@@ -65,7 +65,6 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #252525; border-radius: 10px; }
 
-        /* أيقونات CSS */
         .ico { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .ico-play { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent currentColor; margin-right: 2px; }
         .ico-pause { width: 10px; height: 12px; display: flex; gap: 3px; }
@@ -97,7 +96,6 @@
         .ico-stats::before { height: 8px; }
         .ico-stats::after { height: 13px; }
 
-        /* الهيكل الرئيسي */
         .app-header {
             display: flex; align-items: center; justify-content: space-between;
             padding: 8px 16px; flex-shrink: 0; background: #000;
@@ -173,7 +171,6 @@
         .btn.primary { background: #fff; color: #000; border-color: #fff; font-weight: 700; }
         .btn.primary:active { background: #ddd; }
 
-        /* ========== شاشة القراءة ========== */
         .reading-overlay {
             position: fixed; inset: 0; background: #000; z-index: 300; display: none; flex-direction: column; overflow: hidden;
         }
@@ -200,7 +197,6 @@
             border: 1px solid #1a1a1a; pointer-events: none; letter-spacing: 0.02em;
         }
 
-        /* أزرار التحكم في القراءة — دائماً ظاهرة */
         .reading-controls {
             display: flex; align-items: center; justify-content: space-between;
             padding: 10px 20px calc(10px + var(--safe-bottom));
@@ -221,7 +217,6 @@
         .rc-btn.rc-play:active { background: #ddd; }
         .rc-btn.rc-restart { color: #aaa; }
 
-        /* شاشة الانتهاء من القراءة */
         .reading-done-overlay {
             position: absolute; inset: 0; background: rgba(0,0,0,0.92);
             display: none; flex-direction: column; align-items: center; justify-content: center; gap: 18px; z-index: 20;
@@ -233,7 +228,6 @@
         .reading-done-btn { background: #fff; color: #000; border: none; border-radius: 22px; padding: 11px 32px; font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: var(--font); }
         .reading-done-btn:active { background: #ddd; }
 
-        /* صفحة الإعدادات (بدلاً من اللوحة الجانبية) */
         .settings-page-title {
             font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 16px;
         }
@@ -244,7 +238,6 @@
         .setting-row input[type="color"] { width: 38px; height: 28px; border-radius: 6px; border: 2px solid #333; background: transparent; }
         .setting-row select { width: 100%; padding: 9px; background: #111; border: 1px solid #1e1e1e; border-radius: var(--radius-sm); color: #fff; }
 
-        /* زر إعادة التعيين في الإعدادات – خانة صغيرة مع أيقونة */
         .btn-reset {
             display: inline-flex; align-items: center; gap: 6px;
             padding: 8px 16px; border-radius: 20px;
@@ -348,7 +341,6 @@
         <div class="reading-stage" id="readingStage">
             <div class="teleprompter-content" id="teleprompterContent"></div>
             <div class="reading-time-tag" id="readingTimeTag">--:--</div>
-            <!-- شاشة الانتهاء -->
             <div class="reading-done-overlay" id="readingDoneOverlay">
                 <div class="reading-done-icon">✓</div>
                 <div class="reading-done-title">Reading Complete!</div>
@@ -357,7 +349,6 @@
             </div>
         </div>
         <div class="reading-progress-bar"><div class="prog-inner" id="readingProgInner"></div></div>
-        <!-- أزرار التحكم الدائمة -->
         <div class="reading-controls" id="readingControls">
             <button class="rc-btn rc-close" id="btnCloseReading">
                 <span class="ico ico-close" style="color:var(--danger);"></span> Close
@@ -397,26 +388,19 @@
             const PROGRESS_KEY  = 'eng_reader_progress_v2';
             const LEVELS        = ['A1','A2','B1','B2','C1','C2'];
 
-            // البيانات الافتراضية – سيتم تحديث تاريخها إلى اليوم عند التحميل الأول
+            // تواريخ محدثة إلى 2026-06-28
             const sampleTexts = [
-                { id:'t1', title:'My Daily Routine', level:'A1', content:'I wake up at 7 o\'clock.\nI brush my teeth and wash my face.\nI eat breakfast with my family.\nI go to school by bus.\nI study English and math.\nI have lunch at school.\nI come home at 4 o\'clock.\nI do my homework.\nI watch TV for one hour.\nI go to bed at 10 o\'clock.', description:'Daily activities', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t2', title:'The Weather Today', level:'A1', content:'Today is sunny and warm.\nThe sky is blue.\nThere are no clouds.\nThe temperature is 25 degrees.\nIt is a beautiful day.\nI want to go to the park.\nI will take my dog with me.\nWe will play together.\nIt will be fun.', description:'Weather', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t3', title:'A Trip to London', level:'A2', content:'Last summer, I visited London.\nI went with my best friend.\nWe stayed for five days.\nWe saw Big Ben and the London Eye.\nThe city was very busy.\nWe took many photos.\nWe ate fish and chips.\nIt was delicious.\nI bought souvenirs for my family.\nI want to go back someday.', description:'Travel', favorite:true, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t4', title:'The Importance of Reading', level:'B1', content:'Reading is one of the most important skills.\nIt helps us learn new things.\nWhen we read, we improve our vocabulary.\nWe also learn about different cultures.\nReading can be fun and relaxing.\nMany successful people read every day.\nYou can read books, articles, or blogs.\nThe important thing is to start.\nEven 15 minutes a day can make a difference.\nSo pick up a book today.', description:'Why reading matters', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t5', title:'Technology in Modern Life', level:'B2', content:'Technology has changed the way we live.\nSmartphones connect us to the world.\nWe can work from anywhere now.\nSocial media keeps us in touch with friends.\nHowever, technology also has downsides.\nPeople spend too much time on screens.\nPrivacy is a growing concern.\nWe must find a healthy balance.\nTechnology should serve us, not control us.\nThe future holds even more innovations.', description:'Tech impact', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t6', title:'Climate Change Challenges', level:'C1', content:'Climate change represents one of the most pressing challenges.\nRising global temperatures threaten ecosystems.\nCarbon emissions continue to increase.\nInternational cooperation is essential.\nRenewable energy offers a path forward.\nIndividual actions also matter significantly.\nWe must act now before it is too late.\nFuture generations depend on our decisions.\nScientific consensus is clear on this issue.\nPolicy changes must follow the science.', description:'Climate', favorite:true, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 }
+                { id:'t1', title:'My Daily Routine', level:'A1', content:'I wake up at 7 o\'clock.\nI brush my teeth and wash my face.\nI eat breakfast with my family.\nI go to school by bus.\nI study English and math.\nI have lunch at school.\nI come home at 4 o\'clock.\nI do my homework.\nI watch TV for one hour.\nI go to bed at 10 o\'clock.', description:'Daily activities', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t2', title:'The Weather Today', level:'A1', content:'Today is sunny and warm.\nThe sky is blue.\nThere are no clouds.\nThe temperature is 25 degrees.\nIt is a beautiful day.\nI want to go to the park.\nI will take my dog with me.\nWe will play together.\nIt will be fun.', description:'Weather', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t3', title:'A Trip to London', level:'A2', content:'Last summer, I visited London.\nI went with my best friend.\nWe stayed for five days.\nWe saw Big Ben and the London Eye.\nThe city was very busy.\nWe took many photos.\nWe ate fish and chips.\nIt was delicious.\nI bought souvenirs for my family.\nI want to go back someday.', description:'Travel', favorite:true, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t4', title:'The Importance of Reading', level:'B1', content:'Reading is one of the most important skills.\nIt helps us learn new things.\nWhen we read, we improve our vocabulary.\nWe also learn about different cultures.\nReading can be fun and relaxing.\nMany successful people read every day.\nYou can read books, articles, or blogs.\nThe important thing is to start.\nEven 15 minutes a day can make a difference.\nSo pick up a book today.', description:'Why reading matters', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t5', title:'Technology in Modern Life', level:'B2', content:'Technology has changed the way we live.\nSmartphones connect us to the world.\nWe can work from anywhere now.\nSocial media keeps us in touch with friends.\nHowever, technology also has downsides.\nPeople spend too much time on screens.\nPrivacy is a growing concern.\nWe must find a healthy balance.\nTechnology should serve us, not control us.\nThe future holds even more innovations.', description:'Tech impact', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t6', title:'Climate Change Challenges', level:'C1', content:'Climate change represents one of the most pressing challenges.\nRising global temperatures threaten ecosystems.\nCarbon emissions continue to increase.\nInternational cooperation is essential.\nRenewable energy offers a path forward.\nIndividual actions also matter significantly.\nWe must act now before it is too late.\nFuture generations depend on our decisions.\nScientific consensus is clear on this issue.\nPolicy changes must follow the science.', description:'Climate', favorite:true, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 }
             ];
 
-            /* ── LocalStorage helpers ── */
             function loadData() {
                 try { const r = localStorage.getItem(STORAGE_KEY); if(r){ const d=JSON.parse(r); if(d && d.texts) return d; } } catch(e){}
-                // إذا لم تكن هناك بيانات، ننسخ النماذج ونضبط تاريخ اليوم
-                const today = new Date().toISOString().split('T')[0];
-                const d = JSON.parse(JSON.stringify(sampleTexts));
-                d.forEach(t => { t.dateAdded = today; });
-                const data = { texts: d };
-                saveData(data);
-                return data;
+                const d = { texts: JSON.parse(JSON.stringify(sampleTexts)) }; saveData(d); return d;
             }
             function saveData(d)     { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(e){} }
             function loadSettings()  {
@@ -435,10 +419,8 @@
             function refreshData()  { appData = loadData(); }
             function persistData()  { saveData(appData); }
 
-            /* ── Estado de navegación ── */
             let currentPage = 'home', currentLevel = null, searchActive = false;
 
-            /* ── Estado del lector ── */
             const reading = {
                 textId: null, active: false, paused: false, stopped: true,
                 totalElapsed: 0, lastFrameTime: null, animFrameId: null,
@@ -474,7 +456,6 @@
                 }
             };
 
-            /* ── Refs DOM ── */
             const $ = s => document.querySelector(s);
             const pageHome           = $('#pageHome'),
                   pageLevel          = $('#pageLevel'),
@@ -519,7 +500,6 @@
                   textAlignSelect    = $('#textAlignSelect');
             const btnPausePlay       = $('#btnPausePlay');
 
-            /* ── Utilidades ── */
             function uid()             { return 't' + Date.now() + '_' + Math.random().toString(36).substring(2, 9); }
             function wc(t)             { return t && t.trim() ? t.trim().split(/\s+/).length : 0; }
             function estMin(t)         { return Math.max(1, Math.ceil(wc(t) / 180)); }
@@ -530,7 +510,6 @@
             function textsByLevel(lv)  { return appData.texts.filter(tx => tx.level === lv); }
             function escHtml(s)        { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
-            /* ── Navegación de páginas ── */
             function showPage(name) {
                 [pageHome, pageLevel, pageStats, pageSettings].forEach(p => p.classList.remove('active'));
                 if(name === 'home') {
@@ -566,15 +545,14 @@
                 const btns = bottomNav.querySelectorAll('.nav-btn');
                 btns.forEach(b => b.classList.remove('active'));
                 if(currentPage === 'home' || currentPage === 'level' || currentPage === 'stats') {
-                    btns[0].classList.add('active');   // Home
+                    btns[0].classList.add('active');
                 } else if(currentPage === 'favorites') {
-                    btns[1].classList.add('active');   // Favorites
+                    btns[1].classList.add('active');
                 } else if(currentPage === 'settings') {
-                    btns[2].classList.add('active');   // Settings
+                    btns[2].classList.add('active');
                 }
             }
 
-            /* ── Renderizado de la pantalla principal ── */
             function renderHome() {
                 levelGrid.innerHTML = '';
                 searchResults.innerHTML = '';
@@ -632,7 +610,6 @@
                 if(act === 'fav')    toggleFav(id);
             }
 
-            /* ── Modal añadir / editar ── */
             function openAddModal(presetLv) {
                 modalTitle.textContent = 'Add New Text';
                 inputTitle.value = ''; inputLevel.value = presetLv || 'A1';
@@ -689,7 +666,6 @@
             }
             function closeModal() { modalOverlay.classList.remove('show'); editTextId.value = ''; }
 
-            /* ── Búsqueda y favoritos ── */
             function doSearch(q) {
                 const qt = q.toLowerCase().trim();
                 if(!qt) { searchResults.style.display = 'none'; levelGrid.style.display = ''; searchActive = false; return; }
@@ -723,7 +699,6 @@
                 });
             }
 
-            /* ── Estadísticas ── */
             function renderStats() {
                 const totalT  = appData.texts.length;
                 const totalW  = appData.texts.reduce((s,t) => s + wc(t.content), 0);
@@ -762,10 +737,6 @@
                 }
             }
 
-            /* ══════════════════════════════════════════
-               LECTOR — lógica corregida completamente
-               ══════════════════════════════════════════ */
-
             function updatePausePlayBtn() {
                 if(reading.paused || reading.stopped) {
                     btnPausePlay.innerHTML = '<span class="ico ico-play" style="color:#000;width:10px;height:10px;border-width:5px 0 5px 9px;margin-right:2px;"></span> Play';
@@ -784,7 +755,6 @@
                 reading.paused       = false;
                 reading.speedPxPerSec = reading.getSpeed();
 
-                /* Restaurar progreso guardado */
                 const saved = appProgress[id];
                 if(saved && saved.offset > 0) {
                     reading.currentOffset = saved.offset;
@@ -796,14 +766,11 @@
                 applyReadingSettingsToDOM();
                 readingOverlay.classList.add('active');
 
-                /* Calcular dimensiones y ajustar el inicio desde abajo */
                 requestAnimationFrame(() => {
                     reading.recalc();
-                    // Fijar el padding superior para que el texto comience desde la parte inferior
                     const lineHeight = appSettings.fontSize * appSettings.lineSpacing;
                     const topPad = Math.max(0, reading.stageHeight - lineHeight);
                     teleprompterContent.style.paddingTop = topPad + 'px';
-                    // Recalcular porque el padding cambió la altura total
                     reading.recalc();
                     reading.clampOffset();
                     teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
@@ -991,12 +958,13 @@
                 textAlignSelect.value    = appSettings.textAlign;
             }
 
-            /* ── Eventos ── */
             bottomNav.addEventListener('click', e => {
                 const nb = e.target.closest('.nav-btn'); if(!nb) return;
                 const pg = nb.dataset.page;
                 if(pg === 'home') {
-                    showPage('home');
+                    searchActive = false; searchBarHome.style.display = 'none';
+                    searchResults.style.display = 'none'; levelGrid.style.display = '';
+                    searchInput.value = ''; showPage('home');
                 } else if(pg === 'favorites') {
                     showPage('favorites');
                 } else if(pg === 'settings') {
@@ -1040,33 +1008,28 @@
                 showToast('Settings reset.');
             });
 
-            /* Botones del lector */
             $('#btnCloseReading').addEventListener('click',   closeReading);
             $('#btnPausePlay').addEventListener('click',      togglePausePlay);
             $('#btnRestartReading').addEventListener('click', restartReading);
             $('#btnDoneClose').addEventListener('click',      closeReading);
 
-            /* Tap en el área de texto = pausar / reanudar */
             readingStage.addEventListener('click', e => {
                 if(e.target.closest('.reading-done-overlay')) return;
                 if(!reading.stopped) togglePausePlay();
             });
 
-            /* Prevenir scroll táctil mientras el lector está en marcha */
             readingStage.addEventListener('touchmove', e => {
                 if(readingOverlay.classList.contains('active') && reading.active && !reading.paused) {
                     e.preventDefault();
                 }
             }, { passive: false });
 
-            /* Pausar si la pestaña queda oculta */
             document.addEventListener('visibilitychange', () => {
                 if(document.hidden && readingOverlay.classList.contains('active') && !reading.paused && !reading.stopped) {
                     pauseReading();
                 }
             });
 
-            /* Teclado */
             document.addEventListener('keydown', e => {
                 if(e.key === 'Escape') {
                     if(readingOverlay.classList.contains('active')) closeReading();
@@ -1078,7 +1041,6 @@
                 }
             });
 
-            /* Inicialización */
             updateSettingsUIValues();
             renderHome();
             updateNavHighlight();
