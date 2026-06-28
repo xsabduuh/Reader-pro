@@ -244,6 +244,18 @@
         .setting-row input[type="color"] { width: 38px; height: 28px; border-radius: 6px; border: 2px solid #333; background: transparent; }
         .setting-row select { width: 100%; padding: 9px; background: #111; border: 1px solid #1e1e1e; border-radius: var(--radius-sm); color: #fff; }
 
+        /* زر إعادة التعيين في الإعدادات – خانة صغيرة مع أيقونة */
+        .btn-reset {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 20px;
+            border: 1px solid var(--border-light);
+            background: var(--surface2); color: #bbb;
+            cursor: pointer; font-size: 0.72rem; font-weight: 500;
+            transition: var(--transition-fast);
+        }
+        .btn-reset:active { background: #1a1a1a; transform: scale(0.94); border-color: #3a3a3a; }
+        .btn-reset .reset-icon { font-size: 1rem; line-height: 1; }
+
         .search-wrap { position: relative; margin-bottom: 10px; }
         .search-wrap input { width: 100%; padding: 10px 12px 10px 38px; background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 22px; color: #fff; font-size: 0.82rem; text-align: left; direction: ltr; }
         .search-wrap input:focus { border-color: #3a3a3a; background: #111; }
@@ -321,7 +333,7 @@
             <div class="setting-row"><label>Text Color</label><input type="color" id="textColorPicker" value="#f0f0f0"></div>
             <div class="setting-row"><label>Background Color</label><input type="color" id="bgColorPicker" value="#000000"></div>
             <div class="setting-row"><label>Text Alignment</label><select id="textAlignSelect"><option value="left">Left</option><option value="center">Center</option><option value="justify">Justify</option></select></div>
-            <button class="btn primary" id="resetReadingSettings" style="width:100%;margin-top:6px;">Reset Defaults</button>
+            <button class="btn-reset" id="resetReadingSettings"><span class="reset-icon">↺</span> Reset</button>
         </section>
     </main>
 
@@ -385,19 +397,26 @@
             const PROGRESS_KEY  = 'eng_reader_progress_v2';
             const LEVELS        = ['A1','A2','B1','B2','C1','C2'];
 
+            // البيانات الافتراضية – سيتم تحديث تاريخها إلى اليوم عند التحميل الأول
             const sampleTexts = [
-                { id:'t1', title:'My Daily Routine', level:'A1', content:'I wake up at 7 o\'clock.\nI brush my teeth and wash my face.\nI eat breakfast with my family.\nI go to school by bus.\nI study English and math.\nI have lunch at school.\nI come home at 4 o\'clock.\nI do my homework.\nI watch TV for one hour.\nI go to bed at 10 o\'clock.', description:'Daily activities', favorite:false, dateAdded:'2024-01-15', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t2', title:'The Weather Today', level:'A1', content:'Today is sunny and warm.\nThe sky is blue.\nThere are no clouds.\nThe temperature is 25 degrees.\nIt is a beautiful day.\nI want to go to the park.\nI will take my dog with me.\nWe will play together.\nIt will be fun.', description:'Weather', favorite:false, dateAdded:'2024-01-20', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t3', title:'A Trip to London', level:'A2', content:'Last summer, I visited London.\nI went with my best friend.\nWe stayed for five days.\nWe saw Big Ben and the London Eye.\nThe city was very busy.\nWe took many photos.\nWe ate fish and chips.\nIt was delicious.\nI bought souvenirs for my family.\nI want to go back someday.', description:'Travel', favorite:true, dateAdded:'2024-02-01', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t4', title:'The Importance of Reading', level:'B1', content:'Reading is one of the most important skills.\nIt helps us learn new things.\nWhen we read, we improve our vocabulary.\nWe also learn about different cultures.\nReading can be fun and relaxing.\nMany successful people read every day.\nYou can read books, articles, or blogs.\nThe important thing is to start.\nEven 15 minutes a day can make a difference.\nSo pick up a book today.', description:'Why reading matters', favorite:false, dateAdded:'2024-02-10', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t5', title:'Technology in Modern Life', level:'B2', content:'Technology has changed the way we live.\nSmartphones connect us to the world.\nWe can work from anywhere now.\nSocial media keeps us in touch with friends.\nHowever, technology also has downsides.\nPeople spend too much time on screens.\nPrivacy is a growing concern.\nWe must find a healthy balance.\nTechnology should serve us, not control us.\nThe future holds even more innovations.', description:'Tech impact', favorite:false, dateAdded:'2024-03-05', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t6', title:'Climate Change Challenges', level:'C1', content:'Climate change represents one of the most pressing challenges.\nRising global temperatures threaten ecosystems.\nCarbon emissions continue to increase.\nInternational cooperation is essential.\nRenewable energy offers a path forward.\nIndividual actions also matter significantly.\nWe must act now before it is too late.\nFuture generations depend on our decisions.\nScientific consensus is clear on this issue.\nPolicy changes must follow the science.', description:'Climate', favorite:true, dateAdded:'2024-04-01', lastRead:null, totalReadTime:0, readCount:0 }
+                { id:'t1', title:'My Daily Routine', level:'A1', content:'I wake up at 7 o\'clock.\nI brush my teeth and wash my face.\nI eat breakfast with my family.\nI go to school by bus.\nI study English and math.\nI have lunch at school.\nI come home at 4 o\'clock.\nI do my homework.\nI watch TV for one hour.\nI go to bed at 10 o\'clock.', description:'Daily activities', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t2', title:'The Weather Today', level:'A1', content:'Today is sunny and warm.\nThe sky is blue.\nThere are no clouds.\nThe temperature is 25 degrees.\nIt is a beautiful day.\nI want to go to the park.\nI will take my dog with me.\nWe will play together.\nIt will be fun.', description:'Weather', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t3', title:'A Trip to London', level:'A2', content:'Last summer, I visited London.\nI went with my best friend.\nWe stayed for five days.\nWe saw Big Ben and the London Eye.\nThe city was very busy.\nWe took many photos.\nWe ate fish and chips.\nIt was delicious.\nI bought souvenirs for my family.\nI want to go back someday.', description:'Travel', favorite:true, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t4', title:'The Importance of Reading', level:'B1', content:'Reading is one of the most important skills.\nIt helps us learn new things.\nWhen we read, we improve our vocabulary.\nWe also learn about different cultures.\nReading can be fun and relaxing.\nMany successful people read every day.\nYou can read books, articles, or blogs.\nThe important thing is to start.\nEven 15 minutes a day can make a difference.\nSo pick up a book today.', description:'Why reading matters', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t5', title:'Technology in Modern Life', level:'B2', content:'Technology has changed the way we live.\nSmartphones connect us to the world.\nWe can work from anywhere now.\nSocial media keeps us in touch with friends.\nHowever, technology also has downsides.\nPeople spend too much time on screens.\nPrivacy is a growing concern.\nWe must find a healthy balance.\nTechnology should serve us, not control us.\nThe future holds even more innovations.', description:'Tech impact', favorite:false, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 },
+                { id:'t6', title:'Climate Change Challenges', level:'C1', content:'Climate change represents one of the most pressing challenges.\nRising global temperatures threaten ecosystems.\nCarbon emissions continue to increase.\nInternational cooperation is essential.\nRenewable energy offers a path forward.\nIndividual actions also matter significantly.\nWe must act now before it is too late.\nFuture generations depend on our decisions.\nScientific consensus is clear on this issue.\nPolicy changes must follow the science.', description:'Climate', favorite:true, dateAdded:'', lastRead:null, totalReadTime:0, readCount:0 }
             ];
 
             /* ── LocalStorage helpers ── */
             function loadData() {
                 try { const r = localStorage.getItem(STORAGE_KEY); if(r){ const d=JSON.parse(r); if(d && d.texts) return d; } } catch(e){}
-                const d = { texts: JSON.parse(JSON.stringify(sampleTexts)) }; saveData(d); return d;
+                // إذا لم تكن هناك بيانات، ننسخ النماذج ونضبط تاريخ اليوم
+                const today = new Date().toISOString().split('T')[0];
+                const d = JSON.parse(JSON.stringify(sampleTexts));
+                d.forEach(t => { t.dateAdded = today; });
+                const data = { texts: d };
+                saveData(data);
+                return data;
             }
             function saveData(d)     { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(e){} }
             function loadSettings()  {
@@ -514,22 +533,44 @@
             /* ── Navegación de páginas ── */
             function showPage(name) {
                 [pageHome, pageLevel, pageStats, pageSettings].forEach(p => p.classList.remove('active'));
-                if(name === 'home')     { pageHome.classList.add('active');     currentPage = 'home';     currentLevel = null; }
-                if(name === 'level')    { pageLevel.classList.add('active');    currentPage = 'level'; }
-                if(name === 'stats')    { pageStats.classList.add('active');    currentPage = 'stats'; }
-                if(name === 'settings') { pageSettings.classList.add('active'); currentPage = 'settings'; }
+                if(name === 'home') {
+                    pageHome.classList.add('active');
+                    currentPage = 'home';
+                    currentLevel = null;
+                    searchActive = false;
+                    searchBarHome.style.display = 'none';
+                    searchResults.style.display = 'none';
+                    levelGrid.style.display = '';
+                    searchInput.value = '';
+                } else if(name === 'level') {
+                    pageLevel.classList.add('active');
+                    currentPage = 'level';
+                } else if(name === 'stats') {
+                    pageStats.classList.add('active');
+                    currentPage = 'stats';
+                } else if(name === 'favorites') {
+                    pageHome.classList.add('active');
+                    currentPage = 'favorites';
+                    showFavorites();
+                } else if(name === 'settings') {
+                    pageSettings.classList.add('active');
+                    currentPage = 'settings';
+                }
                 mainContent.scrollTop = 0;
                 updateNavHighlight();
                 if(name === 'stats') renderStats();
-                if(name === 'home')  renderHome();
+                if(name === 'home' || name === 'favorites') renderHome();
             }
+
             function updateNavHighlight() {
                 const btns = bottomNav.querySelectorAll('.nav-btn');
                 btns.forEach(b => b.classList.remove('active'));
                 if(currentPage === 'home' || currentPage === 'level' || currentPage === 'stats') {
-                    btns[0].classList.add('active');
+                    btns[0].classList.add('active');   // Home
+                } else if(currentPage === 'favorites') {
+                    btns[1].classList.add('active');   // Favorites
                 } else if(currentPage === 'settings') {
-                    btns[2].classList.add('active');
+                    btns[2].classList.add('active');   // Settings
                 }
             }
 
@@ -913,7 +954,6 @@
                 teleprompterContent.style.lineHeight = appSettings.lineSpacing;
                 teleprompterContent.style.color      = appSettings.textColor;
                 teleprompterContent.style.textAlign  = appSettings.textAlign;
-                // padding lateral y fondo, el padding superior se ajusta dinámicamente en startReading
                 teleprompterContent.style.paddingRight = padPct + '%';
                 teleprompterContent.style.paddingLeft  = padPct + '%';
                 teleprompterContent.style.paddingBottom = '60vh';
@@ -956,11 +996,9 @@
                 const nb = e.target.closest('.nav-btn'); if(!nb) return;
                 const pg = nb.dataset.page;
                 if(pg === 'home') {
-                    searchActive = false; searchBarHome.style.display = 'none';
-                    searchResults.style.display = 'none'; levelGrid.style.display = '';
-                    searchInput.value = ''; showPage('home');
+                    showPage('home');
                 } else if(pg === 'favorites') {
-                    showPage('home'); showFavorites();
+                    showPage('favorites');
                 } else if(pg === 'settings') {
                     showPage('settings');
                 }
