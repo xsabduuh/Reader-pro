@@ -403,13 +403,12 @@
             const levelGrid = $('#levelGrid'), levelTextsList = $('#levelTextsList'), levelTitleLabel = $('#levelTitleLabel');
             const searchBarHome = $('#searchBarHome'), searchInput = $('#searchInput'), searchResults = $('#searchResults');
             const readingOverlay = $('#readingOverlay'), readingStage = $('#readingStage'), teleprompterContent = $('#teleprompterContent');
-            const readingTitleMini = $('#readingTitleMini'), readingProgInner = $('#readingProgInner'), readingTimeTag = $('#readingTimeTag');
+            const readingProgInner = $('#readingProgInner'), readingTimeTag = $('#readingTimeTag');
             const settingsPanel = $('#settingsPanel'), settingsBackdrop = $('#settingsBackdrop');
             const modalOverlay = $('#modalOverlay'), modalTitle = $('#modalTitle');
             const inputTitle = $('#inputTitle'), inputLevel = $('#inputLevel'), inputContent = $('#inputContent'), inputDesc = $('#inputDesc'), inputFavorite = $('#inputFavorite'), editTextId = $('#editTextId');
             const toastContainer = $('#toastContainer'), statsGrid = $('#statsGrid'), topReadList = $('#topReadList');
             const bottomNav = $('#bottomNav'), mainContent = $('#mainContent');
-            const btnPlay = $('#btnPlay'), btnPause = $('#btnPause');
 
             const speedSlider = $('#speedSlider'), speedVal = $('#speedVal');
             const fontSizeSlider = $('#fontSizeSlider'), fontSizeVal = $('#fontSizeVal');
@@ -520,10 +519,10 @@
                 const tx=getText(id); if(!tx) return;
                 reading.reset(); reading.textId=id; reading.stopped=false; reading.active=true; reading.paused=false; reading.speedPxPerSec=reading.getSpeed();
                 const saved=appProgress[id]; if(saved&&saved.offset>0){ reading.totalElapsed=saved.elapsed||0; reading.currentOffset=saved.offset; }
-                teleprompterContent.textContent=tx.content; readingTitleMini.textContent=tx.title;
+                teleprompterContent.textContent=tx.content;
                 applyReadingSettingsToDOM(); readingOverlay.classList.add('active');
                 requestAnimationFrame(()=>{ reading.recalc(); reading.clampOffset(); teleprompterContent.style.transform=`translateY(${-reading.currentOffset}px)`; updateReadingUI(); });
-                reading.lastFrameTime=null; reading.animFrameId=requestAnimationFrame(animLoop); updatePlayPauseUI();
+                reading.lastFrameTime=null; reading.animFrameId=requestAnimationFrame(animLoop);
             }
             function animLoop(ts) {
                 if(reading.stopped||reading.paused) { reading.animFrameId=null; return; }
@@ -534,15 +533,14 @@
                 if(reading.currentOffset>=reading.maxOffset&&reading.maxOffset>0.5) { finishReading(); showToast('Finished!'); return; }
                 reading.animFrameId=requestAnimationFrame(animLoop);
             }
-            function pauseReading() { if(reading.stopped||reading.paused) return; reading.paused=true; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); reading.animFrameId=null; reading.lastFrameTime=null; reading.active=false; updatePlayPauseUI(); if(reading.textId&&reading.currentOffset>0){ const p=appProgress[reading.textId]||{}; p.offset=reading.currentOffset; p.elapsed=reading.totalElapsed; appProgress[reading.textId]=p; saveProgress(appProgress); } }
-            function resumeReading() { if(reading.stopped||!reading.paused) return; reading.paused=false; reading.active=true; reading.lastFrameTime=null; reading.speedPxPerSec=reading.getSpeed(); reading.recalc(); reading.clampOffset(); teleprompterContent.style.transform=`translateY(${-reading.currentOffset}px)`; updateReadingUI(); reading.animFrameId=requestAnimationFrame(animLoop); updatePlayPauseUI(); }
-            function stopReading() { if(reading.stopped) return; const tot=reading.totalElapsed; reading.stopped=true; reading.paused=false; reading.active=false; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); reading.animFrameId=null; finishReadingSession(tot); reading.currentOffset=0; reading.totalElapsed=0; teleprompterContent.style.transform='translateY(0)'; updateReadingUI(); updatePlayPauseUI(); if(reading.textId&&appProgress[reading.textId]){ delete appProgress[reading.textId]; saveProgress(appProgress); } }
-            function restartReading() { const id=reading.textId; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); reading.reset(); teleprompterContent.style.transform='translateY(0)'; updateReadingUI(); updatePlayPauseUI(); if(id&&appProgress[id]){ delete appProgress[id]; saveProgress(appProgress); } if(id) startReading(id); }
-            function finishReading() { const tot=reading.totalElapsed; reading.stopped=true; reading.paused=false; reading.active=false; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); finishReadingSession(tot); reading.currentOffset=0; reading.totalElapsed=0; teleprompterContent.style.transform='translateY(0)'; updatePlayPauseUI(); if(reading.textId&&appProgress[reading.textId]){ delete appProgress[reading.textId]; saveProgress(appProgress); } }
+            function pauseReading() { if(reading.stopped||reading.paused) return; reading.paused=true; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); reading.animFrameId=null; reading.lastFrameTime=null; reading.active=false; if(reading.textId&&reading.currentOffset>0){ const p=appProgress[reading.textId]||{}; p.offset=reading.currentOffset; p.elapsed=reading.totalElapsed; appProgress[reading.textId]=p; saveProgress(appProgress); } }
+            function resumeReading() { if(reading.stopped||!reading.paused) return; reading.paused=false; reading.active=true; reading.lastFrameTime=null; reading.speedPxPerSec=reading.getSpeed(); reading.recalc(); reading.clampOffset(); teleprompterContent.style.transform=`translateY(${-reading.currentOffset}px)`; updateReadingUI(); reading.animFrameId=requestAnimationFrame(animLoop); }
+            function stopReading() { if(reading.stopped) return; const tot=reading.totalElapsed; reading.stopped=true; reading.paused=false; reading.active=false; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); reading.animFrameId=null; finishReadingSession(tot); reading.currentOffset=0; reading.totalElapsed=0; teleprompterContent.style.transform='translateY(0)'; updateReadingUI(); if(reading.textId&&appProgress[reading.textId]){ delete appProgress[reading.textId]; saveProgress(appProgress); } }
+            function restartReading() { const id=reading.textId; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); reading.reset(); teleprompterContent.style.transform='translateY(0)'; updateReadingUI(); if(id&&appProgress[id]){ delete appProgress[id]; saveProgress(appProgress); } if(id) startReading(id); }
+            function finishReading() { const tot=reading.totalElapsed; reading.stopped=true; reading.paused=false; reading.active=false; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); finishReadingSession(tot); reading.currentOffset=0; reading.totalElapsed=0; teleprompterContent.style.transform='translateY(0)'; if(reading.textId&&appProgress[reading.textId]){ delete appProgress[reading.textId]; saveProgress(appProgress); } }
             function finishReadingSession(totalSec) { if(!reading.textId||totalSec<=0) return; const tx=getText(reading.textId); if(tx){ tx.totalReadTime=(tx.totalReadTime||0)+Math.round(totalSec); tx.readCount=(tx.readCount||0)+1; tx.lastRead=new Date().toISOString(); persistData(); refreshData(); } if(appProgress[reading.textId]){ delete appProgress[reading.textId]; saveProgress(appProgress); } renderHome(); if(currentPage==='level'&&currentLevel) renderLevelTexts(); }
-            function closeReading() { const tot=reading.totalElapsed; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); if(!reading.stopped&&tot>0.5) finishReadingSession(tot); reading.reset(); teleprompterContent.textContent=''; readingOverlay.classList.remove('active'); updatePlayPauseUI(); renderHome(); if(currentPage==='level'&&currentLevel) renderLevelTexts(); }
+            function closeReading() { const tot=reading.totalElapsed; if(reading.animFrameId) cancelAnimationFrame(reading.animFrameId); if(!reading.stopped&&tot>0.5) finishReadingSession(tot); reading.reset(); teleprompterContent.textContent=''; readingOverlay.classList.remove('active'); renderHome(); if(currentPage==='level'&&currentLevel) renderLevelTexts(); }
             function updateReadingUI() { if(reading.maxOffset<=0){ readingProgInner.style.width='0%'; readingTimeTag.textContent='--:--'; return; } const pct=Math.min(100,Math.round((reading.currentOffset/reading.maxOffset)*100)); readingProgInner.style.width=pct+'%'; const remain=Math.max(0,(reading.maxOffset-reading.currentOffset)/Math.max(1,reading.speedPxPerSec)); readingTimeTag.textContent=fmtTimeCompact(remain); }
-            function updatePlayPauseUI() { if(reading.active&&!reading.paused){ btnPlay?.classList.add('active-rt'); btnPause?.classList.remove('active-rt'); } else if(reading.paused){ btnPlay?.classList.remove('active-rt'); btnPause?.classList.add('active-rt'); } else { btnPlay?.classList.remove('active-rt'); btnPause?.classList.remove('active-rt'); } }
             function applyReadingSettingsToDOM() { teleprompterContent.style.fontSize=appSettings.fontSize+'px'; teleprompterContent.style.lineHeight=appSettings.lineSpacing; teleprompterContent.style.color=appSettings.textColor; teleprompterContent.style.textAlign=appSettings.textAlign; const padPct=(100-appSettings.textWidth)/2; teleprompterContent.style.padding=`20px ${padPct}% 60vh ${padPct}%`; readingStage.style.background=appSettings.bgColor; readingOverlay.style.background=appSettings.bgColor; }
             function onReadingSettingChange() { appSettings.speed=parseInt(speedSlider.value); appSettings.fontSize=parseInt(fontSizeSlider.value); appSettings.lineSpacing=parseFloat(lineSpacingSlider.value); appSettings.textWidth=parseInt(textWidthSlider.value); appSettings.textColor=textColorPicker.value; appSettings.bgColor=bgColorPicker.value; appSettings.textAlign=textAlignSelect.value; saveSettings(appSettings); updateSettingsUIValues(); if(readingOverlay.classList.contains('active')){ applyReadingSettingsToDOM(); reading.speedPxPerSec=reading.getSpeed(); reading.recalc(); reading.clampOffset(); teleprompterContent.style.transform=`translateY(${-reading.currentOffset}px)`; updateReadingUI(); } }
             function updateSettingsUIValues() { speedSlider.value=appSettings.speed; speedVal.textContent=appSettings.speed; fontSizeSlider.value=appSettings.fontSize; fontSizeVal.textContent=appSettings.fontSize+'px'; lineSpacingSlider.value=appSettings.lineSpacing; lineSpacingVal.textContent=appSettings.lineSpacing; textWidthSlider.value=appSettings.textWidth; textWidthVal.textContent=appSettings.textWidth+'%'; textColorPicker.value=appSettings.textColor; bgColorPicker.value=appSettings.bgColor; textAlignSelect.value=appSettings.textAlign; }
@@ -586,7 +584,7 @@
             document.addEventListener('fullscreenchange',()=>{ const fb=$('#btnFullscreen'); if(document.fullscreenElement) fb?.classList.add('active-rt'); else fb?.classList.remove('active-rt'); });
             readingStage.addEventListener('touchmove',(e)=>{ if(readingOverlay.classList.contains('active')&&reading.active&&!reading.paused) e.preventDefault(); },{passive:false});
 
-            updateSettingsUIValues(); renderHome(); updateNavHighlight(); updatePlayPauseUI(); updateReadingUI();
+            updateSettingsUIValues(); renderHome(); updateNavHighlight();
         })();
     </script>
 </body>
