@@ -1,1 +1,2135 @@
-x
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>English Reader Pro</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #080808;
+            --surface2: #0f0f0f;
+            --surface3: #141414;
+            --border: #1c1c1c;
+            --border-light: #262626;
+            --text: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #707070;
+            --accent: #5b9bd5;
+            --accent-soft: #4a8bc5;
+            --danger: #e0556a;
+            --success: #4caf84;
+            --warning: #d4a843;
+            --favorite: #e8b84b;
+            --radius-xs: 6px;
+            --radius-sm: 10px;
+            --radius: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 22px;
+            --radius-full: 50%;
+            --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            --safe-bottom: env(safe-area-inset-bottom, 12px);
+            --safe-top: env(safe-area-inset-top, 12px);
+            --nav-height: 64px;
+            --header-height: 50px;
+            --transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        html {
+            background: #000;
+            height: 100%;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        body {
+            font-family: var(--font);
+            background: #000000;
+            color: var(--text);
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            padding-top: var(--safe-top);
+            letter-spacing: -0.01em;
+        }
+        ::-webkit-scrollbar {
+            width: 3px;
+            height: 0;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #252525;
+            border-radius: 10px;
+        }
+
+        /* ==================== CSS ICONS ==================== */
+        .ico {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .ico-play {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 7px 0 7px 12px;
+            border-color: transparent transparent transparent currentColor;
+            margin-left: 2px;
+        }
+        .ico-pause {
+            width: 10px;
+            height: 12px;
+            display: flex;
+            gap: 3px;
+        }
+        .ico-pause::before,
+        .ico-pause::after {
+            content: '';
+            width: 3px;
+            height: 100%;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .ico-stop {
+            width: 12px;
+            height: 12px;
+            background: currentColor;
+            border-radius: 2px;
+        }
+        .ico-restart {
+            width: 14px;
+            height: 14px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            border-right-color: transparent;
+            position: relative;
+        }
+        .ico-restart::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: 2px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 4px 6px 4px 0;
+            border-color: transparent currentColor transparent transparent;
+            transform: rotate(-15deg);
+        }
+        .ico-fullscreen {
+            width: 12px;
+            height: 12px;
+            border: 2px solid currentColor;
+            border-radius: 1px;
+            position: relative;
+        }
+        .ico-fullscreen::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 5px;
+            height: 5px;
+            border-left: 2px solid currentColor;
+            border-top: 2px solid currentColor;
+        }
+        .ico-close {
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+        .ico-close::before,
+        .ico-close::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 1px;
+            top: 50%;
+            left: -1px;
+        }
+        .ico-close::before {
+            transform: rotate(45deg);
+        }
+        .ico-close::after {
+            transform: rotate(-45deg);
+        }
+        .ico-star {
+            width: 15px;
+            height: 15px;
+            position: relative;
+            color: inherit;
+        }
+        .ico-star::before {
+            content: '★';
+            font-size: 16px;
+            line-height: 1;
+            font-weight: 900;
+            color: inherit;
+        }
+        .ico-search {
+            width: 14px;
+            height: 14px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            position: relative;
+        }
+        .ico-search::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            right: -2px;
+            width: 2px;
+            height: 7px;
+            background: currentColor;
+            border-radius: 1px;
+            transform: rotate(-45deg);
+        }
+        .ico-plus {
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+        .ico-plus::before,
+        .ico-plus::after {
+            content: '';
+            position: absolute;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .ico-plus::before {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .ico-plus::after {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .ico-edit {
+            width: 13px;
+            height: 13px;
+            position: relative;
+        }
+        .ico-edit::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 1px;
+            top: 50%;
+            left: 2px;
+            transform: rotate(-45deg);
+        }
+        .ico-edit::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            left: 1px;
+            width: 8px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 1px;
+            transform: rotate(20deg);
+        }
+        .ico-trash {
+            width: 12px;
+            height: 14px;
+            position: relative;
+            border: 2px solid currentColor;
+            border-top: 3px solid currentColor;
+            border-radius: 0 0 3px 3px;
+            margin-top: 3px;
+        }
+        .ico-trash::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -4px;
+            width: 16px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 1px;
+        }
+        .ico-home {
+            width: 15px;
+            height: 13px;
+            position: relative;
+            border-bottom: 2px solid currentColor;
+        }
+        .ico-home::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 7.5px 8px 7.5px;
+            border-color: transparent transparent currentColor transparent;
+        }
+        .ico-stats {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        .ico-stats::before,
+        .ico-stats::after {
+            content: '';
+            width: 4px;
+            background: currentColor;
+            border-radius: 1px 1px 0 0;
+        }
+        .ico-stats::before {
+            height: 8px;
+        }
+        .ico-stats::after {
+            height: 13px;
+        }
+        .ico-folder {
+            width: 16px;
+            height: 12px;
+            background: currentColor;
+            border-radius: 2px 4px 4px 4px;
+            position: relative;
+            margin-top: 3px;
+            opacity: 0.85;
+        }
+        .ico-folder::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            width: 7px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* ==================== LAYOUT ==================== */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            flex-shrink: 0;
+            z-index: 100;
+            background: #000;
+            min-height: var(--header-height);
+            gap: 10px;
+        }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        .app-logo .logo-mark {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-sm);
+            background: #fff;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 0;
+        }
+        .header-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: var(--surface2);
+            color: #ccc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .btn-icon:active {
+            background: #1c1c1c;
+            transform: scale(0.93);
+            border-color: #3a3a3a;
+        }
+        .btn-icon.accent {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            font-weight: 700;
+        }
+        .btn-icon.accent:active {
+            background: #ddd;
+            transform: scale(0.93);
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .page {
+            display: none;
+            flex-direction: column;
+            min-height: 100%;
+            padding: 0 14px 20px;
+            animation: pageIn 0.3s ease;
+        }
+        .page.active {
+            display: flex;
+        }
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== BOTTOM NAV ==================== */
+        .bottom-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: #050505;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            height: var(--nav-height);
+            padding-bottom: var(--safe-bottom);
+            z-index: 100;
+            gap: 4px;
+        }
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            color: #5a5a5a;
+            transition: var(--transition-fast);
+            font-size: 0.65rem;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: var(--radius);
+            border: none;
+            background: none;
+            font-family: var(--font);
+            position: relative;
+            min-width: 56px;
+        }
+        .nav-btn.active {
+            color: #fff;
+        }
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            width: 18px;
+            height: 2.5px;
+            background: #fff;
+            border-radius: 10px;
+        }
+        .nav-btn .nav-ico-wrap {
+            font-size: 1.2rem;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            color: inherit;
+        }
+
+        /* ==================== LEVEL GRID ==================== */
+        .level-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+        }
+        .level-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 15px 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .level-card:active {
+            transform: scale(0.97);
+            border-color: #333;
+            background: #0c0c0c;
+        }
+        .level-badge {
+            display: inline-block;
+            background: #fff;
+            color: #000;
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 4px 9px;
+            border-radius: 16px;
+            letter-spacing: 0.4px;
+            margin-bottom: 8px;
+        }
+        .level-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        .level-meta {
+            font-size: 0.66rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+        .progress-bar-wrap {
+            margin-top: 10px;
+            height: 3px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* ==================== TEXT CARDS ==================== */
+        .text-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 13px 14px;
+            margin-bottom: 7px;
+            transition: var(--transition-fast);
+            cursor: pointer;
+        }
+        .text-card:active {
+            background: #0c0c0c;
+            border-color: #2a2a2a;
+        }
+        .text-card .text-title {
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .text-card .text-meta-row {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .text-card .text-actions-row {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        .btn-xs {
+            padding: 6px 11px;
+            border-radius: 18px;
+            border: 1px solid var(--border-light);
+            background: var(--surface2);
+            color: #bbb;
+            cursor: pointer;
+            font-size: 0.68rem;
+            font-weight: 500;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .btn-xs:active {
+            background: #1a1a1a;
+            transform: scale(0.94);
+            border-color: #3a3a3a;
+        }
+        .btn-xs.play-btn {
+            background: #fff;
+            border-color: #fff;
+            color: #000;
+            font-weight: 700;
+        }
+        .btn-xs.play-btn:active {
+            background: #ddd;
+        }
+        .btn-xs.fav-btn {
+            color: #999;
+            border-color: #2a2a2a;
+        }
+        .btn-xs.fav-btn.is-fav {
+            color: #000;
+            background: var(--favorite);
+            border-color: var(--favorite);
+            font-weight: 600;
+        }
+        .btn-xs.danger-btn {
+            border-color: #2a1519;
+            color: #e0556a;
+        }
+        .btn-xs.danger-btn:active {
+            background: #1a0a0d;
+        }
+
+        /* ==================== MODALS ==================== */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            z-index: 200;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            padding: var(--safe-top) 10px var(--safe-bottom);
+        }
+        .overlay.show {
+            display: flex;
+            animation: fadeInOverlay 0.2s ease;
+        }
+        @keyframes fadeInOverlay {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal {
+            background: #0a0a0a;
+            border: 1px solid #1f1f1f;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            width: 100%;
+            max-width: 560px;
+            max-height: 84dvh;
+            overflow-y: auto;
+            padding: 20px 16px 22px;
+            box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.8);
+            animation: modalUp 0.32s ease;
+        }
+        @keyframes modalUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .modal h3 {
+            font-size: 1.05rem;
+            margin-bottom: 14px;
+            color: #fff;
+            text-align: center;
+            font-weight: 700;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 13px;
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-family: var(--font);
+            font-size: 0.85rem;
+            resize: vertical;
+            outline: none;
+            transition: var(--transition-fast);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #444;
+            background: #151515;
+        }
+        .form-group textarea {
+            min-height: 130px;
+            line-height: 1.6;
+        }
+        .modal .btn-row {
+            display: flex;
+            gap: 7px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 18px;
+            border-radius: 22px;
+            border: 1px solid var(--border-light);
+            background: var(--surface2);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: var(--transition-fast);
+            flex: 1;
+            text-align: center;
+            font-family: var(--font);
+            min-width: 70px;
+        }
+        .btn:active {
+            transform: scale(0.95);
+            background: #181818;
+        }
+        .btn.primary {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            font-weight: 700;
+        }
+        .btn.primary:active {
+            background: #ddd;
+        }
+        .btn.danger {
+            border-color: #2a1519;
+            color: #e0556a;
+        }
+
+        /* ==================== READING OVERLAY ==================== */
+        .reading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 300;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .reading-overlay.active {
+            display: flex;
+        }
+        .reading-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: #050505;
+            border-bottom: 1px solid #181818;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            z-index: 10;
+            min-height: 44px;
+        }
+        .rt-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-full);
+            border: 1px solid #222;
+            background: #0a0a0a;
+            color: #bbb;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            flex-shrink: 0;
+        }
+        .rt-btn:active {
+            background: #1a1a1a;
+            transform: scale(0.9);
+            border-color: #3a3a3a;
+        }
+        .rt-btn.active-rt {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+        .rt-btn .ico {
+            pointer-events: none;
+        }
+        .reading-stage {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            cursor: default;
+        }
+        .teleprompter-content {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            will-change: transform;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-align: left;
+            direction: ltr;
+            font-family: var(--font);
+            padding: 20px 20px 60vh 20px;
+            color: #f0f0f0;
+            font-size: 20px;
+        }
+        .reading-progress-bar {
+            height: 2px;
+            background: #181818;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .reading-progress-bar .prog-inner {
+            height: 100%;
+            background: #fff;
+            transition: width 0.08s linear;
+            border-radius: 0 1px 1px 0;
+            width: 0%;
+        }
+        .reading-time-tag {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 0.65rem;
+            color: #555;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 3px 9px;
+            border-radius: 10px;
+            border: 1px solid #1a1a1a;
+            pointer-events: none;
+            font-family: var(--font);
+            letter-spacing: 0.02em;
+        }
+        .reading-title-mini {
+            font-size: 0.7rem;
+            color: #777;
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* ==================== SETTINGS PANEL ==================== */
+        .settings-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 340;
+            display: none;
+        }
+        .settings-backdrop.show {
+            display: block;
+        }
+        .settings-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 84vw;
+            max-width: 370px;
+            background: #060606;
+            border-left: 1px solid #1a1a1a;
+            z-index: 350;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            padding: 18px 15px;
+            padding-top: calc(var(--safe-top) + 8px);
+            padding-bottom: var(--safe-bottom);
+        }
+        .settings-panel.open {
+            transform: translateX(0);
+        }
+        .settings-panel h4 {
+            color: #fff;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+            text-align: center;
+            font-weight: 700;
+        }
+        .setting-row {
+            margin-bottom: 12px;
+        }
+        .setting-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 3px;
+        }
+        .setting-row input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+        .setting-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            border: 2px solid #000;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+        }
+        .setting-row input[type="color"] {
+            -webkit-appearance: none;
+            width: 38px;
+            height: 28px;
+            border-radius: 6px;
+            border: 2px solid #333;
+            cursor: pointer;
+            background: transparent;
+            padding: 1px;
+        }
+        .setting-row select {
+            width: 100%;
+            padding: 9px 10px;
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-family: var(--font);
+            font-size: 0.8rem;
+            outline: none;
+        }
+        .settings-close-btn {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            z-index: 5;
+            padding: 6px;
+            border-radius: var(--radius-full);
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        /* ==================== SEARCH ==================== */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 10px 38px 10px 12px;
+            background: #0d0d0d;
+            border: 1px solid #1e1e1e;
+            border-radius: 22px;
+            color: #fff;
+            font-family: var(--font);
+            font-size: 0.82rem;
+            outline: none;
+            transition: var(--transition-fast);
+        }
+        .search-wrap input:focus {
+            border-color: #3a3a3a;
+            background: #111;
+        }
+        .search-wrap .search-icon-wrap {
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ==================== STATS ==================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 10px;
+            text-align: center;
+        }
+        .stat-card .stat-val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .stat-card .stat-lbl {
+            font-size: 0.65rem;
+            color: #666;
+            margin-top: 2px;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin: 14px 0 6px;
+            font-weight: 600;
+        }
+
+        /* ==================== TOAST ==================== */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: #fff;
+            padding: 9px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            z-index: 500;
+            border: 1px solid #333;
+            pointer-events: none;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2s forwards;
+            white-space: nowrap;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-8px);
+            }
+        }
+        .empty-state {
+            text-align: center;
+            padding: 36px 16px;
+            color: #4a4a4a;
+        }
+        .empty-state .empty-big {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            opacity: 0.4;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (orientation: landscape) {
+            .level-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+            }
+            .modal {
+                border-radius: var(--radius-xl);
+                max-height: 88dvh;
+                margin: auto;
+            }
+            .overlay {
+                align-items: center;
+            }
+            .settings-panel {
+                width: 45vw;
+                max-width: 320px;
+            }
+            .teleprompter-content {
+                padding: 12px 16px 50vh 16px;
+            }
+        }
+        @media (min-width: 768px) {
+            .level-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+            .page {
+                padding: 4px 20px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="app-header">
+        <div class="app-logo">
+            <span class="logo-mark">ER</span>
+            <span>English Reader Pro</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-icon" id="btnSearch" title="Search" aria-label="Search">
+                <span class="ico ico-search" style="color:#bbb;"></span>
+            </button>
+            <button class="btn-icon" id="btnStats" title="Statistics" aria-label="Statistics">
+                <span class="ico ico-stats" style="color:#bbb;"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content" id="mainContent">
+        <!-- HOME PAGE -->
+        <section class="page active" id="pageHome">
+            <div class="search-wrap" id="searchBarHome" style="display:none;">
+                <input type="text" id="searchInput" placeholder="Search texts by title, content, or level...">
+                <span class="search-icon-wrap"><span class="ico ico-search" style="color:#555;"></span></span>
+            </div>
+            <div class="level-grid" id="levelGrid"></div>
+            <div id="searchResults" style="display:none;margin-top:6px;"></div>
+        </section>
+
+        <!-- LEVEL DETAIL PAGE -->
+        <section class="page" id="pageLevel">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                <button class="btn-icon" id="btnBackLevel" style="width:32px;height:32px;">
+                    <span style="font-size:1.1rem;line-height:1;">&larr;</span>
+                </button>
+                <span style="font-weight:700;font-size:0.95rem;color:#fff;" id="levelTitleLabel">Level</span>
+                <button class="btn-icon accent" id="btnAddText" style="margin-right:auto;width:32px;height:32px;">
+                    <span class="ico ico-plus" style="color:#000;"></span>
+                </button>
+            </div>
+            <div id="levelTextsList"></div>
+        </section>
+
+        <!-- STATS PAGE -->
+        <section class="page" id="pageStats">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                <button class="btn-icon" id="btnBackStats" style="width:32px;height:32px;">
+                    <span style="font-size:1.1rem;line-height:1;">&larr;</span>
+                </button>
+                <span style="font-weight:700;font-size:0.95rem;color:#fff;">Statistics</span>
+            </div>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div class="section-label">Most Read Texts</div>
+            <div id="topReadList"></div>
+        </section>
+    </main>
+
+    <!-- ==================== BOTTOM NAVIGATION ==================== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="nav-btn active" data-page="home">
+            <span class="nav-ico-wrap"><span class="ico ico-home" style="color:inherit;"></span></span>
+            Home
+        </button>
+        <button class="nav-btn" data-page="favorites">
+            <span class="nav-ico-wrap"><span class="ico ico-star" style="color:inherit;"></span></span>
+            Favorites
+        </button>
+        <button class="nav-btn" data-page="settings">
+            <span class="nav-ico-wrap" style="font-size:1.3rem;">&#9881;</span>
+            Settings
+        </button>
+    </nav>
+
+    <!-- ==================== READING OVERLAY ==================== -->
+    <div class="reading-overlay" id="readingOverlay">
+        <div class="reading-toolbar" id="readingToolbar">
+            <span class="reading-title-mini" id="readingTitleMini">Reading...</span>
+            <button class="rt-btn" id="btnPlay" title="Play"><span class="ico ico-play" style="color:inherit;"></span></button>
+            <button class="rt-btn" id="btnPause" title="Pause"><span class="ico ico-pause" style="color:inherit;"></span></button>
+            <button class="rt-btn" id="btnStop" title="Stop"><span class="ico ico-stop" style="color:inherit;"></span></button>
+            <button class="rt-btn" id="btnRestart" title="Restart"><span class="ico ico-restart" style="color:inherit;"></span></button>
+            <button class="rt-btn" id="btnFullscreen" title="Fullscreen"><span class="ico ico-fullscreen" style="color:inherit;"></span></button>
+            <button class="rt-btn" id="btnReadingSettings" title="Reading Settings">&#9881;</button>
+            <button class="rt-btn" id="btnCloseReading" title="Close"><span class="ico ico-close" style="color:inherit;"></span></button>
+        </div>
+        <div class="reading-stage" id="readingStage">
+            <div class="teleprompter-content" id="teleprompterContent"></div>
+            <div class="reading-time-tag" id="readingTimeTag">--:--</div>
+        </div>
+        <div class="reading-progress-bar"><div class="prog-inner" id="readingProgInner"></div></div>
+    </div>
+
+    <!-- ==================== READING SETTINGS PANEL ==================== -->
+    <div class="settings-backdrop" id="settingsBackdrop"></div>
+    <div class="settings-panel" id="settingsPanel">
+        <button class="settings-close-btn" id="settingsCloseBtn"><span class="ico ico-close" style="color:#fff;"></span></button>
+        <h4>Reading Settings</h4>
+        <div class="setting-row">
+            <div class="setting-label-row"><span>Speed</span><span id="speedVal">50</span></div>
+            <input type="range" id="speedSlider" min="8" max="160" value="50" step="1">
+        </div>
+        <div class="setting-row">
+            <div class="setting-label-row"><span>Font Size</span><span id="fontSizeVal">20px</span></div>
+            <input type="range" id="fontSizeSlider" min="14" max="48" value="20" step="1">
+        </div>
+        <div class="setting-row">
+            <div class="setting-label-row"><span>Line Spacing</span><span id="lineSpacingVal">1.7</span></div>
+            <input type="range" id="lineSpacingSlider" min="1.2" max="3.2" value="1.7" step="0.1">
+        </div>
+        <div class="setting-row">
+            <div class="setting-label-row"><span>Text Width</span><span id="textWidthVal">88%</span></div>
+            <input type="range" id="textWidthSlider" min="50" max="100" value="88" step="1">
+        </div>
+        <div class="setting-row">
+            <label style="font-size:0.7rem;color:#888;">Text Color</label>
+            <input type="color" id="textColorPicker" value="#f0f0f0">
+        </div>
+        <div class="setting-row">
+            <label style="font-size:0.7rem;color:#888;">Background Color</label>
+            <input type="color" id="bgColorPicker" value="#000000">
+        </div>
+        <div class="setting-row">
+            <label style="font-size:0.7rem;color:#888;">Text Alignment</label>
+            <select id="textAlignSelect">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="justify">Justify</option>
+            </select>
+        </div>
+        <button class="btn primary" id="resetReadingSettings" style="width:100%;margin-top:6px;">Reset Defaults</button>
+    </div>
+
+    <!-- ==================== ADD / EDIT MODAL ==================== -->
+    <div class="overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+            <h3 id="modalTitle">Add New Text</h3>
+            <div class="form-group"><label>Title</label><input type="text" id="inputTitle" placeholder="Enter text title..."></div>
+            <div class="form-group"><label>Level</label><select id="inputLevel">
+                    <option value="A1">A1 - Beginner</option><option value="A2">A2 - Elementary</option>
+                    <option value="B1">B1 - Intermediate</option><option value="B2">B2 - Upper Intermediate</option>
+                    <option value="C1">C1 - Advanced</option><option value="C2">C2 - Proficient</option>
+            </select></div>
+            <div class="form-group"><label>Text Content</label><textarea id="inputContent" placeholder="Paste your English text here..."></textarea></div>
+            <div class="form-group"><label>Description (optional)</label><input type="text" id="inputDesc" placeholder="Short description..."></div>
+            <div class="form-group" style="display:flex;align-items:center;gap:7px;">
+                <input type="checkbox" id="inputFavorite" style="width:16px;height:16px;accent-color:#e8b84b;">
+                <label style="margin:0;color:#bbb;font-size:0.75rem;">Add to favorites</label>
+            </div>
+            <input type="hidden" id="editTextId" value="">
+            <div class="btn-row">
+                <button class="btn" id="btnCancelModal">Cancel</button>
+                <button class="btn primary" id="btnSaveText">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div id="toastContainer"></div>
+
+    <script>
+        (function() {
+            // ==================== DATA LAYER ====================
+            const STORAGE_KEY = 'eng_reader_pro_v2';
+            const SETTINGS_KEY = 'eng_reader_settings_v2';
+            const PROGRESS_KEY = 'eng_reader_progress_v2';
+            const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+
+            const sampleTexts = [
+                { id: 't1', title: 'My Daily Routine', level: 'A1',
+                    content: 'I wake up at 7 o\'clock.\nI brush my teeth and wash my face.\nI eat breakfast with my family.\nI go to school by bus.\nI study English and math.\nI have lunch at school.\nI come home at 4 o\'clock.\nI do my homework.\nI watch TV for one hour.\nI go to bed at 10 o\'clock.',
+                    description: 'Simple daily activities', favorite: false, dateAdded: '2024-01-15', lastRead: null,
+                    totalReadTime: 0, readCount: 0 },
+                { id: 't2', title: 'The Weather Today', level: 'A1',
+                    content: 'Today is sunny and warm.\nThe sky is blue.\nThere are no clouds.\nThe temperature is 25 degrees.\nIt is a beautiful day.\nI want to go to the park.\nI will take my dog with me.\nWe will play together.\nIt will be fun.',
+                    description: 'Describing weather', favorite: false, dateAdded: '2024-01-20', lastRead: null,
+                    totalReadTime: 0, readCount: 0 },
+                { id: 't3', title: 'A Trip to London', level: 'A2',
+                    content: 'Last summer, I visited London.\nI went with my best friend.\nWe stayed for five days.\nWe saw Big Ben and the London Eye.\nThe city was very busy.\nWe took many photos.\nWe ate fish and chips.\nIt was delicious.\nI bought souvenirs for my family.\nI want to go back someday.',
+                    description: 'Travel experience', favorite: true, dateAdded: '2024-02-01', lastRead: null,
+                    totalReadTime: 0, readCount: 0 },
+                { id: 't4', title: 'The Importance of Reading', level: 'B1',
+                    content: 'Reading is one of the most important skills.\nIt helps us learn new things.\nWhen we read, we improve our vocabulary.\nWe also learn about different cultures.\nReading can be fun and relaxing.\nMany successful people read every day.\nYou can read books, articles, or blogs.\nThe important thing is to start.\nEven 15 minutes a day can make a difference.\nSo pick up a book today.',
+                    description: 'Why reading matters', favorite: false, dateAdded: '2024-02-10', lastRead: null,
+                    totalReadTime: 0, readCount: 0 },
+                { id: 't5', title: 'Technology in Modern Life', level: 'B2',
+                    content: 'Technology has changed the way we live.\nSmartphones connect us to the world.\nWe can work from anywhere now.\nSocial media keeps us in touch with friends.\nHowever, technology also has downsides.\nPeople spend too much time on screens.\nPrivacy is a growing concern.\nWe must find a healthy balance.\nTechnology should serve us, not control us.\nThe future holds even more innovations.',
+                    description: 'Impact of technology', favorite: false, dateAdded: '2024-03-05', lastRead: null,
+                    totalReadTime: 0, readCount: 0 },
+                { id: 't6', title: 'Climate Change Challenges', level: 'C1',
+                    content: 'Climate change represents one of the most pressing challenges.\nRising global temperatures threaten ecosystems.\nCarbon emissions continue to increase.\nInternational cooperation is essential.\nRenewable energy offers a path forward.\nIndividual actions also matter significantly.\nWe must act now before it is too late.\nFuture generations depend on our decisions.\nScientific consensus is clear on this issue.\nPolicy changes must follow the science.',
+                    description: 'Advanced climate discussion', favorite: true, dateAdded: '2024-04-01', lastRead: null,
+                    totalReadTime: 0, readCount: 0 },
+            ];
+
+            function loadData() {
+                try {
+                    const r = localStorage.getItem(STORAGE_KEY);
+                    if (r) { const d = JSON.parse(r); if (d.texts && Array.isArray(d.texts)) return d; }
+                } catch (e) {}
+                const d = { texts: [...sampleTexts] };
+                saveData(d);
+                return d;
+            }
+
+            function saveData(d) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch (e) {
+                    showToast('Storage full.'); } }
+
+            function loadSettings() {
+                const def = { speed: 50, fontSize: 20, lineSpacing: 1.7, textWidth: 88, textColor: '#f0f0f0',
+                    bgColor: '#000000', textAlign: 'left' };
+                try { const r = localStorage.getItem(SETTINGS_KEY); if (r) return { ...def, ...JSON.parse(r) }; } catch (
+                    e) {}
+                return def;
+            }
+
+            function saveSettings(s) { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) {} }
+
+            function loadProgress() { try { const r = localStorage.getItem(PROGRESS_KEY); if (r) return JSON.parse(r); } catch (
+                    e) {} return {}; }
+
+            function saveProgress(p) { try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch (e) {} }
+
+            let appData = loadData();
+            let appSettings = loadSettings();
+            let appProgress = loadProgress();
+
+            function refreshData() { appData = loadData(); }
+
+            function persistData() { saveData(appData); }
+
+            // ==================== GLOBAL STATE ====================
+            let currentPage = 'home';
+            let currentLevel = null;
+            let searchActive = false;
+
+            // Reading state (centralized)
+            const reading = {
+                textId: null,
+                active: false,
+                paused: false,
+                stopped: true,
+                totalElapsed: 0,
+                lastFrameTime: null,
+                animFrameId: null,
+                currentOffset: 0,
+                maxOffset: 0,
+                contentHeight: 0,
+                stageHeight: 0,
+                speedPxPerSec: 40,
+                lastSavedElapsed: -10,
+                reset() {
+                    this.textId = null;
+                    this.active = false;
+                    this.paused = false;
+                    this.stopped = true;
+                    this.totalElapsed = 0;
+                    this.lastFrameTime = null;
+                    if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+                    this.animFrameId = null;
+                    this.currentOffset = 0;
+                    this.maxOffset = 0;
+                    this.contentHeight = 0;
+                    this.stageHeight = 0;
+                    this.lastSavedElapsed = -10;
+                },
+                getSpeed() { return (appSettings.speed / 50) * 40; },
+                recalc() {
+                    this.contentHeight = teleprompterContent.scrollHeight;
+                    this.stageHeight = readingStage.clientHeight;
+                    this.maxOffset = Math.max(0, this.contentHeight - this.stageHeight);
+                    this.speedPxPerSec = this.getSpeed();
+                },
+                clampOffset() { this.currentOffset = Math.max(0, Math.min(this.currentOffset, this.maxOffset)); },
+                saveProgress() {
+                    if (!this.textId) return;
+                    const intv = Math.floor(this.totalElapsed);
+                    if (intv - this.lastSavedElapsed >= 4 && this.currentOffset > 0) {
+                        this.lastSavedElapsed = intv;
+                        const p = appProgress[this.textId] || {};
+                        p.offset = this.currentOffset;
+                        p.elapsed = this.totalElapsed;
+                        appProgress[this.textId] = p;
+                        saveProgress(appProgress);
+                    }
+                }
+            };
+
+            // ==================== DOM CACHE ====================
+            const $ = (s) => document.querySelector(s);
+            const pageHome = $('#pageHome');
+            const pageLevel = $('#pageLevel');
+            const pageStats = $('#pageStats');
+            const levelGrid = $('#levelGrid');
+            const levelTextsList = $('#levelTextsList');
+            const levelTitleLabel = $('#levelTitleLabel');
+            const searchBarHome = $('#searchBarHome');
+            const searchInput = $('#searchInput');
+            const searchResults = $('#searchResults');
+            const readingOverlay = $('#readingOverlay');
+            const readingStage = $('#readingStage');
+            const teleprompterContent = $('#teleprompterContent');
+            const readingTitleMini = $('#readingTitleMini');
+            const readingProgInner = $('#readingProgInner');
+            const readingTimeTag = $('#readingTimeTag');
+            const settingsPanel = $('#settingsPanel');
+            const settingsBackdrop = $('#settingsBackdrop');
+            const modalOverlay = $('#modalOverlay');
+            const modalTitle = $('#modalTitle');
+            const inputTitle = $('#inputTitle');
+            const inputLevel = $('#inputLevel');
+            const inputContent = $('#inputContent');
+            const inputDesc = $('#inputDesc');
+            const inputFavorite = $('#inputFavorite');
+            const editTextId = $('#editTextId');
+            const toastContainer = $('#toastContainer');
+            const statsGrid = $('#statsGrid');
+            const topReadList = $('#topReadList');
+            const bottomNav = $('#bottomNav');
+            const mainContent = $('#mainContent');
+            const btnPlay = $('#btnPlay');
+            const btnPause = $('#btnPause');
+
+            // Settings DOM
+            const speedSlider = $('#speedSlider');
+            const speedVal = $('#speedVal');
+            const fontSizeSlider = $('#fontSizeSlider');
+            const fontSizeVal = $('#fontSizeVal');
+            const lineSpacingSlider = $('#lineSpacingSlider');
+            const lineSpacingVal = $('#lineSpacingVal');
+            const textWidthSlider = $('#textWidthSlider');
+            const textWidthVal = $('#textWidthVal');
+            const textColorPicker = $('#textColorPicker');
+            const bgColorPicker = $('#bgColorPicker');
+            const textAlignSelect = $('#textAlignSelect');
+
+            // ==================== UTILITIES ====================
+            function uid() { return 't' + Date.now() + '_' + Math.random().toString(36).substr(2, 7); }
+
+            function wc(t) { return t && t.trim() ? t.trim().split(/\s+/).length : 0; }
+
+            function estMin(t) { return Math.max(1, Math.ceil(wc(t) / 180)); }
+
+            function fmtTime(sec) {
+                if (!sec || sec < 0) return '0m';
+                const m = Math.floor(sec / 60),
+                    s = Math.floor(sec % 60);
+                return m > 0 ? m + 'm ' + s + 's' : s + 's';
+            }
+
+            function fmtTimeCompact(sec) {
+                if (!sec || sec < 0) return '0:00';
+                const m = Math.floor(sec / 60),
+                    s = Math.floor(sec % 60);
+                return m + ':' + String(s).padStart(2, '0');
+            }
+
+            function showToast(msg) {
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.textContent = msg;
+                toastContainer.appendChild(t);
+                setTimeout(() => { if (t.parentNode) t.remove(); }, 2400);
+            }
+
+            function getText(id) { return appData.texts.find(tx => tx.id === id); }
+
+            function textsByLevel(lv) { return appData.texts.filter(tx => tx.level === lv); }
+
+            function escHtml(s) { const d = document.createElement('div');
+                d.textContent = s; return d.innerHTML; }
+
+            // ==================== NAVIGATION ====================
+            function showPage(name) {
+                [pageHome, pageLevel, pageStats].forEach(p => p.classList.remove('active'));
+                if (name === 'home') { pageHome.classList.add('active');
+                    currentPage = 'home';
+                    currentLevel = null; } else if (name === 'level') { pageLevel.classList.add('active');
+                    currentPage = 'level'; } else if (name === 'stats') { pageStats.classList.add('active');
+                    currentPage = 'stats'; }
+                mainContent.scrollTop = 0;
+                updateNavHighlight();
+                if (name === 'stats') renderStats();
+                if (name === 'home') renderHome();
+            }
+
+            function updateNavHighlight() {
+                const btns = bottomNav.querySelectorAll('.nav-btn');
+                btns.forEach(b => b.classList.remove('active'));
+                if (currentPage === 'home') btns[0].classList.add('active');
+                else if (currentPage === 'level') btns[0].classList.add('active');
+                else if (currentPage === 'stats') { /* no nav highlight */ }
+            }
+
+            // ==================== RENDER HOME ====================
+            function renderHome() {
+                levelGrid.innerHTML = '';
+                searchResults.innerHTML = '';
+                searchResults.style.display = 'none';
+                levelGrid.style.display = '';
+                LEVELS.forEach(lv => {
+                    const texts = textsByLevel(lv);
+                    const cnt = texts.length;
+                    const tw = texts.reduce((s, t) => s + wc(t.content), 0);
+                    const tt = texts.reduce((s, t) => s + (t.totalReadTime || 0), 0);
+                    const rc = texts.filter(t => (t.readCount || 0) > 0).length;
+                    const prog = cnt > 0 ? Math.round((rc / cnt) * 100) : 0;
+                    const last = texts.filter(t => t.lastRead).sort((a, b) => new Date(b.lastRead) - new Date(a
+                        .lastRead))[0];
+                    const lastLbl = last ? last.title : 'None';
+                    const card = document.createElement('div');
+                    card.className = 'level-card';
+                    card.innerHTML = `
+                <span class="level-badge">${lv}</span>
+                <div class="level-name">Level ${lv}</div>
+                <div class="level-meta"><span>${cnt} texts</span><span>${tw} words</span><span>${fmtTime(tt)} read</span></div>
+                <div class="level-meta" style="font-size:0.62rem;color:#555;">Last: ${escHtml(lastLbl)}</div>
+                <div class="progress-bar-wrap"><div class="progress-fill" style="width:${prog}%;"></div></div>
+                <div style="font-size:0.6rem;color:#555;margin-top:3px;">${prog}% completed</div>`;
+                    card.addEventListener('click', () => openLevel(lv));
+                    levelGrid.appendChild(card);
+                });
+            }
+
+            function openLevel(lv) {
+                currentLevel = lv;
+                levelTitleLabel.textContent = 'Level ' + lv;
+                renderLevelTexts();
+                showPage('level');
+            }
+
+            function renderLevelTexts() {
+                if (!currentLevel) return;
+                const texts = [...textsByLevel(currentLevel)].sort((a, b) => new Date(b.dateAdded) - new Date(a
+                .dateAdded));
+                levelTextsList.innerHTML = '';
+                if (texts.length === 0) {
+                    levelTextsList.innerHTML =
+                        '<div class="empty-state"><div class="empty-big">&#x1F4C4;</div><p>No texts in this level.</p><p style="font-size:0.65rem;color:#444;">Tap + to add one.</p></div>';
+                    return;
+                }
+                texts.forEach(tx => {
+                    const card = document.createElement('div');
+                    card.className = 'text-card';
+                    const w = wc(tx.content);
+                    const em = estMin(tx.content);
+                    card.innerHTML = `
+                <div class="text-title">${escHtml(tx.title)}</div>
+                <div class="text-meta-row"><span>${w} words</span><span>~${em} min</span><span>${tx.dateAdded||'Unknown'}</span>${tx.favorite?'<span style="color:#e8b84b;font-weight:700;">&#9733;</span>':''}</div>
+                <div class="text-actions-row">
+                  <button class="btn-xs play-btn" data-act="play" data-id="${tx.id}"><span class="ico ico-play" style="color:#000;width:8px;height:8px;border-width:4px 0 4px 7px;"></span> Read</button>
+                  <button class="btn-xs" data-act="edit" data-id="${tx.id}"><span class="ico ico-edit" style="color:#bbb;"></span> Edit</button>
+                  <button class="btn-xs danger-btn" data-act="delete" data-id="${tx.id}"><span class="ico ico-trash" style="color:#e0556a;width:10px;height:11px;"></span></button>
+                  <button class="btn-xs fav-btn${tx.favorite?' is-fav':''}" data-act="fav" data-id="${tx.id}"><span class="ico ico-star" style="color:inherit;"></span></button>
+                </div>`;
+                    card.addEventListener('click', (e) => {
+                        const ab = e.target.closest('[data-act]');
+                        if (ab) { e.stopPropagation();
+                            handleTextAction(ab.dataset.act, ab.dataset.id); return; }
+                        startReading(tx.id);
+                    });
+                    levelTextsList.appendChild(card);
+                });
+            }
+
+            function handleTextAction(act, id) {
+                if (act === 'play') startReading(id);
+                if (act === 'edit') openEditModal(id);
+                if (act === 'delete') deleteText(id);
+                if (act === 'fav') toggleFav(id);
+            }
+
+            // ==================== CRUD ====================
+            function openAddModal(presetLv) {
+                modalTitle.textContent = 'Add New Text';
+                inputTitle.value = '';
+                inputLevel.value = presetLv || 'A1';
+                inputContent.value = '';
+                inputDesc.value = '';
+                inputFavorite.checked = false;
+                editTextId.value = '';
+                modalOverlay.classList.add('show');
+                setTimeout(() => inputTitle.focus(), 300);
+            }
+
+            function openEditModal(id) {
+                const tx = getText(id);
+                if (!tx) return;
+                modalTitle.textContent = 'Edit Text';
+                inputTitle.value = tx.title;
+                inputLevel.value = tx.level;
+                inputContent.value = tx.content;
+                inputDesc.value = tx.description || '';
+                inputFavorite.checked = tx.favorite || false;
+                editTextId.value = id;
+                modalOverlay.classList.add('show');
+            }
+
+            function saveText() {
+                const title = inputTitle.value.trim();
+                const content = inputContent.value.trim();
+                const level = inputLevel.value;
+                const desc = inputDesc.value.trim();
+                const fav = inputFavorite.checked;
+                const eid = editTextId.value;
+                if (!title || !content) { showToast('Title and content required.'); return; }
+                if (!LEVELS.includes(level)) { showToast('Invalid level.'); return; }
+                if (eid) {
+                    const tx = getText(eid);
+                    if (tx) { tx.title = title;
+                        tx.content = content;
+                        tx.level = level;
+                        tx.description = desc;
+                        tx.favorite = fav; }
+                } else {
+                    appData.texts.push({ id: uid(), title, level, content, description: desc, favorite: fav,
+                        dateAdded: new Date().toISOString().split('T')[0], lastRead: null, totalReadTime: 0,
+                        readCount: 0 });
+                }
+                persistData();
+                refreshData();
+                closeModal();
+                if (currentPage === 'level' && currentLevel) renderLevelTexts();
+                renderHome();
+                showToast(eid ? 'Text updated.' : 'Text added.');
+            }
+
+            function deleteText(id) {
+                if (!confirm('Delete this text permanently?')) return;
+                appData.texts = appData.texts.filter(t => t.id !== id);
+                if (appProgress[id]) delete appProgress[id];
+                saveProgress(appProgress);
+                persistData();
+                refreshData();
+                if (currentPage === 'level' && currentLevel) renderLevelTexts();
+                renderHome();
+                showToast('Text deleted.');
+            }
+
+            function toggleFav(id) {
+                const tx = getText(id);
+                if (!tx) return;
+                tx.favorite = !tx.favorite;
+                persistData();
+                refreshData();
+                if (currentPage === 'level' && currentLevel) renderLevelTexts();
+                if (currentPage === 'home' && searchActive) doSearch(searchInput.value);
+                renderHome();
+            }
+
+            function closeModal() { modalOverlay.classList.remove('show');
+                editTextId.value = ''; }
+
+            // ==================== SEARCH ====================
+            function doSearch(q) {
+                const qt = q.toLowerCase().trim();
+                if (!qt) { searchResults.style.display = 'none';
+                    levelGrid.style.display = '';
+                    searchActive = false; return; }
+                searchActive = true;
+                levelGrid.style.display = 'none';
+                searchResults.style.display = 'block';
+                const hits = appData.texts.filter(t => t.title.toLowerCase().includes(qt) || t.content.toLowerCase()
+                    .includes(qt) || t.level.toLowerCase().includes(qt) || (t.description && t.description
+                        .toLowerCase().includes(qt)));
+                if (hits.length === 0) { searchResults.innerHTML =
+                        '<div class="empty-state"><div class="empty-big">&#x1F50D;</div><p>No results.</p></div>'; return; }
+                searchResults.innerHTML = '';
+                hits.forEach(tx => {
+                    const card = document.createElement('div');
+                    card.className = 'text-card';
+                    card.innerHTML = `
+                <div class="text-title">${escHtml(tx.title)} <span style="font-size:0.6rem;color:#555;">[${tx.level}]</span></div>
+                <div class="text-meta-row"><span>${wc(tx.content)} words</span>${tx.favorite?'<span style="color:#e8b84b;">&#9733;</span>':''}</div>
+                <div class="text-actions-row"><button class="btn-xs play-btn" data-act="play" data-id="${tx.id}"><span class="ico ico-play" style="color:#000;width:8px;height:8px;border-width:4px 0 4px 7px;"></span> Read</button></div>`;
+                    card.addEventListener('click', (e) => {
+                        const ab = e.target.closest('[data-act]');
+                        if (ab) { e.stopPropagation();
+                            startReading(ab.dataset.id); return; }
+                        startReading(tx.id);
+                    });
+                    searchResults.appendChild(card);
+                });
+            }
+
+            function showFavorites() {
+                searchActive = true;
+                searchBarHome.style.display = 'block';
+                searchInput.value = '';
+                levelGrid.style.display = 'none';
+                searchResults.style.display = 'block';
+                const favs = appData.texts.filter(t => t.favorite);
+                searchResults.innerHTML = '';
+                if (favs.length === 0) { searchResults.innerHTML =
+                        '<div class="empty-state"><div class="empty-big">&#9733;</div><p>No favorites yet.</p></div>'; return; }
+                favs.forEach(tx => {
+                    const card = document.createElement('div');
+                    card.className = 'text-card';
+                    card.innerHTML = `
+                <div class="text-title">${escHtml(tx.title)} <span style="font-size:0.6rem;color:#555;">[${tx.level}]</span></div>
+                <div class="text-meta-row"><span>${wc(tx.content)} words</span><span style="color:#e8b84b;">&#9733;</span></div>
+                <div class="text-actions-row"><button class="btn-xs play-btn" data-act="play" data-id="${tx.id}"><span class="ico ico-play" style="color:#000;width:8px;height:8px;border-width:4px 0 4px 7px;"></span> Read</button></div>`;
+                    card.addEventListener('click', (e) => {
+                        const ab = e.target.closest('[data-act]');
+                        if (ab) { e.stopPropagation();
+                            startReading(ab.dataset.id); return; }
+                        startReading(tx.id);
+                    });
+                    searchResults.appendChild(card);
+                });
+            }
+
+            // ==================== STATS ====================
+            function renderStats() {
+                const totalT = appData.texts.length;
+                const totalW = appData.texts.reduce((s, t) => s + wc(t.content), 0);
+                const totalRT = appData.texts.reduce((s, t) => s + (t.totalReadTime || 0), 0);
+                const favC = appData.texts.filter(t => t.favorite).length;
+                const readC = appData.texts.filter(t => (t.readCount || 0) > 0).length;
+                const compR = totalT > 0 ? Math.round((readC / totalT) * 100) : 0;
+                const mostR = [...appData.texts].sort((a, b) => (b.readCount || 0) - (a.readCount || 0)).slice(0, 5);
+                statsGrid.innerHTML = `
+              <div class="stat-card"><div class="stat-val">${totalT}</div><div class="stat-lbl">Total Texts</div></div>
+              <div class="stat-card"><div class="stat-val">${totalW.toLocaleString()}</div><div class="stat-lbl">Total Words</div></div>
+              <div class="stat-card"><div class="stat-val">${fmtTime(totalRT)}</div><div class="stat-lbl">Read Time</div></div>
+              <div class="stat-card"><div class="stat-val">${favC}</div><div class="stat-lbl">Favorites</div></div>
+              <div class="stat-card"><div class="stat-val">${compR}%</div><div class="stat-lbl">Completion</div></div>
+              <div class="stat-card"><div class="stat-val">${readC}</div><div class="stat-lbl">Read Texts</div></div>`;
+                LEVELS.forEach(lv => {
+                    const ts = textsByLevel(lv);
+                    const card = document.createElement('div');
+                    card.className = 'stat-card';
+                    card.innerHTML =
+                        `<div class="stat-val" style="font-size:1rem;">${lv}</div><div class="stat-lbl">${ts.length} texts | ${ts.reduce((s,t)=>s+wc(t.content),0)} words</div>`;
+                    statsGrid.appendChild(card);
+                });
+                topReadList.innerHTML = '';
+                if (mostR.length === 0 || mostR.every(t => (t.readCount || 0) === 0)) {
+                    topReadList.innerHTML =
+                    '<p style="color:#444;font-size:0.7rem;text-align:center;">No reading data yet.</p>';
+                } else {
+                    mostR.forEach((t, i) => {
+                        const d = document.createElement('div');
+                        d.style.cssText =
+                            'display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #111;font-size:0.73rem;';
+                        d.innerHTML =
+                            `<span>${i+1}. ${escHtml(t.title)} <span style="color:#555;">[${t.level}]</span></span><span style="color:#888;">${t.readCount||0}x</span>`;
+                        topReadList.appendChild(d);
+                    });
+                }
+            }
+
+            // ==================== READING ENGINE ====================
+            function startReading(id) {
+                const tx = getText(id);
+                if (!tx) return;
+                reading.reset();
+                reading.textId = id;
+                reading.stopped = false;
+                reading.active = true;
+                reading.paused = false;
+                reading.speedPxPerSec = reading.getSpeed();
+                // Restore progress
+                const saved = appProgress[id];
+                if (saved && saved.offset > 0) {
+                    reading.totalElapsed = saved.elapsed || 0;
+                    reading.currentOffset = saved.offset;
+                }
+                teleprompterContent.textContent = tx.content;
+                readingTitleMini.textContent = tx.title;
+                applyReadingSettingsToDOM();
+                readingOverlay.classList.add('active');
+                readingStage.scrollTop = 0;
+                requestAnimationFrame(() => {
+                    reading.recalc();
+                    reading.clampOffset();
+                    teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
+                    updateReadingUI();
+                });
+                reading.lastFrameTime = null;
+                reading.animFrameId = requestAnimationFrame(animLoop);
+                updatePlayPauseUI();
+            }
+
+            function animLoop(ts) {
+                if (reading.stopped || reading.paused) { reading.animFrameId = null; return; }
+                if (reading.lastFrameTime === null) reading.lastFrameTime = ts;
+                const dt = (ts - reading.lastFrameTime) / 1000;
+                reading.lastFrameTime = ts;
+                reading.totalElapsed += dt;
+                reading.currentOffset = reading.totalElapsed * reading.speedPxPerSec;
+                reading.clampOffset();
+                teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
+                updateReadingUI();
+                reading.saveProgress();
+                if (reading.currentOffset >= reading.maxOffset && reading.maxOffset > 0.5) {
+                    finishReading();
+                    showToast('Finished reading!');
+                    return;
+                }
+                reading.animFrameId = requestAnimationFrame(animLoop);
+            }
+
+            function pauseReading() {
+                if (reading.stopped || reading.paused) return;
+                reading.paused = true;
+                if (reading.animFrameId) cancelAnimationFrame(reading.animFrameId);
+                reading.animFrameId = null;
+                reading.lastFrameTime = null;
+                reading.active = false;
+                updatePlayPauseUI();
+                // Save progress
+                if (reading.textId && reading.currentOffset > 0) {
+                    const p = appProgress[reading.textId] || {};
+                    p.offset = reading.currentOffset;
+                    p.elapsed = reading.totalElapsed;
+                    appProgress[reading.textId] = p;
+                    saveProgress(appProgress);
+                }
+            }
+
+            function resumeReading() {
+                if (reading.stopped || !reading.paused) return;
+                reading.paused = false;
+                reading.active = true;
+                reading.lastFrameTime = null;
+                reading.speedPxPerSec = reading.getSpeed();
+                reading.recalc();
+                reading.clampOffset();
+                teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
+                updateReadingUI();
+                reading.animFrameId = requestAnimationFrame(animLoop);
+                updatePlayPauseUI();
+            }
+
+            function stopReading() {
+                if (reading.stopped) return;
+                const tot = reading.totalElapsed;
+                reading.stopped = true;
+                reading.paused = false;
+                reading.active = false;
+                if (reading.animFrameId) cancelAnimationFrame(reading.animFrameId);
+                reading.animFrameId = null;
+                finishReadingSession(tot);
+                reading.currentOffset = 0;
+                reading.totalElapsed = 0;
+                reading.lastFrameTime = null;
+                teleprompterContent.style.transform = 'translateY(0)';
+                updateReadingUI();
+                updatePlayPauseUI();
+                if (reading.textId && appProgress[reading.textId]) { delete appProgress[reading.textId];
+                    saveProgress(appProgress); }
+            }
+
+            function restartReading() {
+                const id = reading.textId;
+                if (reading.animFrameId) cancelAnimationFrame(reading.animFrameId);
+                reading.reset();
+                teleprompterContent.style.transform = 'translateY(0)';
+                updateReadingUI();
+                updatePlayPauseUI();
+                if (id && appProgress[id]) { delete appProgress[id];
+                    saveProgress(appProgress); }
+                if (id) startReading(id);
+            }
+
+            function finishReading() {
+                const tot = reading.totalElapsed;
+                reading.stopped = true;
+                reading.paused = false;
+                reading.active = false;
+                if (reading.animFrameId) cancelAnimationFrame(reading.animFrameId);
+                reading.animFrameId = null;
+                finishReadingSession(tot);
+                reading.currentOffset = 0;
+                reading.totalElapsed = 0;
+                reading.lastFrameTime = null;
+                updatePlayPauseUI();
+                if (reading.textId && appProgress[reading.textId]) { delete appProgress[reading.textId];
+                    saveProgress(appProgress); }
+                teleprompterContent.style.transform = 'translateY(0)';
+                updateReadingUI();
+            }
+
+            function finishReadingSession(totalSec) {
+                if (!reading.textId || totalSec <= 0) return;
+                const tx = getText(reading.textId);
+                if (tx) {
+                    tx.totalReadTime = (tx.totalReadTime || 0) + Math.round(totalSec);
+                    tx.readCount = (tx.readCount || 0) + 1;
+                    tx.lastRead = new Date().toISOString();
+                    persistData();
+                    refreshData();
+                }
+                if (appProgress[reading.textId]) { delete appProgress[reading.textId];
+                    saveProgress(appProgress); }
+                renderHome();
+                if (currentPage === 'level' && currentLevel) renderLevelTexts();
+            }
+
+            function closeReading() {
+                const tot = reading.totalElapsed;
+                if (reading.animFrameId) cancelAnimationFrame(reading.animFrameId);
+                reading.animFrameId = null;
+                if (!reading.stopped && tot > 0.5) finishReadingSession(tot);
+                reading.reset();
+                teleprompterContent.style.transform = 'translateY(0)';
+                teleprompterContent.textContent = '';
+                readingOverlay.classList.remove('active');
+                updatePlayPauseUI();
+                updateReadingUI();
+                renderHome();
+                if (currentPage === 'level' && currentLevel) renderLevelTexts();
+            }
+
+            function updateReadingUI() {
+                if (reading.maxOffset <= 0) { readingProgInner.style.width = '0%';
+                    readingTimeTag.textContent = '--:--'; return; }
+                const pct = Math.min(100, Math.round((reading.currentOffset / reading.maxOffset) * 100));
+                readingProgInner.style.width = pct + '%';
+                const remain = Math.max(0, (reading.maxOffset - reading.currentOffset) / Math.max(1, reading
+                .speedPxPerSec));
+                readingTimeTag.textContent = fmtTimeCompact(remain);
+            }
+
+            function updatePlayPauseUI() {
+                if (reading.active && !reading.paused) { btnPlay.classList.add('active-rt');
+                    btnPause.classList.remove('active-rt'); } else if (reading.paused) { btnPlay.classList.remove(
+                        'active-rt');
+                    btnPause.classList.add('active-rt'); } else { btnPlay.classList.remove('active-rt');
+                    btnPause.classList.remove('active-rt'); }
+            }
+
+            function applyReadingSettingsToDOM() {
+                teleprompterContent.style.fontSize = appSettings.fontSize + 'px';
+                teleprompterContent.style.lineHeight = appSettings.lineSpacing;
+                teleprompterContent.style.color = appSettings.textColor;
+                teleprompterContent.style.textAlign = appSettings.textAlign;
+                const padPct = (100 - appSettings.textWidth) / 2;
+                teleprompterContent.style.padding = `20px ${padPct}% 60vh ${padPct}%`;
+                readingStage.style.background = appSettings.bgColor;
+                readingOverlay.style.background = appSettings.bgColor;
+            }
+
+            function onReadingSettingChange() {
+                appSettings.speed = parseInt(speedSlider.value);
+                appSettings.fontSize = parseInt(fontSizeSlider.value);
+                appSettings.lineSpacing = parseFloat(lineSpacingSlider.value);
+                appSettings.textWidth = parseInt(textWidthSlider.value);
+                appSettings.textColor = textColorPicker.value;
+                appSettings.bgColor = bgColorPicker.value;
+                appSettings.textAlign = textAlignSelect.value;
+                saveSettings(appSettings);
+                updateSettingsUIValues();
+                if (readingOverlay.classList.contains('active')) {
+                    applyReadingSettingsToDOM();
+                    reading.speedPxPerSec = reading.getSpeed();
+                    reading.recalc();
+                    reading.clampOffset();
+                    teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
+                    updateReadingUI();
+                }
+            }
+
+            function updateSettingsUIValues() {
+                speedSlider.value = appSettings.speed;
+                speedVal.textContent = appSettings.speed;
+                fontSizeSlider.value = appSettings.fontSize;
+                fontSizeVal.textContent = appSettings.fontSize + 'px';
+                lineSpacingSlider.value = appSettings.lineSpacing;
+                lineSpacingVal.textContent = appSettings.lineSpacing;
+                textWidthSlider.value = appSettings.textWidth;
+                textWidthVal.textContent = appSettings.textWidth + '%';
+                textColorPicker.value = appSettings.textColor;
+                bgColorPicker.value = appSettings.bgColor;
+                textAlignSelect.value = appSettings.textAlign;
+            }
+
+            function resetReadingSettingsToDefault() {
+                appSettings = { speed: 50, fontSize: 20, lineSpacing: 1.7, textWidth: 88, textColor: '#f0f0f0',
+                    bgColor: '#000000', textAlign: 'left' };
+                saveSettings(appSettings);
+                updateSettingsUIValues();
+                if (readingOverlay.classList.contains('active')) {
+                    applyReadingSettingsToDOM();
+                    reading.speedPxPerSec = reading.getSpeed();
+                    reading.recalc();
+                    reading.clampOffset();
+                    teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
+                    updateReadingUI();
+                }
+                showToast('Settings reset.');
+            }
+
+            function openSettingsPanel() {
+                updateSettingsUIValues();
+                settingsPanel.classList.add('open');
+                settingsBackdrop.classList.add('show');
+            }
+
+            function closeSettingsPanel() {
+                settingsPanel.classList.remove('open');
+                settingsBackdrop.classList.remove('show');
+            }
+
+            function toggleFullscreen() {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+                    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                }
+            }
+
+            // ==================== EVENT BINDINGS ====================
+            bottomNav.addEventListener('click', (e) => {
+                const nb = e.target.closest('.nav-btn');
+                if (!nb) return;
+                const pg = nb.dataset.page;
+                if (pg === 'home') { searchActive = false;
+                    searchBarHome.style.display = 'none';
+                    searchResults.style.display = 'none';
+                    levelGrid.style.display = '';
+                    searchInput.value = '';
+                    showPage('home'); } else if (pg === 'favorites') { showPage('home');
+                    showFavorites(); } else if (pg === 'settings') { openSettingsPanel(); }
+            });
+
+            $('#btnSearch').addEventListener('click', () => {
+                showPage('home');
+                searchActive = !searchActive;
+                if (searchActive) { searchBarHome.style.display = 'block';
+                    searchInput.focus(); } else { searchBarHome.style.display = 'none';
+                    searchResults.style.display = 'none';
+                    levelGrid.style.display = '';
+                    searchInput.value = ''; }
+            });
+            $('#btnStats').addEventListener('click', () => { showPage('stats');
+                renderStats(); });
+            searchInput.addEventListener('input', () => doSearch(searchInput.value));
+            $('#btnBackLevel').addEventListener('click', () => showPage('home'));
+            $('#btnBackStats').addEventListener('click', () => showPage('home'));
+            $('#btnAddText').addEventListener('click', () => openAddModal(currentLevel || 'A1'));
+            $('#btnCancelModal').addEventListener('click', closeModal);
+            $('#btnSaveText').addEventListener('click', saveText);
+            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+            // Reading controls
+            btnPlay.addEventListener('click', () => { if (reading.paused) resumeReading();
+                else if (reading.stopped && reading.textId) startReading(reading.textId); });
+            btnPause.addEventListener('click', pauseReading);
+            $('#btnStop').addEventListener('click', stopReading);
+            $('#btnRestart').addEventListener('click', restartReading);
+            $('#btnFullscreen').addEventListener('click', toggleFullscreen);
+            $('#btnReadingSettings').addEventListener('click', openSettingsPanel);
+            $('#btnCloseReading').addEventListener('click', closeReading);
+
+            // Settings
+            settingsBackdrop.addEventListener('click', closeSettingsPanel);
+            $('#settingsCloseBtn').addEventListener('click', closeSettingsPanel);
+            speedSlider.addEventListener('input', onReadingSettingChange);
+            fontSizeSlider.addEventListener('input', onReadingSettingChange);
+            lineSpacingSlider.addEventListener('input', onReadingSettingChange);
+            textWidthSlider.addEventListener('input', onReadingSettingChange);
+            textColorPicker.addEventListener('input', onReadingSettingChange);
+            bgColorPicker.addEventListener('input', onReadingSettingChange);
+            textAlignSelect.addEventListener('change', onReadingSettingChange);
+            $('#resetReadingSettings').addEventListener('click', resetReadingSettingsToDefault);
+
+            // Keyboard
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (settingsPanel.classList.contains('open')) closeSettingsPanel();
+                    else if (readingOverlay.classList.contains('active')) closeReading();
+                    else if (modalOverlay.classList.contains('show')) closeModal();
+                }
+                if (e.key === ' ' && readingOverlay.classList.contains('active')) { e.preventDefault(); if (reading
+                        .paused) resumeReading();
+                    else if (!reading.stopped) pauseReading(); }
+            });
+
+            // Fullscreen change
+            const onFSChange = () => {
+                const fb = $('#btnFullscreen');
+                if (document.fullscreenElement || document.webkitFullscreenElement) fb.classList.add('active-rt');
+                else fb.classList.remove('active-rt');
+            };
+            document.addEventListener('fullscreenchange', onFSChange);
+            document.addEventListener('webkitfullscreenchange', onFSChange);
+
+            // Prevent accidental scroll during reading
+            readingStage.addEventListener('touchmove', (e) => {
+                if (readingOverlay.classList.contains('active') && reading.active && !reading.paused) e
+            .preventDefault(); }, { passive: false });
+
+            // ==================== INIT ====================
+            function init() {
+                updateSettingsUIValues();
+                renderHome();
+                updateNavHighlight();
+                updatePlayPauseUI();
+                updateReadingUI();
+                console.log('English Reader Pro v2 — Ready.');
+                console.log('Texts:', appData.texts.length, '| Levels:', LEVELS.join(', '));
+                console.log('Storage: LocalStorage | Icons: Pure CSS | Theme: AMOLED Dark');
+            }
+            init();
+        })();
+    </script>
+</body>
+</html>
