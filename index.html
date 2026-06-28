@@ -233,19 +233,14 @@
         .reading-done-btn { background: #fff; color: #000; border: none; border-radius: 22px; padding: 11px 32px; font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: var(--font); }
         .reading-done-btn:active { background: #ddd; }
 
-        /* لوحة الإعدادات */
-        .settings-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 340; display: none; }
-        .settings-backdrop.show { display: block; }
-        .settings-panel { position: fixed; left: 0; top: 0; bottom: 0; width: 84vw; max-width: 370px; background: #060606; border-right: 1px solid #1a1a1a; z-index: 350; transform: translateX(-100%); transition: transform 0.3s; overflow-y: auto; padding: 18px 15px; padding-top: calc(var(--safe-top) + 8px); padding-bottom: var(--safe-bottom); direction: ltr; text-align: left; }
-        .settings-panel.open { transform: translateX(0); }
-        .settings-panel h4 { color: #fff; margin-bottom: 14px; text-align: center; }
+        /* صفحة الإعدادات */
+        .settings-page { display: flex; flex-direction: column; }
         .setting-row { margin-bottom: 12px; }
         .setting-label-row { display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 3px; }
         .setting-row input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; background: #1a1a1a; border-radius: 10px; outline: none; }
         .setting-row input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; cursor: pointer; border: 2px solid #000; }
         .setting-row input[type="color"] { width: 38px; height: 28px; border-radius: 6px; border: 2px solid #333; background: transparent; }
         .setting-row select { width: 100%; padding: 9px; background: #111; border: 1px solid #1e1e1e; border-radius: var(--radius-sm); color: #fff; }
-        .settings-close-btn { position: sticky; top: 0; float: left; background: none; border: none; color: #fff; cursor: pointer; font-size: 1.3rem; padding: 6px; }
 
         .search-wrap { position: relative; margin-bottom: 10px; }
         .search-wrap input { width: 100%; padding: 10px 12px 10px 38px; background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 22px; color: #fff; font-size: 0.82rem; text-align: left; direction: ltr; }
@@ -272,7 +267,6 @@
             .level-grid { grid-template-columns: repeat(3, 1fr); }
             .stats-grid { grid-template-columns: repeat(4, 1fr); }
             .modal { border-radius: var(--radius-xl); max-height: 88dvh; }
-            .settings-panel { width: 45vw; max-width: 320px; }
         }
         @media (min-width: 768px) {
             .level-grid { grid-template-columns: repeat(3, 1fr); }
@@ -316,6 +310,20 @@
             <div class="section-label">Most Read Texts</div>
             <div id="topReadList"></div>
         </section>
+        <!-- صفحة الإعدادات الجديدة -->
+        <section class="page settings-page" id="pageSettings">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+                <span style="font-weight:700;color:#fff;font-size:1.1rem;">Reading Settings</span>
+            </div>
+            <div class="setting-row"><div class="setting-label-row"><span>Speed</span><span id="speedVal">50</span></div><input type="range" id="speedSlider" min="8" max="160" value="50" step="1"></div>
+            <div class="setting-row"><div class="setting-label-row"><span>Font Size</span><span id="fontSizeVal">20px</span></div><input type="range" id="fontSizeSlider" min="14" max="48" value="20" step="1"></div>
+            <div class="setting-row"><div class="setting-label-row"><span>Line Spacing</span><span id="lineSpacingVal">1.7</span></div><input type="range" id="lineSpacingSlider" min="1.2" max="3.2" value="1.7" step="0.1"></div>
+            <div class="setting-row"><div class="setting-label-row"><span>Text Width</span><span id="textWidthVal">88%</span></div><input type="range" id="textWidthSlider" min="50" max="100" value="88" step="1"></div>
+            <div class="setting-row"><label>Text Color</label><input type="color" id="textColorPicker" value="#f0f0f0"></div>
+            <div class="setting-row"><label>Background Color</label><input type="color" id="bgColorPicker" value="#000000"></div>
+            <div class="setting-row"><label>Text Alignment</label><select id="textAlignSelect"><option value="left">Left</option><option value="center">Center</option><option value="justify">Justify</option></select></div>
+            <button class="btn primary" id="resetReadingSettings" style="width:100%;margin-top:6px;">Reset Defaults</button>
+        </section>
     </main>
 
     <nav class="bottom-nav" id="bottomNav">
@@ -350,21 +358,6 @@
                 <span class="ico ico-restart"></span> Restart
             </button>
         </div>
-    </div>
-
-    <!-- لوحة الإعدادات -->
-    <div class="settings-backdrop" id="settingsBackdrop"></div>
-    <div class="settings-panel" id="settingsPanel">
-        <button class="settings-close-btn" id="settingsCloseBtn"><span class="ico ico-close" style="color:#fff;"></span></button>
-        <h4>Reading Settings</h4>
-        <div class="setting-row"><div class="setting-label-row"><span>Speed</span><span id="speedVal">50</span></div><input type="range" id="speedSlider" min="8" max="160" value="50" step="1"></div>
-        <div class="setting-row"><div class="setting-label-row"><span>Font Size</span><span id="fontSizeVal">20px</span></div><input type="range" id="fontSizeSlider" min="14" max="48" value="20" step="1"></div>
-        <div class="setting-row"><div class="setting-label-row"><span>Line Spacing</span><span id="lineSpacingVal">1.7</span></div><input type="range" id="lineSpacingSlider" min="1.2" max="3.2" value="1.7" step="0.1"></div>
-        <div class="setting-row"><div class="setting-label-row"><span>Text Width</span><span id="textWidthVal">88%</span></div><input type="range" id="textWidthSlider" min="50" max="100" value="88" step="1"></div>
-        <div class="setting-row"><label>Text Color</label><input type="color" id="textColorPicker" value="#f0f0f0"></div>
-        <div class="setting-row"><label>Background Color</label><input type="color" id="bgColorPicker" value="#000000"></div>
-        <div class="setting-row"><label>Text Alignment</label><select id="textAlignSelect"><option value="left">Left</option><option value="center">Center</option><option value="justify">Justify</option></select></div>
-        <button class="btn primary" id="resetReadingSettings" style="width:100%;margin-top:6px;">Reset Defaults</button>
     </div>
 
     <!-- النافذة المنبثقة للإضافة/التعديل -->
@@ -433,6 +426,7 @@
                 totalElapsed: 0, lastFrameTime: null, animFrameId: null,
                 currentOffset: 0, maxOffset: 0, contentHeight: 0, stageHeight: 0,
                 speedPxPerSec: 40, lastSavedElapsed: -10,
+                extraTopPadding: 0,   // مساحة إضافية لبدء القراءة من الأسفل
 
                 reset() {
                     this.textId = null; this.active = false; this.paused = false; this.stopped = true;
@@ -440,6 +434,7 @@
                     if(this.animFrameId) { cancelAnimationFrame(this.animFrameId); this.animFrameId = null; }
                     this.currentOffset = 0; this.maxOffset = 0; this.contentHeight = 0; this.stageHeight = 0;
                     this.lastSavedElapsed = -10;
+                    this.extraTopPadding = 0;
                 },
                 getSpeed() { return (appSettings.speed / 50) * 40; },
                 recalc() {
@@ -455,7 +450,8 @@
                     if(intv - this.lastSavedElapsed >= 4 && this.currentOffset > 0) {
                         this.lastSavedElapsed = intv;
                         const p = appProgress[this.textId] || {};
-                        p.offset = this.currentOffset;
+                        // نخزن الإزاحة الأصلية (بدون padding الإضافي) لتظل متوافقة
+                        p.offset = Math.max(0, this.currentOffset - this.extraTopPadding);
                         p.elapsed = this.totalElapsed;
                         appProgress[this.textId] = p;
                         saveProgress(appProgress);
@@ -467,7 +463,8 @@
             const $ = s => document.querySelector(s);
             const pageHome           = $('#pageHome'),
                   pageLevel          = $('#pageLevel'),
-                  pageStats          = $('#pageStats');
+                  pageStats          = $('#pageStats'),
+                  pageSettings       = $('#pageSettings');
             const levelGrid          = $('#levelGrid'),
                   levelTextsList     = $('#levelTextsList'),
                   levelTitleLabel    = $('#levelTitleLabel');
@@ -481,8 +478,6 @@
                   readingTimeTag     = $('#readingTimeTag');
             const readingDoneOverlay = $('#readingDoneOverlay'),
                   readingDoneSub     = $('#readingDoneSub');
-            const settingsPanel      = $('#settingsPanel'),
-                  settingsBackdrop   = $('#settingsBackdrop');
             const modalOverlay       = $('#modalOverlay'),
                   modalTitle         = $('#modalTitle');
             const inputTitle         = $('#inputTitle'),
@@ -522,20 +517,24 @@
 
             /* ── Navegación de páginas ── */
             function showPage(name) {
-                [pageHome, pageLevel, pageStats].forEach(p => p.classList.remove('active'));
-                if(name === 'home')  { pageHome.classList.add('active');  currentPage = 'home';  currentLevel = null; }
-                if(name === 'level') { pageLevel.classList.add('active'); currentPage = 'level'; }
-                if(name === 'stats') { pageStats.classList.add('active'); currentPage = 'stats'; }
+                [pageHome, pageLevel, pageStats, pageSettings].forEach(p => p.classList.remove('active'));
+                if(name === 'home')     { pageHome.classList.add('active');     currentPage = 'home';     currentLevel = null; }
+                if(name === 'level')    { pageLevel.classList.add('active');    currentPage = 'level';                     }
+                if(name === 'stats')    { pageStats.classList.add('active');    currentPage = 'stats';                     }
+                if(name === 'settings') { pageSettings.classList.add('active'); currentPage = 'settings';                 }
                 mainContent.scrollTop = 0;
                 updateNavHighlight();
                 if(name === 'stats') renderStats();
                 if(name === 'home')  renderHome();
+                if(name === 'settings') updateSettingsUIValues(); // تحديث القيم الظاهرة عند فتح الصفحة
             }
             function updateNavHighlight() {
                 const btns = bottomNav.querySelectorAll('.nav-btn');
                 btns.forEach(b => b.classList.remove('active'));
                 if(currentPage === 'home' || currentPage === 'level' || currentPage === 'stats') {
                     btns[0].classList.add('active');
+                } else if(currentPage === 'settings') {
+                    btns[2].classList.add('active');
                 }
             }
 
@@ -728,7 +727,7 @@
             }
 
             /* ══════════════════════════════════════════
-               LECTOR — lógica corregida completamente
+               LECTOR — بداية من الأسفل مع padding إضافي
                ══════════════════════════════════════════ */
 
             function updatePausePlayBtn() {
@@ -743,63 +742,53 @@
                 const tx = getText(id); if(!tx) return;
 
                 reading.reset();
-                reading.textId       = id;
-                reading.stopped      = false;
-                reading.active       = true;
-                reading.paused       = false;
+                reading.textId        = id;
+                reading.stopped       = false;
+                reading.active        = true;
+                reading.paused        = false;
                 reading.speedPxPerSec = reading.getSpeed();
 
-                /* Restaurar progreso guardado */
-                const saved = appProgress[id];
-                if(saved && saved.offset > 0) {
-                    reading.currentOffset = saved.offset;
-                    reading.totalElapsed  = saved.elapsed || 0;
-                }
-
-                teleprompterContent.textContent = tx.content;
-                readingDoneOverlay.classList.remove('show');
+                // ضبط padding إضافي لإظهار النص من الأسفل
                 applyReadingSettingsToDOM();
                 readingOverlay.classList.add('active');
-
-                /* Calcular dimensiones después del primer paint */
+                // الحصول على ارتفاع المرحلة بعد التفعيل
                 requestAnimationFrame(() => {
+                    const stageHeight = readingStage.clientHeight;
+                    reading.extraTopPadding = stageHeight; // مسافة إضافية تدفع النص إلى الأسفل
+                    teleprompterContent.style.paddingTop = (20 + stageHeight) + 'px'; // 20px هو الحشو العلوي الأساسي
                     reading.recalc();
+
+                    // استعادة التقدم مع مراعاة الحشو الإضافي
+                    const saved = appProgress[id];
+                    if(saved && saved.offset !== undefined && saved.offset > 0) {
+                        // حول الإزاحة القديمة إلى النظام الجديد
+                        reading.currentOffset = saved.offset + reading.extraTopPadding;
+                    } else {
+                        reading.currentOffset = 0; // بداية جديدة من الأسفل
+                    }
+
                     reading.clampOffset();
                     teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
                     updateReadingUI();
                     updatePausePlayBtn();
+                    reading.lastFrameTime = null;
+                    reading.animFrameId   = requestAnimationFrame(animLoop);
                 });
-
-                reading.lastFrameTime = null;
-                reading.animFrameId   = requestAnimationFrame(animLoop);
             }
 
-            /*
-             * FIX CRÍTICO: antes se usaba
-             *   currentOffset = totalElapsed * speed
-             * lo que causaba saltos al cambiar la velocidad o al retomar
-             * una lectura guardada.
-             *
-             * Ahora se usa acumulación de delta:
-             *   currentOffset += dt * speed
-             * La velocidad solo afecta el movimiento futuro, nunca la posición actual.
-             */
             function animLoop(ts) {
                 if(reading.stopped || reading.paused) { reading.animFrameId = null; return; }
 
-                /* Primer frame: solo inicializar el timestamp y esperar el siguiente */
                 if(reading.lastFrameTime === null) {
                     reading.lastFrameTime = ts;
                     reading.animFrameId = requestAnimationFrame(animLoop);
                     return;
                 }
 
-                /* Limitar dt a 100 ms para evitar saltos si la pestaña estuvo inactiva */
                 const dt = Math.min((ts - reading.lastFrameTime) / 1000, 0.1);
                 reading.lastFrameTime = ts;
                 reading.totalElapsed += dt;
 
-                /* Acumular offset — NO derivar de totalElapsed */
                 reading.currentOffset += dt * reading.speedPxPerSec;
                 reading.clampOffset();
 
@@ -807,7 +796,6 @@
                 updateReadingUI();
                 reading.saveProgressToDisk();
 
-                /* Detectar fin del texto */
                 if(reading.maxOffset > 0.5 && reading.currentOffset >= reading.maxOffset) {
                     finishReading();
                     return;
@@ -822,10 +810,9 @@
                 reading.active       = false;
                 reading.lastFrameTime = null;
                 if(reading.animFrameId) { cancelAnimationFrame(reading.animFrameId); reading.animFrameId = null; }
-                /* Guardar posición inmediatamente al pausar */
                 if(reading.textId && reading.currentOffset > 0) {
                     const p = appProgress[reading.textId] || {};
-                    p.offset  = reading.currentOffset;
+                    p.offset  = Math.max(0, reading.currentOffset - reading.extraTopPadding);
                     p.elapsed = reading.totalElapsed;
                     appProgress[reading.textId] = p;
                     saveProgress(appProgress);
@@ -838,7 +825,6 @@
                 reading.paused       = false;
                 reading.active       = true;
                 reading.lastFrameTime = null;
-                /* Actualizar velocidad (puede haber cambiado en ajustes) */
                 reading.speedPxPerSec = reading.getSpeed();
                 reading.recalc();
                 reading.clampOffset();
@@ -870,13 +856,11 @@
                 if(reading.animFrameId) { cancelAnimationFrame(reading.animFrameId); reading.animFrameId = null; }
                 finishReadingSession(tot);
 
-                /* Mostrar pantalla de finalización */
                 const tx = getText(reading.textId);
                 readingDoneSub.textContent = tx ? `"${tx.title}" — ${fmtTime(Math.round(tot))} reading time` : '';
                 readingDoneOverlay.classList.add('show');
                 updatePausePlayBtn();
 
-                /* Limpiar progreso guardado */
                 if(reading.textId && appProgress[reading.textId]) {
                     delete appProgress[reading.textId]; saveProgress(appProgress);
                 }
@@ -898,12 +882,10 @@
             function closeReading() {
                 const tot = reading.totalElapsed;
                 if(reading.animFrameId) { cancelAnimationFrame(reading.animFrameId); reading.animFrameId = null; }
-                /* Guardar tiempo si no se terminó el texto */
                 if(!reading.stopped && tot > 1) finishReadingSession(tot);
-                /* Limpiar progreso si el texto no terminó (para retomarlo la próxima vez) */
                 if(!reading.stopped && reading.textId && reading.currentOffset > 0 && reading.currentOffset < reading.maxOffset) {
                     const p = appProgress[reading.textId] || {};
-                    p.offset  = reading.currentOffset;
+                    p.offset  = Math.max(0, reading.currentOffset - reading.extraTopPadding);
                     p.elapsed = reading.totalElapsed;
                     appProgress[reading.textId] = p;
                     saveProgress(appProgress);
@@ -934,6 +916,7 @@
                 teleprompterContent.style.lineHeight = appSettings.lineSpacing;
                 teleprompterContent.style.color      = appSettings.textColor;
                 teleprompterContent.style.textAlign  = appSettings.textAlign;
+                // الحشو الأساسي (يتم تعديل paddingTop لاحقًا لإضافة المساحة من الأسفل)
                 teleprompterContent.style.padding    = `20px ${padPct}% 60vh ${padPct}%`;
                 readingStage.style.background        = appSettings.bgColor;
                 readingOverlay.style.background      = appSettings.bgColor;
@@ -951,7 +934,10 @@
                 updateSettingsUIValues();
                 if(readingOverlay.classList.contains('active')) {
                     applyReadingSettingsToDOM();
-                    /* Actualizar velocidad sin saltar de posición */
+                    // إعادة تطبيق الـ padding الإضافي للأسفل
+                    if(reading.extraTopPadding) {
+                        teleprompterContent.style.paddingTop = (20 + reading.extraTopPadding) + 'px';
+                    }
                     reading.speedPxPerSec = reading.getSpeed();
                     reading.recalc();
                     reading.clampOffset();
@@ -970,9 +956,6 @@
                 textAlignSelect.value    = appSettings.textAlign;
             }
 
-            function openSettingsPanel()  { updateSettingsUIValues(); settingsPanel.classList.add('open');    settingsBackdrop.classList.add('show'); }
-            function closeSettingsPanel() { settingsPanel.classList.remove('open'); settingsBackdrop.classList.remove('show'); }
-
             /* ── Eventos ── */
             bottomNav.addEventListener('click', e => {
                 const nb = e.target.closest('.nav-btn'); if(!nb) return;
@@ -984,7 +967,7 @@
                 } else if(pg === 'favorites') {
                     showPage('home'); showFavorites();
                 } else if(pg === 'settings') {
-                    openSettingsPanel();
+                    showPage('settings');
                 }
             });
 
@@ -1003,9 +986,7 @@
             $('#btnSaveText').addEventListener('click', saveText);
             modalOverlay.addEventListener('click', e => { if(e.target === modalOverlay) closeModal(); });
 
-            settingsBackdrop.addEventListener('click', closeSettingsPanel);
-            $('#settingsCloseBtn').addEventListener('click', closeSettingsPanel);
-
+            // أحداث الإعدادات (نفس العناصر موجودة الآن في صفحة الإعدادات)
             speedSlider.addEventListener('input',       onReadingSettingChange);
             fontSizeSlider.addEventListener('input',    onReadingSettingChange);
             lineSpacingSlider.addEventListener('input', onReadingSettingChange);
@@ -1019,6 +1000,9 @@
                 saveSettings(appSettings); updateSettingsUIValues();
                 if(readingOverlay.classList.contains('active')) {
                     applyReadingSettingsToDOM();
+                    if(reading.extraTopPadding) {
+                        teleprompterContent.style.paddingTop = (20 + reading.extraTopPadding) + 'px';
+                    }
                     reading.speedPxPerSec = reading.getSpeed();
                     reading.recalc(); reading.clampOffset();
                     teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
@@ -1056,8 +1040,7 @@
             /* Teclado */
             document.addEventListener('keydown', e => {
                 if(e.key === 'Escape') {
-                    if(settingsPanel.classList.contains('open'))       closeSettingsPanel();
-                    else if(readingOverlay.classList.contains('active')) closeReading();
+                    if(readingOverlay.classList.contains('active')) closeReading();
                     else if(modalOverlay.classList.contains('show'))   closeModal();
                 }
                 if(e.key === ' ' && readingOverlay.classList.contains('active')) {
