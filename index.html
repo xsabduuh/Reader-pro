@@ -1,1050 +1,1461 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="fr" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>English Reader Pro</title>
-    <style>
-        :root {
-            --bg: #000000;
-            --surface: #080808;
-            --surface2: #0f0f0f;
-            --surface3: #141414;
-            --border: #1c1c1c;
-            --border-light: #262626;
-            --text: #f0f0f0;
-            --text-secondary: #b0b0b0;
-            --text-muted: #707070;
-            --accent: #5b9bd5;
-            --danger: #e0556a;
-            --success: #4caf84;
-            --warning: #d4a843;
-            --favorite: #e8b84b;
-            --radius-xs: 6px;
-            --radius-sm: 10px;
-            --radius: 14px;
-            --radius-lg: 18px;
-            --radius-xl: 22px;
-            --radius-full: 50%;
-            --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
-            --safe-bottom: env(safe-area-inset-bottom, 12px);
-            --safe-top: env(safe-area-inset-top, 12px);
-            --nav-height: 64px;
-            --header-height: 50px;
-            --transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        html {
-            background: #000;
-            height: 100%;
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        body {
-            font-family: var(--font);
-            background: #000000;
-            color: var(--text);
-            height: 100dvh;
-            width: 100vw;
-            overflow: hidden;
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            padding-top: var(--safe-top);
-        }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #252525; border-radius: 10px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <title>Préparation Zakaria – Option Radiologique</title>
+  <!-- تم حذف: manifest, apple-mobile-web-app-capable, theme-color -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f13; --bg2: #18181f; --bg3: #22222d; --border: #2e2e3a;
+      --text: #f0f0f5; --text2: #a0a0b8; --text3: #606078;
+      --accent: #6c63ff; --accent2: #5a52e0; --accent-light: rgba(108,99,255,0.15);
+      --green: #22c55e; --green-light: rgba(34,197,94,0.15);
+      --yellow: #f59e0b; --yellow-light: rgba(245,158,11,0.12);
+      --red: #ef4444; --red-light: rgba(239,68,68,0.12);
+      --radius: 14px; --radius-sm: 8px; --nav-h: 64px; --header-h: 56px; --transition: 0.2s ease;
+      --hero-end: #9c5cf5;
+    }
+    [data-theme="light"] {
+      --bg: #f5f5fa; --bg2: #ffffff; --bg3: #ededf5; --border: #e0e0ea;
+      --text: #111118; --text2: #555568; --text3: #9090a8;
+      --accent: #5b52f0; --accent2: #4a42df; --accent-light: rgba(91,82,240,0.1);
+      --green: #16a34a; --green-light: rgba(22,163,74,0.1);
+      --yellow: #d97706; --yellow-light: rgba(217,119,6,0.1);
+      --red: #dc2626; --red-light: rgba(220,38,38,0.1);
+      --hero-end: #7c3aed;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-        .ico { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .ico-play { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent currentColor; margin-right: 2px; }
-        .ico-pause { width: 10px; height: 12px; display: flex; gap: 3px; }
-        .ico-pause::before, .ico-pause::after { content: ''; width: 3px; height: 100%; background: currentColor; border-radius: 1px; }
-        .ico-stop { width: 12px; height: 12px; background: currentColor; border-radius: 2px; }
-        .ico-restart { width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 50%; border-right-color: transparent; position: relative; }
-        .ico-restart::after { content: ''; position: absolute; top: -3px; left: 2px; width: 0; height: 0; border-style: solid; border-width: 4px 6px 4px 0; border-color: transparent currentColor transparent transparent; transform: rotate(15deg); }
-        .ico-close { width: 14px; height: 14px; position: relative; }
-        .ico-close::before, .ico-close::after { content: ''; position: absolute; width: 16px; height: 2px; background: currentColor; border-radius: 1px; top: 50%; left: -1px; }
-        .ico-close::before { transform: rotate(45deg); }
-        .ico-close::after { transform: rotate(-45deg); }
-        .ico-star { width: 15px; height: 15px; position: relative; color: inherit; }
-        .ico-star::before { content: '★'; font-size: 16px; line-height: 1; font-weight: 900; color: inherit; }
-        .ico-search { width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 50%; position: relative; }
-        .ico-search::after { content: ''; position: absolute; bottom: -4px; left: -2px; width: 2px; height: 7px; background: currentColor; border-radius: 1px; transform: rotate(45deg); }
-        .ico-plus { width: 14px; height: 14px; position: relative; }
-        .ico-plus::before, .ico-plus::after { content: ''; position: absolute; background: currentColor; border-radius: 1px; }
-        .ico-plus::before { width: 100%; height: 2px; top: 50%; transform: translateY(-50%); }
-        .ico-plus::after { width: 2px; height: 100%; left: 50%; transform: translateX(-50%); }
-        .ico-edit { width: 13px; height: 13px; position: relative; }
-        .ico-edit::before { content: ''; position: absolute; width: 10px; height: 2px; background: currentColor; border-radius: 1px; top: 50%; left: 2px; transform: rotate(-45deg); }
-        .ico-edit::after { content: ''; position: absolute; bottom: 1px; left: 1px; width: 8px; height: 2px; background: currentColor; border-radius: 1px; transform: rotate(20deg); }
-        .ico-trash { width: 12px; height: 14px; position: relative; border: 2px solid currentColor; border-top: 3px solid currentColor; border-radius: 0 0 3px 3px; margin-top: 3px; }
-        .ico-trash::before { content: ''; position: absolute; top: -6px; left: -4px; width: 16px; height: 2px; background: currentColor; border-radius: 1px; }
-        .ico-home { width: 15px; height: 13px; position: relative; border-bottom: 2px solid currentColor; }
-        .ico-home::before { content: ''; position: absolute; top: -4px; left: 0; width: 0; height: 0; border-style: solid; border-width: 0 7.5px 8px 7.5px; border-color: transparent transparent currentColor transparent; }
-        .ico-stats { width: 14px; height: 14px; display: flex; align-items: flex-end; gap: 2px; }
-        .ico-stats::before, .ico-stats::after { content: ''; width: 4px; background: currentColor; border-radius: 1px 1px 0 0; }
-        .ico-stats::before { height: 8px; }
-        .ico-stats::after { height: 13px; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.5;
+      transition: background var(--transition), color var(--transition);
+      direction: ltr;
+      text-align: left;
+    }
 
-        .app-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 16px; flex-shrink: 0; background: #000;
-            min-height: var(--header-height); gap: 10px;
-        }
-        .app-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.2rem; color: #fff; }
-        .app-logo .logo-mark { width: 30px; height: 30px; border-radius: var(--radius-sm); background: #fff; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; }
-        .header-actions { display: flex; gap: 4px; }
-        .btn-icon {
-            width: 36px; height: 36px; border-radius: var(--radius-full); border: 1px solid var(--border-light);
-            background: var(--surface2); color: #ccc; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: var(--transition-fast); flex-shrink: 0;
-        }
-        .btn-icon:active { background: #1c1c1c; transform: scale(0.93); border-color: #3a3a3a; }
-        .btn-icon.accent { background: #fff; color: #000; border-color: #fff; font-weight: 700; }
-        .btn-icon.accent:active { background: #ddd; }
+    #app {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
 
-        .main-content { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
-        .page { display: none; flex-direction: column; min-height: 100%; padding: 0 14px 20px; animation: pageIn 0.3s ease; }
-        .page.active { display: flex; }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .header {
+      height: calc(var(--header-h) + env(safe-area-inset-top));
+      padding-top: env(safe-area-inset-top);
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+      gap: 10px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .header-title { flex: 1; font-weight: 700; font-size: 17px; color: var(--text); }
+    .header-action { background: none; border: none; color: var(--text2); font-size: 22px; cursor: pointer; padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s, transform 0.1s; }
+    .header-action:active { background: var(--bg3); transform: scale(0.85); }
+    .back-btn { color: var(--accent); }
 
-        .bottom-nav {
-            display: flex; align-items: center; justify-content: space-around; background: #050505;
-            border-top: 1px solid var(--border); flex-shrink: 0; height: var(--nav-height);
-            padding-bottom: var(--safe-bottom); z-index: 100; gap: 4px;
-        }
-        .nav-btn {
-            display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; color: #5a5a5a;
-            transition: var(--transition-fast); font-size: 0.65rem; font-weight: 500; padding: 6px 10px;
-            border-radius: var(--radius); border: none; background: none; font-family: var(--font); position: relative; min-width: 56px;
-        }
-        .nav-btn.active { color: #fff; }
-        .nav-btn.active::after { content: ''; position: absolute; top: -6px; width: 18px; height: 2.5px; background: #fff; border-radius: 10px; }
-        .nav-btn .nav-ico-wrap { font-size: 1.2rem; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; color: inherit; }
+    .page {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+    .page-inner { padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
 
-        .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-        .level-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 15px 14px; cursor: pointer; transition: var(--transition); }
-        .level-card:active { transform: scale(0.97); border-color: #333; background: #0c0c0c; }
-        .level-badge { display: inline-block; background: #fff; color: #000; font-weight: 800; font-size: 0.7rem; padding: 4px 9px; border-radius: 16px; margin-bottom: 8px; }
-        .level-name { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
-        .level-meta { font-size: 0.66rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
-        .progress-bar-wrap { margin-top: 10px; height: 3px; background: #1a1a1a; border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background: #fff; border-radius: 10px; transition: width 0.5s ease; }
+    .bottom-nav {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-shrink: 0;
+      z-index: 10;
+      height: var(--nav-h);
+      padding: 0 max(12px, env(safe-area-inset-left, 0px)) 0 max(12px, env(safe-area-inset-right, 0px));
+      box-sizing: border-box;
+    }
+    .nav-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text3);
+      font-size: 11px;
+      font-family: inherit;
+      transition: color 0.2s, transform 0.15s;
+      border-radius: var(--radius-sm);
+    }
+    .nav-item i { font-size: 22px; transition: transform 0.15s; }
+    .nav-item.active { color: var(--accent); } .nav-item.active i { transform: scale(1.15); }
+    .nav-item:active { background: var(--bg3); transform: scale(0.9); }
 
-        .text-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px 14px; margin-bottom: 7px; transition: var(--transition-fast); cursor: pointer; }
-        .text-card:active { background: #0c0c0c; border-color: #2a2a2a; }
-        .text-title { font-weight: 600; color: #fff; font-size: 0.9rem; margin-bottom: 4px; }
-        .text-meta-row { font-size: 0.68rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 6px; }
-        .text-actions-row { display: flex; gap: 5px; flex-wrap: wrap; }
-        .btn-xs { padding: 6px 11px; border-radius: 18px; border: 1px solid var(--border-light); background: var(--surface2); color: #bbb; cursor: pointer; font-size: 0.68rem; font-weight: 500; transition: var(--transition-fast); display: inline-flex; align-items: center; gap: 3px; }
-        .btn-xs:active { background: #1a1a1a; transform: scale(0.94); border-color: #3a3a3a; }
-        .btn-xs.play-btn { background: #fff; border-color: #fff; color: #000; font-weight: 700; }
-        .btn-xs.play-btn:active { background: #ddd; }
-        .btn-xs.fav-btn { color: #999; border-color: #2a2a2a; }
-        .btn-xs.fav-btn.is-fav { color: #000; background: var(--favorite); border-color: var(--favorite); font-weight: 600; }
-        .btn-xs.danger-btn { border-color: #2a1519; color: #e0556a; }
+    /* ===== باقي الأنماط ===== */
+    .home-hero { background: linear-gradient(135deg, var(--accent) 0%, var(--hero-end) 100%); border-radius: var(--radius); padding: 22px 20px; color: #fff; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .home-hero::after { content: ''; position: absolute; top: -30px; right: -30px; width: 160px; height: 160px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+    .home-hero-label { font-size: 13px; opacity: 0.85; margin-bottom: 4px; }
+    .home-hero-title { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+    .home-hero-progress { display: flex; align-items: center; gap: 14px; }
+    .progress-ring-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+    .progress-ring-wrap svg { transform: rotate(-90deg); }
+    .progress-ring-bg { fill: none; stroke: rgba(255,255,255,0.2); stroke-width: 7; }
+    .progress-ring-fill { fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+    .progress-ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; line-height: 1.1; }
+    .progress-ring-sub { font-size: 10px; opacity: 0.8; }
+    .home-hero-stats { flex: 1; }
+    .home-hero-stat { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
+    .home-hero-stat strong { font-weight: 600; }
+    .section-title { font-size: 13px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; display: flex; flex-direction: column; gap: 4px; transition: transform 0.15s, background 0.15s; }
+    .stat-card:active { transform: scale(0.95); background: var(--bg3); }
+    .stat-card-icon { font-size: 22px; margin-bottom: 4px; } .stat-card-val { font-size: 20px; font-weight: 700; } .stat-card-lbl { font-size: 12px; color: var(--text3); }
+    .recent-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .recent-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.15s, background 0.15s; }
+    .recent-item:active { background: var(--bg3); transform: scale(0.97); }
+    .recent-item-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .recent-item-info { flex: 1; min-width: 0; }
+    .recent-item-title { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .recent-item-sub { font-size: 12px; color: var(--text3); }
+    
+    .search-bar { background: var(--bg2); border: 1px solid var(--border); border-radius: 50px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; transition: border-color 0.2s, box-shadow 0.2s; }
+    .search-bar:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+    .search-bar i { color: var(--text3); font-size: 18px; }
+    .search-bar input { flex: 1; background: none; border: none; outline: none; font-family: inherit; font-size: 14px; color: var(--text); }
+    .search-bar input::placeholder { color: var(--text3); }
+    
+    .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .folder-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; }
+    .folder-item:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+    .folder-item:active { transform: scale(0.95); background: var(--bg3); }
+    .folder-item-icon { width: 56px; height: 56px; margin: 0 auto 8px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; transition: transform 0.2s ease; }
+    .folder-item:hover .folder-item-icon { transform: rotate(-5deg); }
+    .folder-item-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .folder-item-progress { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+    .folder-mini-progress { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+    .folder-mini-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+    
+    .file-browser { margin-top: 8px; }
+    .file-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 6px; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 10px; }
+    .file-item:hover { background: var(--bg3); }
+    .file-item:active { transform: scale(0.98); background: var(--bg3); }
+    .file-item-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .file-item-info { flex: 1; min-width: 0; }
+    .file-item-title { font-size: 14px; font-weight: 500; }
+    .file-item-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
+    .file-progress-ring { width: 44px; height: 44px; position: relative; flex-shrink: 0; }
+    .file-progress-ring svg { transform: rotate(-90deg); }
+    .file-progress-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--text); }
+    .file-arrow { color: var(--text3); font-size: 18px; transition: transform 0.15s; }
+    .file-item:active .file-arrow { transform: translateX(4px); }
+    
+    .folder-breadcrumb { margin-bottom: 12px; }
+    .folder-back-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-family: inherit; font-size: 13px; color: var(--text2); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+    .folder-back-btn:active { background: var(--accent-light); color: var(--accent); transform: scale(0.95); }
+    
+    .subject-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; transition: transform 0.15s; }
+    .subject-card:active { transform: scale(0.99); }
+    .subject-header { padding: 12px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: background 0.15s; }
+    .subject-header:active { background: var(--bg3); }
+    .subject-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .subject-info { flex: 1; min-width: 0; }
+    .subject-name { font-weight: 600; font-size: 15px; }
+    .subject-progress { font-size: 12px; color: var(--text3); margin-top: 2px; }
+    .progress-bar-wrap { height: 4px; background: var(--bg3); }
+    .progress-bar-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s; }
+    
+    .branch-header-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+    .branch-breadcrumb { font-size: 12px; color: var(--text3); margin-bottom: 6px; line-height: 1.4; }
+    .branch-main-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .branch-progress-row { display: flex; align-items: center; gap: 10px; }
+    .branch-progress-bar { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+    .branch-progress-val { font-size: 13px; font-weight: 600; color: var(--accent); }
+    
+    .partial-list { display: flex; flex-direction: column; gap: 10px; }
+    .partial-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; transition: border-color 0.2s, transform 0.15s; }
+    .partial-card:active { transform: scale(0.99); } .partial-card.completed { border-color: var(--green); }
+    .partial-header { padding: 14px; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; transition: background 0.15s; }
+    .partial-header:active { background: var(--bg3); }
+    .partial-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; margin-top: 1px; }
+    .partial-check:active { transform: scale(0.8); background: var(--bg3); } .partial-check.done { background: var(--green); border-color: var(--green); color: #fff; } .partial-check i { font-size: 13px; }
+    .partial-info { flex: 1; } .partial-title { font-size: 14px; font-weight: 500; line-height: 1.4; }
+    .partial-meta { font-size: 12px; color: var(--text3); margin-top: 4px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .partial-body { display: none; border-top: 1px solid var(--border); padding: 16px 14px; background: var(--bg2); } .partial-body.open { display: block; }
+    
+    .tab-bar { display: flex; gap: 4px; background: var(--bg3); border-radius: 12px; padding: 4px; margin-bottom: 14px; }
+    .tab-btn { flex: 1; border: none; background: none; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text3); padding: 8px 4px; border-radius: 9px; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .tab-btn i { font-size: 15px; }
+    .tab-btn.active { background: var(--accent); color: #fff; box-shadow: 0 3px 10px rgba(108,99,255,0.35); }
+    .tab-btn:active { transform: scale(0.94); }
 
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 200; display: none; align-items: flex-end; justify-content: center; padding: var(--safe-top) 10px var(--safe-bottom); }
-        .overlay.show { display: flex; animation: fadeInOverlay 0.2s ease; }
-        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
-        .modal { background: #0a0a0a; border: 1px solid #1f1f1f; border-radius: var(--radius-xl) var(--radius-xl) 0 0; width: 100%; max-width: 560px; max-height: 84dvh; overflow-y: auto; padding: 20px 16px; box-shadow: 0 -8px 40px rgba(0,0,0,0.8); animation: modalUp 0.32s ease; }
-        @keyframes modalUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal h3 { font-size: 1.05rem; margin-bottom: 14px; color: #fff; text-align: center; font-weight: 700; }
-        .form-group { margin-bottom: 10px; }
-        .form-group label { display: block; font-size: 0.7rem; color: #888; margin-bottom: 3px; font-weight: 500; text-align: left; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 13px; background: #111; border: 1px solid #1e1e1e; border-radius: var(--radius-sm); color: #fff; font-family: var(--font); font-size: 0.85rem; resize: vertical; outline: none; text-align: left; direction: ltr; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #444; background: #151515; }
-        .form-group textarea { min-height: 130px; line-height: 1.6; }
-        .modal .btn-row { display: flex; gap: 7px; margin-top: 14px; }
-        .btn { padding: 10px 18px; border-radius: 22px; border: 1px solid var(--border-light); background: var(--surface2); color: #fff; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: var(--transition-fast); flex: 1; text-align: center; }
-        .btn:active { transform: scale(0.95); background: #181818; }
-        .btn.primary { background: #fff; color: #000; border-color: #fff; font-weight: 700; }
-        .btn.primary:active { background: #ddd; }
+    .content-area { font-size: 13px; color: var(--text2); line-height: 1.7; }
+    .notes-area { padding: 2px 0 6px; }
+    .notes-textarea { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; font-family: inherit; font-size: 14px; color: var(--text); resize: vertical; min-height: 130px; outline: none; line-height: 1.75; transition: border-color 0.2s, box-shadow 0.2s; }
+    .notes-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+    .notes-textarea::placeholder { color: var(--text3); }
+    .save-notes-btn { margin-top: 10px; width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s, transform 0.1s; box-shadow: 0 3px 10px rgba(108,99,255,0.25); }
+    .save-notes-btn:active { background: var(--accent2); transform: scale(0.97); }
 
-        .reading-overlay {
-            position: fixed; inset: 0; background: #000; z-index: 300; display: none; flex-direction: column; overflow: hidden;
-        }
-        .reading-overlay.active { display: flex; }
+    .exercises-area { display: flex; flex-direction: column; gap: 8px; }
+    .exercise-item { background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; transition: border-color 0.2s; }
+    .exercise-item.done-item { border-color: var(--green); opacity: 0.7; }
+    .exercise-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .exercise-check:active { transform: scale(0.8); } .exercise-check.done { background: var(--green); border-color: var(--green); color: #fff; } .exercise-check i { font-size: 13px; }
+    .exercise-text { flex: 1; font-size: 13px; color: var(--text2); line-height: 1.4; }
+    .add-exercise-row { display: flex; gap: 8px; margin-top: 4px; }
+    .add-exercise-input { flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-family: inherit; font-size: 13px; color: var(--text); outline: none; transition: border-color 0.2s; }
+    .add-exercise-input:focus { border-color: var(--accent); }
+    .add-exercise-btn { background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 10px 16px; font-family: inherit; font-size: 18px; cursor: pointer; display: flex; align-items: center; flex-shrink: 0; }
+    .add-exercise-btn:active { background: var(--accent2); transform: scale(0.92); }
 
-        .reading-stage {
-            flex: 1; overflow: hidden; position: relative; cursor: default;
-        }
-        .teleprompter-content {
-            position: absolute; left: 0; right: 0; top: 0;
-            will-change: transform; line-height: 1.7; white-space: pre-wrap; word-wrap: break-word;
-            text-align: left; direction: ltr; font-family: var(--font);
-            padding: 20px 20px 60vh 20px; color: #f0f0f0; font-size: 20px;
-        }
-        .reading-progress-bar {
-            height: 2px; background: #181818; flex-shrink: 0; position: relative;
-        }
-        .reading-progress-bar .prog-inner {
-            height: 100%; background: #fff; transition: width 0.08s linear; border-radius: 0 1px 1px 0; width: 0%;
-        }
-        .reading-time-tag {
-            position: absolute; top: 8px; left: 12px; font-size: 0.65rem; color: #555;
-            z-index: 5; background: rgba(0,0,0,0.75); padding: 3px 9px; border-radius: 10px;
-            border: 1px solid #1a1a1a; pointer-events: none; letter-spacing: 0.02em;
-        }
+    .review-hero { background: linear-gradient(135deg, var(--accent-light), rgba(156,92,245,0.1)); border: 1.5px solid var(--accent-light); border-radius: 16px; padding: 24px 16px; text-align: center; margin-bottom: 12px; }
+    .review-hero-count { font-size: 54px; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 6px; letter-spacing: -2px; }
+    .review-hero-label { font-size: 13px; color: var(--text3); font-weight: 500; }
+    .review-hero-stars { margin-top: 10px; font-size: 18px; letter-spacing: 4px; }
+    .review-add-btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 13px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s, transform 0.1s; box-shadow: 0 3px 10px rgba(108,99,255,0.25); }
+    .review-add-btn:active { background: var(--accent2); transform: scale(0.97); }
 
-        .reading-controls {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 20px calc(10px + var(--safe-bottom));
-            background: rgba(0,0,0,0.9); border-top: 1px solid #1a1a1a;
-            flex-shrink: 0; gap: 12px; z-index: 10;
-        }
-        .rc-btn {
-            display: flex; align-items: center; justify-content: center; gap: 7px;
-            background: #141414; border: 1px solid #282828; border-radius: 22px;
-            color: #ccc; cursor: pointer; font-size: 0.75rem; font-weight: 600;
-            padding: 9px 16px; font-family: var(--font); transition: var(--transition-fast);
-            flex: 1; text-align: center;
-        }
-        .rc-btn:active { transform: scale(0.94); background: #1e1e1e; }
-        .rc-btn.rc-close { color: var(--danger); border-color: #2a1519; }
-        .rc-btn.rc-close:active { background: #160b0e; }
-        .rc-btn.rc-play { background: #fff; color: #000; border-color: #fff; flex: 1.4; }
-        .rc-btn.rc-play:active { background: #ddd; }
-        .rc-btn.rc-restart { color: #aaa; }
+    .complete-btn-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .complete-btn { width: 100%; border: none; border-radius: 12px; padding: 13px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s; }
+    .complete-btn:active { transform: scale(0.96); } .complete-btn.done { background: var(--green-light); color: var(--green); border: 1.5px solid var(--green); } .complete-btn.undone { background: var(--accent); color: #fff; box-shadow: 0 3px 10px rgba(108,99,255,0.25); }
 
-        .reading-done-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.92);
-            display: none; flex-direction: column; align-items: center; justify-content: center; gap: 18px; z-index: 20;
-        }
-        .reading-done-overlay.show { display: flex; animation: fadeInOverlay 0.3s ease; }
-        .reading-done-icon { font-size: 3rem; }
-        .reading-done-title { color: #fff; font-size: 1.3rem; font-weight: 700; }
-        .reading-done-sub { color: #666; font-size: 0.8rem; }
-        .reading-done-btn { background: #fff; color: #000; border: none; border-radius: 22px; padding: 11px 32px; font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: var(--font); }
-        .reading-done-btn:active { background: #ddd; }
-
-        .settings-page-title {
-            font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 16px;
-        }
-        .setting-row { margin-bottom: 12px; }
-        .setting-label-row { display: flex; justify-content: space-between; font-size: 0.7rem; color: #888; margin-bottom: 3px; }
-        .setting-row input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; background: #1a1a1a; border-radius: 10px; outline: none; }
-        .setting-row input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; cursor: pointer; border: 2px solid #000; }
-        .setting-row input[type="color"] { width: 38px; height: 28px; border-radius: 6px; border: 2px solid #333; background: transparent; }
-        .setting-row select { width: 100%; padding: 9px; background: #111; border: 1px solid #1e1e1e; border-radius: var(--radius-sm); color: #fff; }
-
-        .btn-reset {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 8px 16px; border-radius: 20px;
-            border: 1px solid var(--border-light);
-            background: var(--surface2); color: #bbb;
-            cursor: pointer; font-size: 0.72rem; font-weight: 500;
-            transition: var(--transition-fast);
-        }
-        .btn-reset:active { background: #1a1a1a; transform: scale(0.94); border-color: #3a3a3a; }
-        .btn-reset .reset-icon { font-size: 1rem; line-height: 1; }
-
-        .search-wrap { position: relative; margin-bottom: 10px; }
-        .search-wrap input { width: 100%; padding: 10px 12px 10px 38px; background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 22px; color: #fff; font-size: 0.82rem; text-align: left; direction: ltr; }
-        .search-wrap input:focus { border-color: #3a3a3a; background: #111; }
-        .search-icon-wrap { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #555; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 10px; text-align: center; }
-        .stat-val { font-size: 1.6rem; font-weight: 800; color: #fff; }
-        .stat-lbl { font-size: 0.65rem; color: #666; margin-top: 2px; }
-        .section-label { font-size: 0.75rem; color: #888; margin: 14px 0 6px; text-align: left; }
-
-        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 9px 18px; border-radius: 20px; font-size: 0.75rem; z-index: 500; border: 1px solid #333; pointer-events: none; animation: toastIn 0.3s ease, toastOut 0.3s ease 2s forwards; }
-        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateX(-50%) translateY(-8px); } }
-        .empty-state { text-align: center; padding: 36px 16px; color: #4a4a4a; }
-        .empty-big { font-size: 2.5rem; margin-bottom: 8px; }
-
-        .fav-checkbox-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
-        .fav-checkbox-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--favorite); flex-shrink: 0; }
-        .fav-checkbox-row label { font-size: 0.8rem; color: #aaa; cursor: pointer; margin: 0; }
-
-        @media (orientation: landscape) {
-            .level-grid { grid-template-columns: repeat(3, 1fr); }
-            .stats-grid { grid-template-columns: repeat(4, 1fr); }
-            .modal { border-radius: var(--radius-xl); max-height: 88dvh; }
-        }
-        @media (min-width: 768px) {
-            .level-grid { grid-template-columns: repeat(3, 1fr); }
-            .stats-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-    </style>
+    .delete-module-btn { background: var(--red-light); border: 1.5px solid rgba(239,68,68,0.2); color: var(--red); border-radius: 10px; padding: 8px 13px; cursor: pointer; font-size: 19px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .delete-module-btn:active { background: var(--red); color: #fff; transform: scale(0.88); }
+    
+    .week-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 16px; }
+    .day-cell { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 4px; text-align: center; cursor: pointer; transition: all 0.2s, transform 0.1s; }
+    .day-cell:active { background: var(--bg3); transform: scale(0.9); border-color: var(--accent); } .day-cell.active { border-color: var(--accent); background: var(--accent-light); } .day-cell.today { border-color: var(--yellow); }
+    .day-name { font-size: 10px; color: var(--text3); margin-bottom: 4px; } .day-num { font-size: 16px; font-weight: 700; }
+    .day-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin: 3px auto 0; opacity: 0; } .day-cell.has-sessions .day-dot { opacity: 1; }
+    
+    .sessions-container { display: flex; flex-direction: column; gap: 10px; }
+    .session-add-card { background: var(--bg2); border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 10px; }
+    .session-add-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; color: var(--text2); }
+    .session-add-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .session-select { flex: 1; min-width: 120px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; font-family: inherit; font-size: 13px; color: var(--text); outline: none; }
+    .session-time-input, .session-duration-input { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; font-family: inherit; font-size: 13px; color: var(--text); outline: none; width: 100px; }
+    .session-add-submit { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 8px 14px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s, transform 0.1s; }
+    .session-add-submit:active { background: var(--accent2); transform: scale(0.95); }
+    .session-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+    .session-card:active { background: var(--bg3); transform: scale(0.98); } .session-card.completed { opacity: 0.6; border-color: var(--green); }
+    .session-time-badge { background: var(--accent-light); color: var(--accent); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+    .session-info { flex: 1; } .session-subject { font-size: 14px; font-weight: 600; } .session-detail { font-size: 12px; color: var(--text3); }
+    .session-complete-btn { background: none; border: none; color: var(--text3); font-size: 24px; cursor: pointer; padding: 4px; flex-shrink: 0; }
+    .session-complete-btn:active { color: var(--green); transform: scale(0.8); } .session-complete-btn.done { color: var(--green); }
+    .session-del { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 4px; flex-shrink: 0; } .session-del:active { color: var(--red); transform: scale(0.8); }
+    
+    .empty-state { text-align: center; padding: 30px 20px; color: var(--text3); } .empty-state i { font-size: 48px; margin-bottom: 10px; display: block; } .empty-state p { font-size: 14px; }
+    
+    .stats-hero-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stats-mini { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+    .stats-mini-val { font-size: 20px; font-weight: 700; } .stats-mini-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .subjects-progress { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .subj-progress-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; }
+    .subj-progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .subj-progress-name { font-size: 14px; font-weight: 500; } .subj-progress-pct { font-size: 13px; font-weight: 700; color: var(--accent); }
+    
+    .heatmap-grid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 3px; margin-bottom: 8px; }
+    .heat-cell { aspect-ratio: 1; border-radius: 3px; background: var(--bg3); transition: transform 0.1s; } .heat-cell:active { transform: scale(1.3); }
+    .heat-cell[data-lvl="1"] { background: rgba(108,99,255,0.25); } .heat-cell[data-lvl="2"] { background: rgba(108,99,255,0.5); } .heat-cell[data-lvl="3"] { background: rgba(108,99,255,0.75); } .heat-cell[data-lvl="4"] { background: var(--accent); }
+    .heatmap-legend { display: flex; align-items: center; gap: 6px; justify-content: flex-end; font-size: 11px; color: var(--text3); } .heatmap-legend-cell { width: 12px; height: 12px; border-radius: 3px; }
+    
+    #toast { position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px); left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: var(--bg); border-radius: 50px; padding: 10px 20px; font-size: 13px; font-weight: 600; white-space: nowrap; z-index: 1100; opacity: 0; transition: all 0.3s; pointer-events: none; } #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    
+    .chip { display: inline-flex; align-items: center; gap: 4px; border-radius: 50px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+    .chip-green { background: var(--green-light); color: var(--green); } .chip-yellow { background: var(--yellow-light); color: var(--yellow); } .chip-accent { background: var(--accent-light); color: var(--accent); }
+    
+    .divider { height: 1px; background: var(--border); margin: 12px 0; } .text-accent { color: var(--accent); } .text-green { color: var(--green); }
+    
+    ::-webkit-scrollbar { width: 0; }
+    
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.2s; } .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-card { background: var(--bg2); border-radius: var(--radius); width: 100%; max-width: 500px; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+    .modal-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; } .modal-title { flex: 1; font-weight: 700; font-size: 17px; }
+    .modal-close { background: none; border: none; color: var(--text2); font-size: 24px; cursor: pointer; }
+    .modal-body { flex: 1; overflow-y: auto; padding: 12px 16px; } .modal-footer { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+    
+    .goal-empty-card { background: var(--bg2); border: 2px dashed var(--accent); border-radius: var(--radius); padding: 20px; text-align: center; margin-bottom: 16px; } .goal-empty-icon { font-size: 36px; margin-bottom: 8px; color: var(--accent); }
+    .goal-progress-card { background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(156,92,245,0.08)); border: 1px solid var(--accent-light); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px; }
+    .goal-circle-wrap { position: relative; width: 70px; height: 70px; flex-shrink: 0; }
+    .goal-circle-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; } .goal-circle-sub { font-size: 9px; color: var(--text3); }
+    .goal-info { flex: 1; } .goal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; } .goal-desc { font-size: 13px; color: var(--text3); margin-bottom: 8px; }
+    .goal-actions { display: flex; gap: 8px; } .goal-actions button { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); padding: 6px 12px; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; } .goal-actions button:active { background: var(--accent-light); color: var(--accent); transform: scale(0.95); }
+    
+    #checklist-body { display: flex; flex-direction: column; gap: 12px; }
+    .checklist-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); } .checklist-item:last-child { border-bottom: none; }
+    .checklist-item-actions { display: flex; align-items: center; gap: 8px; }
+    .checklist-checkbox { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; } .checklist-checkbox.checked { background: var(--green); border-color: var(--green); color: #fff; }
+    .checklist-item-title { font-size: 14px; flex: 1; } .checklist-item-sub { font-size: 12px; color: var(--text3); }
+    .checklist-delete-btn { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 4px; } .checklist-delete-btn:active { color: var(--red); }
+    
+    .modal-search-bar { margin-bottom: 12px; }
+    .modal-subject-header { background: var(--bg3); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 6px; } .modal-subject-header:active { background: var(--accent-light); }
+    .modal-subject-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .modal-subject-info { flex: 1; } .modal-subject-name { font-size: 14px; font-weight: 600; } .modal-subject-count { font-size: 12px; color: var(--text3); }
+    .modal-subject-chevron { font-size: 18px; color: var(--text3); transition: transform 0.2s; } .modal-subject-chevron.open { transform: rotate(90deg); }
+    .modal-subject-body { display: none; padding-left: 8px; margin-bottom: 8px; } .modal-subject-body.open { display: block; }
+    .modal-branch-row { background: var(--bg3); border-radius: 6px; padding: 8px 12px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; cursor: pointer; } .modal-branch-row:active { background: var(--accent-light); }
+    .modal-branch-name { flex: 1; font-size: 13px; color: var(--text2); } .modal-branch-stats { font-size: 11px; color: var(--text3); }
+    .modal-branch-chevron { font-size: 14px; color: var(--text3); transition: transform 0.2s; } .modal-branch-chevron.open { transform: rotate(90deg); }
+    .modal-partials-list { display: none; margin-top: 4px; margin-bottom: 8px; } .modal-partials-list.open { display: block; }
+    .modal-partial-label { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 20px; border-radius: 6px; cursor: pointer; transition: background 0.15s; } .modal-partial-label:hover { background: var(--bg3); }
+    .modal-partial-checkbox { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; } .modal-partial-checkbox.checked { background: var(--accent); border-color: var(--accent); color: #fff; } .modal-partial-checkbox i { font-size: 12px; }
+    .modal-partial-title { font-size: 13px; color: var(--text2); flex: 1; }
+    .delete-partial-btn { background: none; border: none; color: var(--text3); font-size: 16px; cursor: pointer; padding: 2px 4px; margin-left: 4px; transition: color 0.15s; } .delete-partial-btn:active { color: var(--red); transform: scale(0.9); }
+    
+    .subject-edit-btn { background: none; border: none; color: var(--text3); font-size: 18px; cursor: pointer; padding: 6px; border-radius: 6px; margin-left: 4px; transition: all 0.15s; }
+    .subject-edit-btn:active { background: var(--bg3); color: var(--accent); transform: scale(0.9); }
+    
+    .icon-select-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0; }
+    .icon-option { width: 100%; aspect-ratio: 1; border: 2px solid var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: all 0.15s; background: var(--bg3); color: var(--text2); }
+    .icon-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--accent); transform: scale(1.05); }
+    
+    .color-select-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .color-option { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.15s; }
+    .color-option.selected { border-color: var(--text); transform: scale(1.15); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    
+    .view-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+    .view-btn { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 12px; font-family: inherit; font-size: 13px; color: var(--text2); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+    .view-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .view-btn:active { transform: scale(0.95); }
+    
+    .add-branch-inline { display: flex; gap: 8px; margin-bottom: 16px; }
+    .add-branch-inline input { flex: 1; }
+    .add-branch-inline button { flex-shrink: 0; }
+  </style>
 </head>
 <body>
+<div id="app">
+  <div class="header" id="header">
+    <button class="header-action back-btn" id="back-btn" style="display:none" onclick="goBack()" aria-label="Retour"><i class="ri-arrow-left-line"></i></button>
+    <div class="header-title" id="header-title">Préparation Zakaria</div>
+    <button class="header-action" onclick="toggleTheme()" id="theme-btn" title="Changer le thème" aria-label="Changer le thème"><i class="ri-moon-line" id="theme-icon"></i></button>
+  </div>
+  <div class="page" id="page-content"></div>
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-item active" data-page="home" onclick="nav('home')" aria-label="Accueil"><i class="ri-home-5-line"></i>Accueil</button>
+    <button class="nav-item" data-page="subjects" onclick="nav('subjects')" aria-label="Modules"><i class="ri-book-open-line"></i>Modules</button>
+    <button class="nav-item" data-page="schedule" onclick="nav('schedule')" aria-label="Planning"><i class="ri-calendar-2-line"></i>Planning</button>
+    <button class="nav-item" data-page="stats" onclick="nav('stats')" aria-label="Statistiques"><i class="ri-bar-chart-2-line"></i>Stats</button>
+  </nav>
+</div>
 
-    <header class="app-header">
-        <div class="app-logo"><span class="logo-mark">ER</span><span>English Reader Pro</span></div>
-        <div class="header-actions">
-            <button class="btn-icon" id="btnSearch"><span class="ico ico-search" style="color:#bbb;"></span></button>
-            <button class="btn-icon" id="btnStats"><span class="ico ico-stats" style="color:#bbb;"></span></button>
-        </div>
-    </header>
-
-    <main class="main-content" id="mainContent">
-        <section class="page active" id="pageHome">
-            <div class="search-wrap" id="searchBarHome" style="display:none;">
-                <input type="text" id="searchInput" placeholder="Search texts...">
-                <span class="search-icon-wrap"><span class="ico ico-search" style="color:#555;"></span></span>
-            </div>
-            <div class="level-grid" id="levelGrid"></div>
-            <div id="searchResults" style="display:none;margin-top:6px;"></div>
-        </section>
-        <section class="page" id="pageLevel">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
-                <button class="btn-icon" id="btnBackLevel"><span>&larr;</span></button>
-                <span style="font-weight:700;color:#fff;" id="levelTitleLabel">Level</span>
-                <button class="btn-icon accent" id="btnAddText" style="margin-left:auto;"><span class="ico ico-plus" style="color:#000;"></span></button>
-            </div>
-            <div id="levelTextsList"></div>
-        </section>
-        <section class="page" id="pageStats">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
-                <button class="btn-icon" id="btnBackStats"><span>&larr;</span></button>
-                <span style="font-weight:700;color:#fff;">Statistics</span>
-            </div>
-            <div class="stats-grid" id="statsGrid"></div>
-            <div class="section-label">Most Read Texts</div>
-            <div id="topReadList"></div>
-        </section>
-        <section class="page" id="pageSettings">
-            <div class="settings-page-title">Reading Settings</div>
-            <div class="setting-row"><div class="setting-label-row"><span>Speed</span><span id="speedVal">50</span></div><input type="range" id="speedSlider" min="8" max="160" value="50" step="1"></div>
-            <div class="setting-row"><div class="setting-label-row"><span>Font Size</span><span id="fontSizeVal">20px</span></div><input type="range" id="fontSizeSlider" min="14" max="48" value="20" step="1"></div>
-            <div class="setting-row"><div class="setting-label-row"><span>Line Spacing</span><span id="lineSpacingVal">1.7</span></div><input type="range" id="lineSpacingSlider" min="1.2" max="3.2" value="1.7" step="0.1"></div>
-            <div class="setting-row"><div class="setting-label-row"><span>Text Width</span><span id="textWidthVal">88%</span></div><input type="range" id="textWidthSlider" min="50" max="100" value="88" step="1"></div>
-            <div class="setting-row"><label>Text Color</label><input type="color" id="textColorPicker" value="#f0f0f0"></div>
-            <div class="setting-row"><label>Background Color</label><input type="color" id="bgColorPicker" value="#000000"></div>
-            <div class="setting-row"><label>Text Alignment</label><select id="textAlignSelect"><option value="left">Left</option><option value="center">Center</option><option value="justify">Justify</option></select></div>
-            <button class="btn-reset" id="resetReadingSettings"><span class="reset-icon">↺</span> Reset</button>
-        </section>
-    </main>
-
-    <nav class="bottom-nav" id="bottomNav">
-        <button class="nav-btn active" data-page="home"><span class="nav-ico-wrap"><span class="ico ico-home"></span></span>Home</button>
-        <button class="nav-btn" data-page="favorites"><span class="nav-ico-wrap"><span class="ico ico-star"></span></span>Favorites</button>
-        <button class="nav-btn" data-page="settings"><span class="nav-ico-wrap">⚙</span>Settings</button>
-    </nav>
-
-    <!-- شاشة القراءة -->
-    <div class="reading-overlay" id="readingOverlay">
-        <div class="reading-stage" id="readingStage">
-            <div class="teleprompter-content" id="teleprompterContent"></div>
-            <div class="reading-time-tag" id="readingTimeTag">--:--</div>
-            <div class="reading-done-overlay" id="readingDoneOverlay">
-                <div class="reading-done-icon">✓</div>
-                <div class="reading-done-title">Reading Complete!</div>
-                <div class="reading-done-sub" id="readingDoneSub"></div>
-                <button class="reading-done-btn" id="btnDoneClose">Close</button>
-            </div>
-        </div>
-        <div class="reading-progress-bar"><div class="prog-inner" id="readingProgInner"></div></div>
-        <div class="reading-controls" id="readingControls">
-            <button class="rc-btn rc-close" id="btnCloseReading">
-                <span class="ico ico-close" style="color:var(--danger);"></span> Close
-            </button>
-            <button class="rc-btn rc-play" id="btnPausePlay">
-                <span class="ico ico-pause"></span> Pause
-            </button>
-            <button class="rc-btn rc-restart" id="btnRestartReading">
-                <span class="ico ico-restart"></span> Restart
-            </button>
-        </div>
+<!-- Modales -->
+<div id="goal-modal" class="modal-overlay">
+  <div class="modal-card"><div class="modal-header"><div class="modal-title">Objectif de la semaine</div><button class="modal-close" onclick="closeGoalModal()" aria-label="Fermer"><i class="ri-close-line"></i></button></div><div class="modal-body"><div class="modal-search-bar"><div class="search-bar" style="margin-bottom:0"><i class="ri-search-line"></i><input type="search" id="goal-search-input" placeholder="Rechercher..." oninput="onGoalModalSearch()" autocomplete="off" aria-label="Rechercher une partie" /></div></div><div id="goal-modal-results"></div></div><div class="modal-footer"><button class="save-notes-btn" onclick="saveWeeklyGoalFromModal()" style="background:var(--accent);color:#fff">Enregistrer</button><button class="save-notes-btn" onclick="closeGoalModal()" style="background:var(--bg3);color:var(--text)">Annuler</button></div></div>
+</div>
+<div id="checklist-modal" class="modal-overlay">
+  <div class="modal-card"><div class="modal-header"><div class="modal-title">Tâches de la semaine</div><button class="modal-close" onclick="closeChecklistModal()" aria-label="Fermer"><i class="ri-close-line"></i></button></div><div class="modal-body" id="checklist-body"></div><div class="modal-footer"><button class="save-notes-btn" onclick="closeChecklistModal()" style="background:var(--bg3);color:var(--text)">Fermer</button></div></div>
+</div>
+<div id="subject-modal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header"><div class="modal-title" id="subject-modal-title">Nouveau Module</div><button class="modal-close" onclick="closeSubjectModal()" aria-label="Fermer"><i class="ri-close-line"></i></button></div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px"><label style="font-size:13px;color:var(--text3);display:block;margin-bottom:4px">Nom du module</label><input class="add-exercise-input" id="subject-name-input" placeholder="Ex: Anatomie pathologique" style="width:100%" aria-label="Nom du module"></div>
+      <label style="font-size:13px;color:var(--text3);display:block;margin-bottom:4px">Icône</label>
+      <div class="icon-select-grid" id="icon-select-grid"></div>
+      <label style="font-size:13px;color:var(--text3);display:block;margin-bottom:4px;margin-top:12px">Couleur</label>
+      <div class="color-select-grid" id="color-select-grid"></div>
+      <input type="hidden" id="subject-id-input">
+      <input type="hidden" id="subject-icon-input" value="ri-book-line">
+      <input type="hidden" id="subject-color-input" value="#6c63ff">
     </div>
+    <div class="modal-footer"><button class="save-notes-btn" onclick="saveSubjectFromModal()" style="background:var(--accent);color:#fff">Enregistrer</button><button class="save-notes-btn" onclick="closeSubjectModal()" style="background:var(--bg3);color:var(--text)">Annuler</button></div>
+  </div>
+</div>
+<div id="toast"></div>
 
-    <!-- النافذة المنبثقة للإضافة/التعديل -->
-    <div class="overlay" id="modalOverlay">
-        <div class="modal">
-            <h3 id="modalTitle">Add New Text</h3>
-            <div class="form-group"><label for="inputTitle">Title</label><input type="text" id="inputTitle"></div>
-            <div class="form-group"><label for="inputLevel">Level</label><select id="inputLevel"><option value="A1">A1</option><option value="A2">A2</option><option value="B1">B1</option><option value="B2">B2</option><option value="C1">C1</option><option value="C2">C2</option></select></div>
-            <div class="form-group"><label for="inputContent">Content</label><textarea id="inputContent"></textarea></div>
-            <div class="form-group"><label for="inputDesc">Description</label><input type="text" id="inputDesc"></div>
-            <div class="form-group fav-checkbox-row">
-                <input type="checkbox" id="inputFavorite">
-                <label for="inputFavorite">Mark as Favorite</label>
-            </div>
-            <input type="hidden" id="editTextId">
-            <div class="btn-row"><button class="btn" id="btnCancelModal">Cancel</button><button class="btn primary" id="btnSaveText">Save</button></div>
-        </div>
+<script>
+'use strict';
+
+// ========== STORE ==========
+const LS = {
+  get: (k, def) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : def; } catch { return def; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+const KEY_PROGRESS = 'prep_progress', KEY_NOTES = 'prep_notes', KEY_EXERCISES = 'prep_exercises', KEY_ACTIVITY = 'prep_activity';
+const KEY_TIMER = 'prep_timer', KEY_SCHEDULE = 'prep_schedule', KEY_THEME = 'prep_theme', KEY_WEEKLY_GOAL = 'prep_weekly_goal';
+const KEY_CUSTOM_PARTIALS = 'prep_custom_partials', KEY_SUBJECTS = 'prep_subjects_v3';
+const KEY_VIEW_MODE = 'prep_view_mode';
+
+// ========== THEME ==========
+let currentTheme = LS.get(KEY_THEME, 'dark');
+function applyTheme(t) { 
+  document.documentElement.setAttribute('data-theme', t); 
+  const icon = document.getElementById('theme-icon'); 
+  if (icon) icon.className = t === 'dark' ? 'ri-moon-line' : 'ri-sun-line'; 
+}
+function toggleTheme() { currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; LS.set(KEY_THEME, currentTheme); applyTheme(currentTheme); }
+applyTheme(currentTheme);
+
+// ========== DATA ==========
+const DEFAULT_SUBJECTS = [
+  { id: "subj-physradio", title: "Physique appliquée en radiologie", icon: 'ri-flashlight-line', color: '#f59e0b' },
+  { id: "subj-physcan", title: "Physique appliquée en scanographie", icon: 'ri-scan-line', color: '#3b82f6' },
+  { id: "subj-protoTDM", title: "Protocole en TDM", icon: 'ri-file-list-3-line', color: '#8b5cf6' },
+  { id: "subj-physIRM", title: "Physique appliquée en IRM", icon: 'ri-flask-line', color: '#ec4899' },
+  { id: "subj-protoIRM", title: "Protocoles IRM", icon: 'ri-file-text-line', color: '#14b8a6' },
+  { id: "subj-anatphys", title: "Anatomie et physiologie humaine", icon: 'ri-heart-pulse-line', color: '#ef4444' },
+  { id: "subj-anatTopo", title: "Anatomie topographique et radiologique", icon: 'ri-scan-2-line', color: '#f97316' },
+  { id: "subj-techAxial", title: "Technique axiale d'exploration radiologique", icon: 'ri-ruler-line', color: '#84cc16' },
+  { id: "subj-techApp", title: "Technique appendiculaire d'exploration radiologique", icon: 'ri-tools-line', color: '#06b6d4' },
+  { id: "subj-pharmaco", title: "Pharmacologie et technique viscérale", icon: 'ri-capsule-line', color: '#a855f7' },
+  { id: "subj-sciencesBio", title: "Les sciences biologiques", icon: 'ri-microscope-line', color: '#22c55e' },
+  { id: "subj-santeNat", title: "Systèmes nationaux de la santé et économie de la santé", icon: 'ri-government-line', color: '#64748b' },
+  { id: "subj-commInfo", title: "Langue, communication, informatique", icon: 'ri-chat-3-line', color: '#2563eb' },
+  { id: "subj-maintenance", title: "Maintenance, démarche qualité, gestion des risques", icon: 'ri-settings-3-line', color: '#78716c' },
+  { id: "subj-radioBio", title: "Radiobiologie et radioprotection", icon: 'ri-shield-flash-line', color: '#ef4444' },
+  { id: "subj-echoAngio", title: "Échographie et angiographie", icon: 'ri-pulse-line', color: '#10b981' },
+  { id: "subj-osteoAxiale", title: "Ostéologie axiale", icon: 'ri-user-line', color: '#d97706' },
+  { id: "subj-osteoApp", title: "Ostéologie appendiculaire", icon: 'ri-run-line', color: '#b45309' },
+  { id: "subj-mathsPhys", title: "Mathématiques et physique fondamentale", icon: 'ri-calculator-line', color: '#6366f1' },
+  { id: "subj-semioPath", title: "Sémiologie et pathologie médicale", icon: 'ri-stethoscope-line', color: '#dc2626' },
+  { id: "subj-soinsInf", title: "Soins infirmiers de base et pathologie chirurgicale", icon: 'ri-nurse-line', color: '#0ea5e9' },
+  { id: "subj-droitEthique", title: "Le droit et l'éthique", icon: 'ri-scales-3-line', color: '#4b5563' },
+  { id: "subj-demographie", title: "Démographie, épidémiologie et statistiques sanitaires", icon: 'ri-pie-chart-line', color: '#0891b2' },
+  { id: "subj-psychoSocio", title: "Psychologie, sociologie", icon: 'ri-user-heart-line', color: '#be185d' }
+];
+
+function initSubjects() {
+  if (!LS.get(KEY_SUBJECTS, null)) {
+    const subjectsWithStructure = DEFAULT_SUBJECTS.map(s => ({
+      ...s,
+      branches: [{ id: "main-" + s.id, title: "Main", partials: [] }],
+      _simple: true
+    }));
+    LS.set(KEY_SUBJECTS, subjectsWithStructure);
+  } else {
+    const existing = LS.get(KEY_SUBJECTS, []);
+    const needsMigration = existing.some(s => !s._simple);
+    if (needsMigration) {
+      const migrated = existing.map(s => ({
+        id: s.id, title: s.title, icon: s.icon, color: s.color,
+        branches: [{ id: "main-" + s.id, title: "Main", partials: [] }],
+        _simple: true
+      }));
+      LS.set(KEY_SUBJECTS, migrated);
+      LS.set(KEY_CUSTOM_PARTIALS, []);
+      LS.set(KEY_PROGRESS, {});
+    }
+  }
+}
+initSubjects();
+
+function getSubjects() { return LS.get(KEY_SUBJECTS, DEFAULT_SUBJECTS); }
+function saveSubjects(subjects) { LS.set(KEY_SUBJECTS, subjects); }
+
+const ICON_OPTIONS = [
+  'ri-book-line', 'ri-flashlight-line', 'ri-scan-line', 'ri-file-list-3-line', 'ri-flask-line', 'ri-file-text-line',
+  'ri-heart-pulse-line', 'ri-scan-2-line', 'ri-ruler-line', 'ri-tools-line', 'ri-capsule-line', 'ri-microscope-line',
+  'ri-government-line', 'ri-chat-3-line', 'ri-settings-3-line', 'ri-shield-flash-line', 'ri-pulse-line',
+  'ri-user-line', 'ri-calculator-line', 'ri-stethoscope-line', 'ri-nurse-line', 'ri-scales-3-line',
+  'ri-pie-chart-line', 'ri-user-heart-line', 'ri-lungs-line', 'ri-lightbulb-line', 'ri-discuss-line',
+  'ri-syringe-line', 'ri-hospital-line', 'ri-book-2-line', 'ri-thermometer-line', 'ri-drop-line'
+];
+
+const COLOR_OPTIONS = [
+  '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#ef4444', '#f97316', '#84cc16', '#06b6d4', '#a855f7',
+  '#22c55e', '#64748b', '#2563eb', '#78716c', '#dc2626', '#b45309', '#6366f1', '#0ea5e9', '#4b5563', '#0891b2', '#be185d'
+];
+
+function subjMeta(id) { return getSubjects().find(s => s.id === id) || { icon: 'ri-book-line', color: '#6c63ff' }; }
+
+// ========== CUSTOM PARTIALS & HELPERS ==========
+function getCustomPartials() { return LS.get(KEY_CUSTOM_PARTIALS, []); }
+function addCustomPartial(branchId, title) { const customs = getCustomPartials(); const id = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2,5); customs.push({ id, branchId, title, createdAt: new Date().toISOString() }); LS.set(KEY_CUSTOM_PARTIALS, customs); return id; }
+function deleteCustomPartial(id) { const customs = getCustomPartials().filter(p => p.id !== id); LS.set(KEY_CUSTOM_PARTIALS, customs); }
+
+function getAllPartials() {
+  const subs = getSubjects();
+  const builtin = [];
+  subs.forEach(s => (s.branches||[]).forEach(b => (b.partials||[]).forEach(p => builtin.push({ ...p, branchId: b.id, subjectId: s.id, subjectTitle: s.title }))));
+  const customs = getCustomPartials().map(p => { const b = findBranch(p.branchId); return { ...p, subjectId: b?.subjectId, subjectTitle: b?.subjectTitle || '' }; });
+  return [...builtin, ...customs];
+}
+function getAllBranches() { const all = []; getSubjects().forEach(s => (s.branches||[]).forEach(b => all.push({...b, subjectId: s.id, subjectTitle: s.title}))); return all; }
+
+function findBranch(id) { 
+  const b = getAllBranches().find(x => x.id === id);
+  if (b) return b;
+  if (id && (id.startsWith('main-') || id.startsWith('b-'))) {
+    const subjId = id.startsWith('main-') ? id.replace('main-', '') : id.replace('b-', '');
+    const s = getSubjects().find(x => x.id === subjId);
+    if (s) {
+      return { id, title: "Main", subjectId: s.id, subjectTitle: s.title, partials: [] };
+    }
+  }
+  return null;
+}
+
+function getBranchPartials(branchId) { const branch = findBranch(branchId); if (!branch) return []; const builtin = branch.partials || []; const customs = getCustomPartials().filter(p => p.branchId === branchId); return [...builtin, ...customs]; }
+
+function addBranchToSubject(subjectId, title) {
+  const subjects = getSubjects();
+  const subject = subjects.find(s => s.id === subjectId);
+  if (!subject) return null;
+  if (!subject.branches) subject.branches = [];
+  const branchId = 'b-' + Date.now() + '-' + Math.random().toString(36).substr(2,5);
+  subject.branches.push({ id: branchId, title: title, partials: [] });
+  saveSubjects(subjects);
+  return branchId;
+}
+
+function getProgress() { return LS.get(KEY_PROGRESS, {}); }
+function setPartialProgress(pid, data) { const p = getProgress(); const e = p[pid] || {}; const m = {...e, ...data}; Object.keys(m).forEach(k => m[k]===undefined && delete m[k]); p[pid]=m; LS.set(KEY_PROGRESS, p); }
+function isCompleted(pid) { return !!(getProgress()[pid]||{}).completed; }
+function getReviewCount(pid) { return (getProgress()[pid]||{}).reviewCount || 0; }
+function getNotes(pid) { return (LS.get(KEY_NOTES,{}))[pid]||''; }
+function setNotes(pid, t) { const n=LS.get(KEY_NOTES,{}); n[pid]=t; LS.set(KEY_NOTES,n); }
+function getExercises(pid) { return (LS.get(KEY_EXERCISES,{}))[pid]||[]; }
+function setExercises(pid, ex) { const e=LS.get(KEY_EXERCISES,{}); e[pid]=ex; LS.set(KEY_EXERCISES,e); }
+
+function calcSubjectProgress(subjectId) { 
+  const all = getAllPartials().filter(p => p.subjectId === subjectId); 
+  if (!all.length) return 0; 
+  const done = all.filter(p => isCompleted(p.id)).length;
+  return Math.round((done / all.length) * 100); 
+}
+
+function calcBranchProgress(branchId) { 
+  const ps = getBranchPartials(branchId); 
+  if (!ps.length) return {done:0, total:0, pct:0}; 
+  const d = ps.filter(p => isCompleted(p.id)).length; 
+  return {done:d, total:ps.length, pct: Math.round((d/ps.length)*100)}; 
+}
+
+function calcOverallProgress() { 
+  const allPartials = getAllPartials();
+  if (!allPartials.length) return {done:0, total:0, pct:0};
+  const done = allPartials.filter(p => isCompleted(p.id)).length;
+  return {done, total: allPartials.length, pct: Math.round((done / allPartials.length) * 100)};
+}
+
+function totalReviews() { return Object.values(getProgress()).reduce((s,v)=>s+(v.reviewCount||0),0); }
+function todayKey() { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+// ========== WEEKLY GOAL ==========
+function getCurrentWeekMonday() { const n=new Date(); const d=n.getDay(); const diff=d===0?-6:1-d; const m=new Date(n); m.setDate(n.getDate()+diff); m.setHours(0,0,0,0); return m; }
+function getWeekEnd(m) { const e=new Date(m); e.setDate(m.getDate()+7); return e; }
+function getWeekKey() { const m=getCurrentWeekMonday(); return `${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}-${String(m.getDate()).padStart(2,'0')}`; }
+function formatDate(d) { return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; }
+function getWeeklyGoal() { const g=LS.get(KEY_WEEKLY_GOAL,null); if(g&&g.weekMonday===getWeekKey()) return g; if(g) LS.set(KEY_WEEKLY_GOAL,null); return null; }
+function saveWeeklyGoal(ids) { LS.set(KEY_WEEKLY_GOAL,{weekMonday:getWeekKey(),startDate:getCurrentWeekMonday().toISOString(),endDate:getWeekEnd(getCurrentWeekMonday()).toISOString(),partials:ids}); }
+
+function calcGoalProgress(goal) {
+  const {partials}=goal;
+  let d=0;
+  partials.forEach(pid=>{ if(isCompleted(pid)) d++; });
+  return {done:d,total:partials.length,pct:partials.length?Math.round((d/partials.length)*100):0};
+}
+
+// ========== ROUTER ==========
+let currentPage='home', historyStack=[];
+function nav(page, push=true) { 
+  const mp=['home','subjects','schedule','stats']; 
+  if(mp.includes(page)) historyStack=[]; 
+  else if(push&&currentPage!==page) historyStack.push(currentPage); 
+  currentPage=page; 
+  updateNav(page); 
+  renderPage(page); 
+}
+function goBack() { 
+  const p=historyStack.pop(); 
+  if(p) nav(p,false); 
+  else nav('home',false); 
+}
+function updateNav(page) { 
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.page===page)); 
+  const mp=['home','subjects','schedule','stats']; 
+  document.getElementById('back-btn').style.display=mp.includes(page)?'none':''; 
+  const t={home:'Préparation Zakaria',subjects:'Modules',schedule:'Planning',stats:'Statistiques'}; 
+  if(page.startsWith('branch:')){ 
+    const b=findBranch(page.replace('branch:','')); 
+    document.getElementById('header-title').textContent=b?b.title:'Branche'; 
+  } else if(page.startsWith('folder:')) {
+    const s=getSubjects().find(x=>x.id===page.replace('folder:',''));
+    document.getElementById('header-title').textContent=s?s.title:'Dossier';
+  } else {
+    document.getElementById('header-title').textContent=t[page]||'Préparation Zakaria'; 
+  }
+}
+function showToast(msg) { 
+  const t=document.getElementById('toast'); 
+  t.textContent=msg; 
+  t.classList.add('show'); 
+  setTimeout(()=>t.classList.remove('show'),2200); 
+}
+
+// ========== RENDER ENGINE ==========
+function renderPage(page) { 
+  const c=document.getElementById('page-content'); 
+  if(!c) return; 
+  c.scrollTop=0; 
+  try { 
+    if(page==='home') c.innerHTML=renderHome(); 
+    else if(page==='subjects') c.innerHTML=renderSubjectsPage(); 
+    else if(page.startsWith('folder:')) c.innerHTML=renderFolderView(page.replace('folder:','')); 
+    else if(page==='schedule') c.innerHTML=renderSchedule(); 
+    else if(page==='stats') c.innerHTML=renderStats(); 
+    else if(page.startsWith('branch:')) c.innerHTML=renderBranch(page.replace('branch:','')); 
+  } catch(e){ 
+    console.error(e);
+    c.innerHTML='<div class="page-inner"><p>Erreur de chargement.</p></div>'; 
+  } 
+}
+
+// ========== HOME ==========
+function renderHome() {
+  const overall = calcOverallProgress(); 
+  const r=35, c=2*Math.PI*r, offset=c-(overall.pct/100)*c;
+  
+  const weeklyGoal = getWeeklyGoal(); let goalCard = '';
+  if(weeklyGoal&&weeklyGoal.partials.length) {
+    const gp=calcGoalProgress(weeklyGoal); const gr=30,gc=2*Math.PI*gr,goffset=gc-(gp.pct/100)*gc; 
+    const sd=formatDate(new Date(weeklyGoal.startDate)),ed=formatDate(new Date(weeklyGoal.endDate)); 
+    const allDone=gp.done===gp.total&&gp.total>0;
+    goalCard=`<div id="goal-card" class="goal-progress-card" style="border-color:${allDone?'var(--green)':'var(--accent-light)'}"><div class="goal-circle-wrap"><svg width="70" height="70" viewBox="0 0 70 70"><circle cx="35" cy="35" r="${gr}" fill="none" stroke="var(--bg3)" stroke-width="6"/><circle id="goal-circle-fill" cx="35" cy="35" r="${gr}" fill="none" stroke="${allDone?'var(--green)':'var(--accent)'}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${gc}" stroke-dashoffset="${goffset}" transform="rotate(-90 35 35)" style="transition: stroke-dashoffset 0.6s ease"/></svg><div class="goal-circle-text"><span id="goal-pct">${gp.pct}%</span><span class="goal-circle-sub">Objectif</span></div></div><div class="goal-info"><div class="goal-title">${allDone?'Objectif atteint!':'Objectif de la semaine'}</div><div class="goal-desc">${gp.done}/${gp.total} complété(s) (${sd} - ${ed})</div><div class="goal-actions"><button onclick="openChecklistModal()"><i class="ri-check-double-line"></i> Tâches</button><button onclick="openGoalModal()"><i class="ri-edit-line"></i> Modifier</button></div></div></div>`;
+  } else {
+    goalCard=`<div class="goal-empty-card"><i class="ri-focus-2-line goal-empty-icon"></i><div style="color:var(--text2);margin-bottom:8px;font-size:16px;font-weight:600">Objectif de la semaine</div><p style="font-size:13px;color:var(--text3);margin-bottom:16px">Définissez vos objectifs pour la semaine</p><button class="save-notes-btn" onclick="openGoalModal()"><i class="ri-add-line"></i> Définir</button></div>`;
+  }
+  
+  const prog=getProgress(); const studiedBranchIds=new Set(); 
+  getAllPartials().forEach(p=>{ if(prog[p.id]&&(prog[p.id].completed||prog[p.id].reviewCount>0)) studiedBranchIds.add(p.branchId); }); 
+  const allBranches=getAllBranches(); const studiedBranches=allBranches.filter(b=>studiedBranchIds.has(b.id)).slice(0,5);
+  
+  let recentHtml='';
+  if(studiedBranches.length) { 
+    recentHtml=`<div class="section-title">Dernièrement étudié</div><div class="recent-list">${studiedBranches.map(b=>{ 
+      const meta=subjMeta(b.subjectId); const bp=calcBranchProgress(b.id); 
+      return `<div class="recent-item" onclick="nav('branch:${b.id}')"><div class="recent-item-icon" style="background:${meta.color?meta.color+'33':'rgba(108,99,255,0.15)'};color:${meta.color||'#6c63ff'}"><i class="${meta.icon}"></i></div><div class="recent-item-info"><div class="recent-item-title">${escHtml(b.title)}</div><div class="recent-item-sub">${escHtml(b.subjectTitle)} · ${bp.done}/${bp.total} parties</div></div><i class="ri-arrow-right-s-line" style="color:var(--text3);font-size:18px"></i></div>`; 
+    }).join('')}</div>`; 
+  } else { 
+    recentHtml=`<div class="empty-state"><i class="ri-book-open-line"></i><p>Commencez à étudier depuis la liste des modules</p></div>`; 
+  }
+  
+  return `<div class="page-inner"><div class="home-hero"><div class="home-hero-label">Option Radiologique – ${new Date().getFullYear()}</div><div class="home-hero-title">Votre progression</div><div class="home-hero-progress"><div class="progress-ring-wrap"><svg width="80" height="80" viewBox="0 0 80 80"><circle class="progress-ring-bg" cx="40" cy="40" r="${r}"/><circle class="progress-ring-fill" cx="40" cy="40" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${offset}"/></svg><div class="progress-ring-text"><span>${overall.pct}%</span><span class="progress-ring-sub">Complété</span></div></div><div class="home-hero-stats"><div class="home-hero-stat"><span>Parties terminées</span><strong>${overall.done}/${overall.total}</strong></div><div class="home-hero-stat"><span>Révisions</span><strong>${totalReviews()}</strong></div></div></div></div>${goalCard}<div class="stats-row"><div class="stat-card"><div class="stat-card-icon" style="color:var(--accent)"><i class="ri-book-open-line"></i></div><div class="stat-card-val">${getSubjects().length}</div><div class="stat-card-lbl">Modules</div></div><div class="stat-card"><div class="stat-card-icon" style="color:var(--green)"><i class="ri-checkbox-circle-line"></i></div><div class="stat-card-val">${overall.done}</div><div class="stat-card-lbl">Complété</div></div></div>${recentHtml}</div>`;
+}
+
+// ========== SUBJECTS PAGE ==========
+let currentViewMode = LS.get(KEY_VIEW_MODE, 'folders');
+let searchQuery = '';
+
+function renderSubjectsPage() {
+  const viewFolders = currentViewMode === 'folders';
+  return `
+    <div class="page-inner">
+      <div class="view-toggle">
+        <button class="view-btn ${viewFolders?'active':''}" onclick="switchView('folders')">
+          <i class="ri-folder-3-line"></i> Dossiers
+        </button>
+        <button class="view-btn ${!viewFolders?'active':''}" onclick="switchView('list')">
+          <i class="ri-list-check"></i> Liste
+        </button>
+      </div>
+      <div class="search-bar">
+        <i class="ri-search-line"></i>
+        <input type="search" id="search-input" placeholder="Rechercher un module..." value="${escHtml(searchQuery)}" oninput="onSearchInput(this.value)" autocomplete="off" aria-label="Rechercher un module" />
+      </div>
+      <div id="subjects-results">
+        ${viewFolders ? renderFoldersView() : renderListView()}
+      </div>
     </div>
+  `;
+}
 
-    <div id="toastContainer"></div>
+function switchView(mode) {
+  currentViewMode = mode;
+  LS.set(KEY_VIEW_MODE, mode);
+  const resultsDiv = document.getElementById('subjects-results');
+  if (resultsDiv) {
+    resultsDiv.innerHTML = mode === 'folders' ? renderFoldersView() : renderListView();
+  }
+}
 
-    <script>
-        (function() {
-            const STORAGE_KEY   = 'eng_reader_pro_v2';
-            const SETTINGS_KEY  = 'eng_reader_settings_v2';
-            const PROGRESS_KEY  = 'eng_reader_progress_v2';
-            const LEVELS        = ['A1','A2','B1','B2','C1','C2'];
+function renderFoldersView() {
+  const subjects = getSubjects();
+  const q = searchQuery.toLowerCase().trim();
+  const filteredSubjects = q ? subjects.filter(s => s.title.toLowerCase().includes(q)) : subjects;
+  
+  if (!filteredSubjects.length) {
+    return '<div class="empty-state"><i class="ri-search-line"></i><p>Aucun module trouvé</p></div>';
+  }
+  
+  return `
+    <div class="folder-grid">
+      ${filteredSubjects.map(s => {
+        const pct = calcSubjectProgress(s.id);
+        const subjectPartials = getAllPartials().filter(p=>p.subjectId===s.id);
+        const doneP = subjectPartials.filter(p=>isCompleted(p.id)).length;
+        const allP = subjectPartials.length;
+        
+        return `
+          <div class="folder-item" onclick="nav('folder:${s.id}')" title="${escHtml(s.title)}">
+            <div class="folder-item-icon" style="background:${s.color}22; color:${s.color}">
+              <i class="${s.icon}"></i>
+            </div>
+            <div class="folder-item-name">${escHtml(s.title)}</div>
+            <div class="folder-item-progress">${doneP}/${allP} parties</div>
+            <div class="folder-mini-progress">
+              <div class="folder-mini-fill" style="width:${pct}%; background:${s.color}"></div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <button class="save-notes-btn" onclick="openSubjectModal()" style="margin-top:16px;width:100%">
+      <i class="ri-add-line"></i> Nouveau module
+    </button>
+  `;
+}
 
-            // تواريخ محدثة إلى 2026-06-28
-            const sampleTexts = [
-                { id:'t1', title:'My Daily Routine', level:'A1', content:'I wake up at 7 o\'clock.\nI brush my teeth and wash my face.\nI eat breakfast with my family.\nI go to school by bus.\nI study English and math.\nI have lunch at school.\nI come home at 4 o\'clock.\nI do my homework.\nI watch TV for one hour.\nI go to bed at 10 o\'clock.', description:'Daily activities', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t2', title:'The Weather Today', level:'A1', content:'Today is sunny and warm.\nThe sky is blue.\nThere are no clouds.\nThe temperature is 25 degrees.\nIt is a beautiful day.\nI want to go to the park.\nI will take my dog with me.\nWe will play together.\nIt will be fun.', description:'Weather', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t3', title:'A Trip to London', level:'A2', content:'Last summer, I visited London.\nI went with my best friend.\nWe stayed for five days.\nWe saw Big Ben and the London Eye.\nThe city was very busy.\nWe took many photos.\nWe ate fish and chips.\nIt was delicious.\nI bought souvenirs for my family.\nI want to go back someday.', description:'Travel', favorite:true, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t4', title:'The Importance of Reading', level:'B1', content:'Reading is one of the most important skills.\nIt helps us learn new things.\nWhen we read, we improve our vocabulary.\nWe also learn about different cultures.\nReading can be fun and relaxing.\nMany successful people read every day.\nYou can read books, articles, or blogs.\nThe important thing is to start.\nEven 15 minutes a day can make a difference.\nSo pick up a book today.', description:'Why reading matters', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t5', title:'Technology in Modern Life', level:'B2', content:'Technology has changed the way we live.\nSmartphones connect us to the world.\nWe can work from anywhere now.\nSocial media keeps us in touch with friends.\nHowever, technology also has downsides.\nPeople spend too much time on screens.\nPrivacy is a growing concern.\nWe must find a healthy balance.\nTechnology should serve us, not control us.\nThe future holds even more innovations.', description:'Tech impact', favorite:false, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 },
-                { id:'t6', title:'Climate Change Challenges', level:'C1', content:'Climate change represents one of the most pressing challenges.\nRising global temperatures threaten ecosystems.\nCarbon emissions continue to increase.\nInternational cooperation is essential.\nRenewable energy offers a path forward.\nIndividual actions also matter significantly.\nWe must act now before it is too late.\nFuture generations depend on our decisions.\nScientific consensus is clear on this issue.\nPolicy changes must follow the science.', description:'Climate', favorite:true, dateAdded:'2026-06-28', lastRead:null, totalReadTime:0, readCount:0 }
-            ];
+function renderListView() {
+  const subjects = getSubjects();
+  const q = searchQuery.toLowerCase().trim();
+  const filteredSubjects = q ? subjects.filter(s => s.title.toLowerCase().includes(q)) : subjects;
+  
+  if (!filteredSubjects.length) {
+    return '<div class="empty-state"><i class="ri-search-line"></i><p>Aucun module trouvé</p></div>';
+  }
+  
+  return filteredSubjects.map(s => {
+    const pct = calcSubjectProgress(s.id);
+    const subjectPartials = getAllPartials().filter(p=>p.subjectId===s.id);
+    const doneP = subjectPartials.filter(p=>isCompleted(p.id)).length;
+    const allP = subjectPartials.length;
+    
+    return `
+      <div class="subject-card" onclick="nav('folder:${s.id}')">
+        <div class="subject-header">
+          <div class="subject-icon" style="background:${s.color}33; color:${s.color}">
+            <i class="${s.icon}"></i>
+          </div>
+          <div class="subject-info">
+            <div class="subject-name">${escHtml(s.title)}</div>
+            <div class="subject-progress">${doneP}/${allP} · ${pct}%</div>
+          </div>
+          <button class="subject-edit-btn" onclick="event.stopPropagation();openSubjectModal('${s.id}')" title="Modifier le module">
+            <i class="ri-pencil-line"></i>
+          </button>
+          <i class="ri-arrow-right-s-line" style="color:var(--text3)"></i>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" style="width:${pct}%; background:${s.color}"></div>
+        </div>
+      </div>
+    `;
+  }).join('') + `<button class="save-notes-btn" onclick="openSubjectModal()" style="margin-top:8px;width:100%"><i class="ri-add-line"></i> Ajouter un module</button>`;
+}
 
-            function loadData() {
-                try { const r = localStorage.getItem(STORAGE_KEY); if(r){ const d=JSON.parse(r); if(d && d.texts) return d; } } catch(e){}
-                const d = { texts: JSON.parse(JSON.stringify(sampleTexts)) }; saveData(d); return d;
-            }
-            function saveData(d)     { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch(e){} }
-            function loadSettings()  {
-                const def = { speed:50, fontSize:20, lineSpacing:1.7, textWidth:88, textColor:'#f0f0f0', bgColor:'#000000', textAlign:'left' };
-                try { const r = localStorage.getItem(SETTINGS_KEY); if(r) return Object.assign({}, def, JSON.parse(r)); } catch(e){}
-                return def;
-            }
-            function saveSettings(s) { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch(e){} }
-            function loadProgress()  { try { const r = localStorage.getItem(PROGRESS_KEY); if(r) return JSON.parse(r); } catch(e){} return {}; }
-            function saveProgress(p) { try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch(e){} }
+function onSearchInput(v) {
+  searchQuery = v;
+  const resultsDiv = document.getElementById('subjects-results');
+  if (resultsDiv) {
+    resultsDiv.innerHTML = currentViewMode === 'folders' ? renderFoldersView() : renderListView();
+  }
+}
 
-            let appData     = loadData();
-            let appSettings = loadSettings();
-            let appProgress = loadProgress();
+// ========== FOLDER VIEW ==========
+function renderFolderView(subjectId) {
+  const subject = getSubjects().find(s => s.id === subjectId);
+  if (!subject) return '<div class="page-inner"><p>Module introuvable</p></div>';
 
-            function refreshData()  { appData = loadData(); }
-            function persistData()  { saveData(appData); }
+  const mainBranch = (subject.branches || [])[0] || { id: 'main-' + subjectId, title: 'Main', partials: [] };
+  const branchId = mainBranch.id;
 
-            let currentPage = 'home', currentLevel = null, searchActive = false;
+  const partials = getBranchPartials(branchId);
+  const doneP = partials.filter(p => isCompleted(p.id)).length;
+  const allP = partials.length;
+  const pct = allP ? Math.round((doneP / allP) * 100) : 0;
 
-            const reading = {
-                textId: null, active: false, paused: false, stopped: true,
-                totalElapsed: 0, lastFrameTime: null, animFrameId: null,
-                currentOffset: 0, maxOffset: 0, contentHeight: 0, stageHeight: 0,
-                speedPxPerSec: 40, lastSavedElapsed: -10,
+  const partialsHtml = partials.length
+    ? '<div class="partial-list">' + partials.map((p, i) => renderPartialCard(p, i)).join('') + '</div>'
+    : `<div class="empty-state" style="padding:40px 20px">
+        <i class="ri-file-add-line" style="font-size:56px;color:var(--accent);opacity:0.7"></i>
+        <p style="margin-top:12px;font-size:14px;color:var(--text3)">Aucune fiche pour l'instant</p>
+        <p style="font-size:12px;color:var(--text3);margin-top:4px">Ajoutez votre première fiche ci-dessous</p>
+      </div>`;
 
-                reset() {
-                    this.textId = null; this.active = false; this.paused = false; this.stopped = true;
-                    this.totalElapsed = 0; this.lastFrameTime = null;
-                    if(this.animFrameId) { cancelAnimationFrame(this.animFrameId); this.animFrameId = null; }
-                    this.currentOffset = 0; this.maxOffset = 0; this.contentHeight = 0; this.stageHeight = 0;
-                    this.lastSavedElapsed = -10;
-                },
-                getSpeed() { return (appSettings.speed / 50) * 40; },
-                recalc() {
-                    this.contentHeight   = teleprompterContent.scrollHeight;
-                    this.stageHeight     = readingStage.clientHeight;
-                    this.maxOffset       = Math.max(0, this.contentHeight - this.stageHeight);
-                    this.speedPxPerSec   = this.getSpeed();
-                },
-                clampOffset() { this.currentOffset = Math.max(0, Math.min(this.currentOffset, this.maxOffset)); },
-                saveProgressToDisk() {
-                    if(!this.textId) return;
-                    const intv = Math.floor(this.totalElapsed);
-                    if(intv - this.lastSavedElapsed >= 4 && this.currentOffset > 0) {
-                        this.lastSavedElapsed = intv;
-                        const p = appProgress[this.textId] || {};
-                        p.offset = this.currentOffset;
-                        p.elapsed = this.totalElapsed;
-                        appProgress[this.textId] = p;
-                        saveProgress(appProgress);
-                    }
-                }
-            };
+  const html = `
+    <div class="page-inner">
+      <div class="folder-breadcrumb" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
+        <button class="folder-back-btn" style="margin-bottom:0" onclick="nav('subjects')">
+          <i class="ri-arrow-left-line"></i> Tous les modules
+        </button>
+        <button class="delete-module-btn" onclick="deleteModule('${subjectId}')" title="Supprimer ce module" aria-label="Supprimer le module">
+          <i class="ri-delete-bin-2-line"></i>
+        </button>
+      </div>
 
-            const $ = s => document.querySelector(s);
-            const pageHome           = $('#pageHome'),
-                  pageLevel          = $('#pageLevel'),
-                  pageStats          = $('#pageStats'),
-                  pageSettings       = $('#pageSettings');
-            const levelGrid          = $('#levelGrid'),
-                  levelTextsList     = $('#levelTextsList'),
-                  levelTitleLabel    = $('#levelTitleLabel');
-            const searchBarHome      = $('#searchBarHome'),
-                  searchInput        = $('#searchInput'),
-                  searchResults      = $('#searchResults');
-            const readingOverlay     = $('#readingOverlay'),
-                  readingStage       = $('#readingStage'),
-                  teleprompterContent= $('#teleprompterContent');
-            const readingProgInner   = $('#readingProgInner'),
-                  readingTimeTag     = $('#readingTimeTag');
-            const readingDoneOverlay = $('#readingDoneOverlay'),
-                  readingDoneSub     = $('#readingDoneSub');
-            const modalOverlay       = $('#modalOverlay'),
-                  modalTitle         = $('#modalTitle');
-            const inputTitle         = $('#inputTitle'),
-                  inputLevel         = $('#inputLevel'),
-                  inputContent       = $('#inputContent'),
-                  inputDesc          = $('#inputDesc'),
-                  inputFavorite      = $('#inputFavorite'),
-                  editTextId         = $('#editTextId');
-            const toastContainer     = $('#toastContainer'),
-                  statsGrid          = $('#statsGrid'),
-                  topReadList        = $('#topReadList');
-            const bottomNav          = $('#bottomNav'),
-                  mainContent        = $('#mainContent');
-            const speedSlider        = $('#speedSlider'),
-                  speedVal           = $('#speedVal');
-            const fontSizeSlider     = $('#fontSizeSlider'),
-                  fontSizeVal        = $('#fontSizeVal');
-            const lineSpacingSlider  = $('#lineSpacingSlider'),
-                  lineSpacingVal     = $('#lineSpacingVal');
-            const textWidthSlider    = $('#textWidthSlider'),
-                  textWidthVal       = $('#textWidthVal');
-            const textColorPicker    = $('#textColorPicker'),
-                  bgColorPicker      = $('#bgColorPicker'),
-                  textAlignSelect    = $('#textAlignSelect');
-            const btnPausePlay       = $('#btnPausePlay');
+      <div class="branch-header-card">
+        <div class="branch-breadcrumb">
+          <span style="display:flex;align-items:center;gap:6px">
+            <i class="${subject.icon}" style="color:${subject.color}"></i>
+            ${escHtml(subject.title)}
+          </span>
+        </div>
+        <div class="branch-main-title">Fiches du module</div>
+        <div class="branch-progress-row">
+          <div class="branch-progress-bar">
+            <div class="progress-bar-fill" style="width:${pct}%;background:${subject.color}"></div>
+          </div>
+          <span class="branch-progress-val">${doneP}/${allP}</span>
+        </div>
+      </div>
 
-            function uid()             { return 't' + Date.now() + '_' + Math.random().toString(36).substring(2, 9); }
-            function wc(t)             { return t && t.trim() ? t.trim().split(/\s+/).length : 0; }
-            function estMin(t)         { return Math.max(1, Math.ceil(wc(t) / 180)); }
-            function fmtTime(sec)      { if(!sec || sec < 0) return '0m'; const m=Math.floor(sec/60), s=Math.floor(sec%60); return m>0 ? m+'m '+s+'s' : s+'s'; }
-            function fmtTimeCompact(s) { if(!s || s < 0) return '0:00'; const m=Math.floor(s/60), ss=Math.floor(s%60); return m+':'+String(ss).padStart(2,'0'); }
-            function showToast(msg)    { const t=document.createElement('div'); t.className='toast'; t.textContent=msg; toastContainer.appendChild(t); setTimeout(()=>{ if(t.parentNode) t.remove(); }, 2400); }
-            function getText(id)       { return appData.texts.find(tx => tx.id === id); }
-            function textsByLevel(lv)  { return appData.texts.filter(tx => tx.level === lv); }
-            function escHtml(s)        { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+      ${partialsHtml}
 
-            function showPage(name) {
-                [pageHome, pageLevel, pageStats, pageSettings].forEach(p => p.classList.remove('active'));
-                if(name === 'home') {
-                    pageHome.classList.add('active');
-                    currentPage = 'home';
-                    currentLevel = null;
-                    searchActive = false;
-                    searchBarHome.style.display = 'none';
-                    searchResults.style.display = 'none';
-                    levelGrid.style.display = '';
-                    searchInput.value = '';
-                } else if(name === 'level') {
-                    pageLevel.classList.add('active');
-                    currentPage = 'level';
-                } else if(name === 'stats') {
-                    pageStats.classList.add('active');
-                    currentPage = 'stats';
-                } else if(name === 'favorites') {
-                    pageHome.classList.add('active');
-                    currentPage = 'favorites';
-                    showFavorites();
-                } else if(name === 'settings') {
-                    pageSettings.classList.add('active');
-                    currentPage = 'settings';
-                }
-                mainContent.scrollTop = 0;
-                updateNavHighlight();
-                if(name === 'stats') renderStats();
-                if(name === 'home' || name === 'favorites') renderHome();
-            }
+      <div class="add-partial-row" style="margin-top:16px;display:flex;gap:8px;">
+        <input class="add-exercise-input" id="add-partial-folder-${branchId}"
+          placeholder="Nouvelle fiche..." style="flex:1"
+          onkeydown="if(event.key==='Enter')addPartialToModule('${subjectId}','${branchId}')"
+          aria-label="Nouvelle fiche"/>
+        <button class="add-exercise-btn" onclick="addPartialToModule('${subjectId}','${branchId}')">
+          <i class="ri-add-line"></i> Ajouter
+        </button>
+      </div>
+    </div>
+  `;
+  setTimeout(() => restoreBranchState(), 0);
+  return html;
+}
 
-            function updateNavHighlight() {
-                const btns = bottomNav.querySelectorAll('.nav-btn');
-                btns.forEach(b => b.classList.remove('active'));
-                if(currentPage === 'home' || currentPage === 'level' || currentPage === 'stats') {
-                    btns[0].classList.add('active');
-                } else if(currentPage === 'favorites') {
-                    btns[1].classList.add('active');
-                } else if(currentPage === 'settings') {
-                    btns[2].classList.add('active');
-                }
-            }
+function deleteModule(subjectId) {
+  if (!confirm('Supprimer ce module et toutes ses fiches ?')) return;
+  const subject = getSubjects().find(s => s.id === subjectId);
+  if (subject) {
+    const branchIds = new Set((subject.branches||[]).map(b => b.id));
+    branchIds.add('main-' + subjectId);
+    branchIds.add('b-' + subjectId);
+    LS.set(KEY_CUSTOM_PARTIALS, getCustomPartials().filter(p => !branchIds.has(p.branchId)));
+  }
+  saveSubjects(getSubjects().filter(s => s.id !== subjectId));
+  nav('subjects');
+  showToast('Module supprimé');
+}
 
-            function renderHome() {
-                levelGrid.innerHTML = '';
-                searchResults.innerHTML = '';
-                searchResults.style.display = 'none';
-                levelGrid.style.display = '';
-                LEVELS.forEach(lv => {
-                    const texts = textsByLevel(lv);
-                    const cnt  = texts.length;
-                    const tw   = texts.reduce((s, t) => s + wc(t.content), 0);
-                    const tt   = texts.reduce((s, t) => s + (t.totalReadTime || 0), 0);
-                    const rc   = texts.filter(t => (t.readCount || 0) > 0).length;
-                    const prog = cnt > 0 ? Math.round((rc / cnt) * 100) : 0;
-                    const last = texts.filter(t => t.lastRead).sort((a,b) => new Date(b.lastRead) - new Date(a.lastRead))[0];
-                    const lastLbl = last ? last.title : 'None';
-                    const card = document.createElement('div');
-                    card.className = 'level-card';
-                    card.innerHTML = `<span class="level-badge">${lv}</span><div class="level-name">Level ${lv}</div><div class="level-meta"><span>${cnt} texts</span><span>${tw} words</span><span>${fmtTime(tt)} read</span></div><div class="level-meta" style="font-size:0.62rem;color:#555;">Last: ${escHtml(lastLbl)}</div><div class="progress-bar-wrap"><div class="progress-fill" style="width:${prog}%;"></div></div><div style="font-size:0.6rem;color:#555;margin-top:3px;">${prog}% completed</div>`;
-                    card.addEventListener('click', () => openLevel(lv));
-                    levelGrid.appendChild(card);
-                });
-            }
+function addPartialToModule(subjectId, branchId) {
+  const input = document.getElementById('add-partial-folder-' + branchId);
+  if (!input || !input.value.trim()) return;
+  addCustomPartial(branchId, input.value.trim());
+  input.value = '';
+  document.getElementById('page-content').innerHTML = renderFolderView(subjectId);
+  showToast('Fiche ajoutée');
+}
 
-            function openLevel(lv) {
-                currentLevel = lv;
-                levelTitleLabel.textContent = 'Level ' + lv;
-                renderLevelTexts();
-                showPage('level');
-            }
+// ========== BRANCH VIEW ==========
+const expandedPartials = new Set();
+const activePartialTabs = {};
 
-            function renderLevelTexts() {
-                if(!currentLevel) return;
-                const texts = [...textsByLevel(currentLevel)].sort((a,b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-                levelTextsList.innerHTML = '';
-                if(texts.length === 0) {
-                    levelTextsList.innerHTML = '<div class="empty-state"><div class="empty-big">📄</div><p>No texts in this level.</p></div>';
-                    return;
-                }
-                texts.forEach(tx => {
-                    const card = document.createElement('div');
-                    card.className = 'text-card';
-                    card.innerHTML = `<div class="text-title">${escHtml(tx.title)}</div><div class="text-meta-row"><span>${wc(tx.content)} words</span><span>~${estMin(tx.content)} min</span><span>${tx.dateAdded || 'Unknown'}</span>${tx.favorite ? '<span style="color:#e8b84b;">★</span>' : ''}</div><div class="text-actions-row"><button class="btn-xs play-btn" data-act="play" data-id="${tx.id}"><span class="ico ico-play" style="color:#000;width:8px;height:8px;border-width:4px 0 4px 7px;"></span> Read</button><button class="btn-xs" data-act="edit" data-id="${tx.id}"><span class="ico ico-edit" style="color:#bbb;"></span> Edit</button><button class="btn-xs danger-btn" data-act="delete" data-id="${tx.id}"><span class="ico ico-trash" style="color:#e0556a;width:10px;height:11px;"></span></button><button class="btn-xs fav-btn${tx.favorite ? ' is-fav' : ''}" data-act="fav" data-id="${tx.id}"><span class="ico ico-star" style="color:inherit;"></span></button></div>`;
-                    card.addEventListener('click', e => {
-                        const ab = e.target.closest('[data-act]');
-                        if(ab) { e.stopPropagation(); handleTextAction(ab.dataset.act, ab.dataset.id); return; }
-                        startReading(tx.id);
-                    });
-                    levelTextsList.appendChild(card);
-                });
-            }
+function renderBranch(branchId) {
+  const branch = findBranch(branchId);
+  if (!branch) return '<div class="page-inner"><p>Branche introuvable</p></div>';
+  const bp = calcBranchProgress(branchId);
+  const subject = getSubjects().find(s => s.id === branch.subjectId);
+  
+  const html = `
+    <div class="page-inner">
+      <div class="branch-header-card">
+        <div class="branch-breadcrumb">
+          ${subject ? `<span style="cursor:pointer;color:var(--accent)" onclick="nav('folder:${subject.id}')">${escHtml(subject.title)}</span> / ` : ''}
+          ${escHtml(branch.title)}
+        </div>
+        <div class="branch-main-title">${escHtml(branch.title)}</div>
+        <div class="branch-progress-row">
+          <div class="branch-progress-bar">
+            <div class="progress-bar-fill" style="width:${bp.pct}%;background:${subject?subject.color:'var(--accent)'}"></div>
+          </div>
+          <span class="branch-progress-val">${bp.done}/${bp.total}</span>
+        </div>
+      </div>
+      <div class="partial-list">
+        ${getBranchPartials(branchId).map((p,i)=>renderPartialCard(p,i)).join('')}
+      </div>
+      <div class="add-partial-row" style="margin-top:16px;display:flex;gap:8px;">
+        <input class="add-exercise-input" id="add-partial-input-${branchId}" placeholder="Nouvelle fiche..." style="flex:1" onkeydown="if(event.key==='Enter')addPartial('${branchId}')" aria-label="Nouvelle fiche"/>
+        <button class="add-exercise-btn" onclick="addPartial('${branchId}')"><i class="ri-add-line"></i> Ajouter</button>
+      </div>
+    </div>
+  `;
+  setTimeout(() => restoreBranchState(), 0);
+  return html;
+}
 
-            function handleTextAction(act, id) {
-                if(act === 'play')   startReading(id);
-                if(act === 'edit')   openEditModal(id);
-                if(act === 'delete') deleteText(id);
-                if(act === 'fav')    toggleFav(id);
-            }
+function restoreBranchState() {
+  expandedPartials.forEach(pid => {
+    const body = document.getElementById('pb-' + pid);
+    const chevron = document.getElementById('chevron-' + pid);
+    if (body) {
+      body.classList.add('open');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+      const tab = activePartialTabs[pid] || 'notes';
+      switchTab(pid, tab);
+    }
+  });
+}
 
-            function openAddModal(presetLv) {
-                modalTitle.textContent = 'Add New Text';
-                inputTitle.value = ''; inputLevel.value = presetLv || 'A1';
-                inputContent.value = ''; inputDesc.value = '';
-                inputFavorite.checked = false; editTextId.value = '';
-                modalOverlay.classList.add('show');
-                setTimeout(() => inputTitle.focus(), 300);
-            }
-            function openEditModal(id) {
-                const tx = getText(id); if(!tx) return;
-                modalTitle.textContent = 'Edit Text';
-                inputTitle.value = tx.title; inputLevel.value = tx.level;
-                inputContent.value = tx.content; inputDesc.value = tx.description || '';
-                inputFavorite.checked = tx.favorite || false; editTextId.value = id;
-                modalOverlay.classList.add('show');
-            }
-            function saveText() {
-                const title   = inputTitle.value.trim();
-                const content = inputContent.value.trim();
-                const level   = inputLevel.value;
-                const desc    = inputDesc.value.trim();
-                const fav     = inputFavorite.checked;
-                const eid     = editTextId.value;
+function renderPartialCard(p,i) {
+  const done = isCompleted(p.id), rc = getReviewCount(p.id), isCustom = p.id.startsWith('custom-');
+  const isOpen = expandedPartials.has(p.id);
+  return `
+    <div class="partial-card ${done?'completed':''}" id="pc-${p.id}">
+      <div class="partial-header" onclick="togglePartial('${p.id}')">
+        <div class="partial-check ${done?'done':''}" id="chk-${p.id}">
+          ${done?'<i class="ri-check-line"></i>':''}
+        </div>
+        <div class="partial-info">
+          <div class="partial-title">
+            ${escHtml(p.title)} ${isCustom?'<span style="font-size:10px;opacity:0.6">(perso)</span>':''}
+          </div>
+          <div class="partial-meta">
+            ${done?'<span class="chip chip-green"><i class="ri-check-line"></i> Complété</span>':'<span class="chip chip-accent"><i class="ri-time-line"></i> En cours</span>'}
+            ${rc>0?`<span class="chip chip-yellow"><i class="ri-restart-line"></i> ${rc} révisions</span>`:''}
+          </div>
+        </div>
+        ${isCustom?`<button class="delete-partial-btn" onclick="event.stopPropagation();deletePartial('${p.id}')" title="Supprimer" aria-label="Supprimer la fiche"><i class="ri-delete-bin-line"></i></button>`:''}
+        <i class="ri-arrow-down-s-line" id="chevron-${p.id}" style="color:var(--text3);font-size:20px;transition:transform 0.2s;${isOpen?'transform:rotate(180deg)':''}"></i>
+      </div>
+      <div class="partial-body${isOpen?' open':''}" id="pb-${p.id}">
+        <div class="tab-bar">
+          <button class="tab-btn${(!activePartialTabs[p.id]||activePartialTabs[p.id]==='notes')?' active':''}" id="tab-notes-${p.id}" onclick="switchTab('${p.id}','notes')">
+            <i class="ri-file-text-line"></i> Notes
+          </button>
+          <button class="tab-btn${activePartialTabs[p.id]==='exercises'?' active':''}" id="tab-exercises-${p.id}" onclick="switchTab('${p.id}','exercises')">
+            <i class="ri-todo-line"></i> Exercices
+          </button>
+          <button class="tab-btn${activePartialTabs[p.id]==='review'?' active':''}" id="tab-review-${p.id}" onclick="switchTab('${p.id}','review')">
+            <i class="ri-restart-line"></i> Révision
+          </button>
+        </div>
+        <div id="tab-content-${p.id}">
+          ${isOpen ? renderTabContent(p.id, activePartialTabs[p.id]||'notes') : renderNotesTab(p.id)}
+        </div>
+        <div class="complete-btn-wrap">
+          <button class="complete-btn ${done?'done':'undone'}" id="cbtn-${p.id}" onclick="toggleComplete('${p.id}')">
+            ${done?'<i class="ri-checkbox-circle-fill"></i> Annuler':'<i class="ri-checkbox-circle-line"></i> Marquer complété'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
-                if(!title || !content) { showToast('Title and content required.'); return; }
-                if(!LEVELS.includes(level)) { showToast('Invalid level.'); return; }
+function renderTabContent(pid, tab) {
+  if (tab === 'notes') return renderNotesTab(pid);
+  if (tab === 'exercises') return renderExercisesTab(pid);
+  if (tab === 'review') return renderReviewTab(pid);
+  return renderNotesTab(pid);
+}
 
-                if(eid) {
-                    const tx = getText(eid);
-                    if(tx) { tx.title = title; tx.content = content; tx.level = level; tx.description = desc; tx.favorite = fav; }
-                } else {
-                    appData.texts.push({ id: uid(), title, level, content, description: desc, favorite: fav, dateAdded: new Date().toISOString().split('T')[0], lastRead: null, totalReadTime: 0, readCount: 0 });
-                }
-                persistData(); refreshData(); closeModal();
-                if(currentPage === 'level' && currentLevel) renderLevelTexts();
-                renderHome();
-                showToast(eid ? 'Text updated.' : 'Text added.');
-            }
-            function deleteText(id) {
-                if(!confirm('Delete permanently?')) return;
-                appData.texts = appData.texts.filter(t => t.id !== id);
-                if(appProgress[id]) { delete appProgress[id]; saveProgress(appProgress); }
-                persistData(); refreshData();
-                if(currentPage === 'level' && currentLevel) renderLevelTexts();
-                renderHome();
-                showToast('Deleted.');
-            }
-            function toggleFav(id) {
-                const tx = getText(id); if(!tx) return;
-                tx.favorite = !tx.favorite; persistData(); refreshData();
-                if(currentPage === 'level' && currentLevel) renderLevelTexts();
-                if(currentPage === 'home' && searchActive) doSearch(searchInput.value);
-                renderHome();
-            }
-            function closeModal() { modalOverlay.classList.remove('show'); editTextId.value = ''; }
+function addPartial(branchId) { 
+  const input=document.getElementById('add-partial-input-'+branchId); 
+  if(!input||!input.value.trim()) return; 
+  addCustomPartial(branchId,input.value.trim()); 
+  input.value=''; 
+  document.getElementById('page-content').innerHTML=renderBranch(branchId); 
+  showToast('Fiche ajoutée'); 
+}
 
-            function doSearch(q) {
-                const qt = q.toLowerCase().trim();
-                if(!qt) { searchResults.style.display = 'none'; levelGrid.style.display = ''; searchActive = false; return; }
-                searchActive = true; levelGrid.style.display = 'none'; searchResults.style.display = 'block';
-                const hits = appData.texts.filter(t =>
-                    t.title.toLowerCase().includes(qt) ||
-                    t.content.toLowerCase().includes(qt) ||
-                    t.level.toLowerCase().includes(qt) ||
-                    (t.description && t.description.toLowerCase().includes(qt))
-                );
-                if(hits.length === 0) { searchResults.innerHTML = '<div class="empty-state">No results.</div>'; return; }
-                searchResults.innerHTML = '';
-                hits.forEach(tx => {
-                    const card = document.createElement('div'); card.className = 'text-card';
-                    card.innerHTML = `<div class="text-title">${escHtml(tx.title)} [${tx.level}]</div><div class="text-actions-row"><button class="btn-xs play-btn" data-act="play" data-id="${tx.id}">Read</button></div>`;
-                    card.addEventListener('click', e => { const ab = e.target.closest('[data-act]'); if(ab){ e.stopPropagation(); startReading(ab.dataset.id); return; } startReading(tx.id); });
-                    searchResults.appendChild(card);
-                });
-            }
-            function showFavorites() {
-                searchActive = true; searchBarHome.style.display = 'block'; searchInput.value = '';
-                levelGrid.style.display = 'none'; searchResults.style.display = 'block';
-                const favs = appData.texts.filter(t => t.favorite);
-                searchResults.innerHTML = '';
-                if(favs.length === 0) { searchResults.innerHTML = '<div class="empty-state">No favorites.</div>'; return; }
-                favs.forEach(tx => {
-                    const card = document.createElement('div'); card.className = 'text-card';
-                    card.innerHTML = `<div class="text-title">${escHtml(tx.title)} [${tx.level}]</div><div class="text-actions-row"><button class="btn-xs play-btn" data-act="play" data-id="${tx.id}">Read</button></div>`;
-                    card.addEventListener('click', e => { const ab = e.target.closest('[data-act]'); if(ab){ e.stopPropagation(); startReading(ab.dataset.id); return; } startReading(tx.id); });
-                    searchResults.appendChild(card);
-                });
-            }
+function deletePartial(pid) { 
+  if(!confirm('Supprimer cette fiche ?')) return; 
+  deleteCustomPartial(pid);
+  if (currentPage.startsWith('folder:')) {
+    document.getElementById('page-content').innerHTML = renderFolderView(currentPage.replace('folder:',''));
+  } else {
+    document.getElementById('page-content').innerHTML = renderBranch(currentPage.replace('branch:',''));
+  }
+  showToast('Fiche supprimée'); 
+}
 
-            function renderStats() {
-                const totalT  = appData.texts.length;
-                const totalW  = appData.texts.reduce((s,t) => s + wc(t.content), 0);
-                const totalRT = appData.texts.reduce((s,t) => s + (t.totalReadTime || 0), 0);
-                const favC    = appData.texts.filter(t => t.favorite).length;
-                const readC   = appData.texts.filter(t => (t.readCount || 0) > 0).length;
-                const compR   = totalT > 0 ? Math.round((readC / totalT) * 100) : 0;
-                const mostR   = [...appData.texts].sort((a,b) => (b.readCount||0) - (a.readCount||0)).slice(0, 5);
+function togglePartial(pid) {
+  const body=document.getElementById('pb-'+pid),chevron=document.getElementById('chevron-'+pid);
+  if(!body) return;
+  if(body.classList.contains('open')){
+    body.classList.remove('open');
+    if(chevron) chevron.style.transform='';
+    expandedPartials.delete(pid);
+  } else {
+    body.classList.add('open');
+    if(chevron) chevron.style.transform='rotate(180deg)';
+    expandedPartials.add(pid);
+    const tab = activePartialTabs[pid] || 'notes';
+    switchTab(pid, tab);
+  }
+}
 
-                statsGrid.innerHTML = `
-                    <div class="stat-card"><div class="stat-val">${totalT}</div><div class="stat-lbl">Total Texts</div></div>
-                    <div class="stat-card"><div class="stat-val">${totalW.toLocaleString()}</div><div class="stat-lbl">Words</div></div>
-                    <div class="stat-card"><div class="stat-val">${fmtTime(totalRT)}</div><div class="stat-lbl">Read Time</div></div>
-                    <div class="stat-card"><div class="stat-val">${favC}</div><div class="stat-lbl">Favorites</div></div>
-                    <div class="stat-card"><div class="stat-val">${compR}%</div><div class="stat-lbl">Completion</div></div>
-                    <div class="stat-card"><div class="stat-val">${readC}</div><div class="stat-lbl">Read</div></div>`;
+function switchTab(pid,tab) {
+  activePartialTabs[pid] = tab;
+  ['notes','exercises','review'].forEach(t=>{ 
+    const btn=document.getElementById(`tab-${t}-${pid}`); 
+    if(btn) btn.classList.toggle('active',t===tab); 
+  });
+  const area=document.getElementById('tab-content-'+pid);
+  if(!area) return;
+  if(tab==='notes') area.innerHTML=renderNotesTab(pid);
+  else if(tab==='exercises') area.innerHTML=renderExercisesTab(pid);
+  else if(tab==='review') area.innerHTML=renderReviewTab(pid);
+}
 
-                LEVELS.forEach(lv => {
-                    const ts = textsByLevel(lv);
-                    const card = document.createElement('div'); card.className = 'stat-card';
-                    card.innerHTML = `<div class="stat-val" style="font-size:1rem;">${lv}</div><div class="stat-lbl">${ts.length} texts</div>`;
-                    statsGrid.appendChild(card);
-                });
+function renderNotesTab(pid) {
+  const notes = getNotes(pid);
+  return `<div class="notes-area">
+    <textarea class="notes-textarea" id="notes-ta-${pid}" placeholder="Ajoutez vos notes, résumés, points importants..." aria-label="Notes">${escHtml(notes)}</textarea>
+    <button class="save-notes-btn" onclick="saveNotes('${pid}')">
+      <i class="ri-save-3-line"></i> Enregistrer les notes
+    </button>
+  </div>`;
+}
 
-                topReadList.innerHTML = '';
-                if(mostR.length === 0 || mostR.every(t => (t.readCount||0) === 0)) {
-                    topReadList.innerHTML = '<p style="color:#444;font-size:0.8rem;">No reading data yet.</p>';
-                } else {
-                    mostR.forEach((t, i) => {
-                        if((t.readCount||0) === 0) return;
-                        const d = document.createElement('div');
-                        d.style.cssText = 'display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #111;font-size:0.73rem;';
-                        d.innerHTML = `<span>${i+1}. ${escHtml(t.title)} [${t.level}]</span><span style="color:#888;">${t.readCount||0}×</span>`;
-                        topReadList.appendChild(d);
-                    });
-                }
-            }
+function renderExercisesTab(pid) {
+  const exs = getExercises(pid);
+  const items = exs.length
+    ? exs.map((ex, i) => `
+        <div class="exercise-item ${ex.done ? 'done-item' : ''}">
+          <div class="exercise-check ${ex.done ? 'done' : ''}" onclick="toggleExercise('${pid}',${i})">
+            ${ex.done ? '<i class="ri-check-line"></i>' : ''}
+          </div>
+          <div class="exercise-text" style="${ex.done ? 'text-decoration:line-through;color:var(--text3)' : ''}">${escHtml(ex.text)}</div>
+          <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;flex-shrink:0;padding:2px;transition:color 0.15s" onclick="deleteExercise('${pid}',${i})" aria-label="Supprimer">
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </div>`).join('')
+    : `<div style="text-align:center;padding:24px 0 16px;color:var(--text3)">
+        <i class="ri-checkbox-blank-circle-line" style="font-size:36px;display:block;margin-bottom:8px;opacity:0.4"></i>
+        <span style="font-size:13px">Aucun exercice ajouté</span>
+      </div>`;
+  return `<div class="exercises-area">
+    ${items}
+    <div class="add-exercise-row">
+      <input class="add-exercise-input" id="ex-input-${pid}" placeholder="Nouvel exercice..."
+        onkeydown="if(event.key==='Enter')addExercise('${pid}')" aria-label="Nouvel exercice"/>
+      <button class="add-exercise-btn" onclick="addExercise('${pid}')"><i class="ri-add-line"></i></button>
+    </div>
+  </div>`;
+}
 
-            function updatePausePlayBtn() {
-                if(reading.paused || reading.stopped) {
-                    btnPausePlay.innerHTML = '<span class="ico ico-play" style="color:#000;width:10px;height:10px;border-width:5px 0 5px 9px;margin-right:2px;"></span> Play';
-                } else {
-                    btnPausePlay.innerHTML = '<span class="ico ico-pause"></span> Pause';
-                }
-            }
+function renderReviewTab(pid) {
+  const rc = getReviewCount(pid);
+  const stars = rc === 0 ? '' : rc < 3 ? '⭐' : rc < 6 ? '⭐⭐' : rc < 10 ? '⭐⭐⭐' : '⭐⭐⭐⭐';
+  return `<div>
+    <div class="review-hero">
+      <div class="review-hero-count">${rc}</div>
+      <div class="review-hero-label">Révision${rc !== 1 ? 's' : ''} effectuée${rc !== 1 ? 's' : ''}</div>
+      ${stars ? `<div class="review-hero-stars">${stars}</div>` : ''}
+    </div>
+    <button class="review-add-btn" onclick="addReview('${pid}')">
+      <i class="ri-restart-line"></i> Marquer une révision
+    </button>
+  </div>`;
+}
 
-            function startReading(id) {
-                const tx = getText(id); if(!tx) return;
+function saveNotes(pid) { 
+  const ta=document.getElementById('notes-ta-'+pid); 
+  if(!ta) return; 
+  setNotes(pid,ta.value); 
+  showToast('Notes enregistrées'); 
+}
 
-                reading.reset();
-                reading.textId       = id;
-                reading.stopped      = false;
-                reading.active       = true;
-                reading.paused       = false;
-                reading.speedPxPerSec = reading.getSpeed();
+function addExercise(pid) { 
+  const input=document.getElementById('ex-input-'+pid); 
+  if(!input||!input.value.trim()) return; 
+  const exs=getExercises(pid); 
+  exs.push({text:input.value.trim(),done:false}); 
+  setExercises(pid,exs); 
+  switchTab(pid,'exercises'); 
+  showToast('Exercice ajouté'); 
+}
 
-                const saved = appProgress[id];
-                if(saved && saved.offset > 0) {
-                    reading.currentOffset = saved.offset;
-                    reading.totalElapsed  = saved.elapsed || 0;
-                }
+function toggleExercise(pid,idx) { 
+  const exs=getExercises(pid); 
+  if(!exs[idx]) return; 
+  exs[idx].done=!exs[idx].done; 
+  setExercises(pid,exs); 
+  switchTab(pid,'exercises'); 
+}
 
-                teleprompterContent.textContent = tx.content;
-                readingDoneOverlay.classList.remove('show');
-                applyReadingSettingsToDOM();
-                readingOverlay.classList.add('active');
+function deleteExercise(pid,idx) { 
+  const exs=getExercises(pid); 
+  exs.splice(idx,1); 
+  setExercises(pid,exs); 
+  switchTab(pid,'exercises'); 
+}
 
-                requestAnimationFrame(() => {
-                    reading.recalc();
-                    const lineHeight = appSettings.fontSize * appSettings.lineSpacing;
-                    const topPad = Math.max(0, reading.stageHeight - lineHeight);
-                    teleprompterContent.style.paddingTop = topPad + 'px';
-                    reading.recalc();
-                    reading.clampOffset();
-                    teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
-                    updateReadingUI();
-                    updatePausePlayBtn();
-                });
+function addReview(pid) { 
+  const rc=getReviewCount(pid); 
+  setPartialProgress(pid,{reviewCount:rc+1}); 
+  switchTab(pid,'review'); 
+  showToast('Révision ajoutée'); 
+}
 
-                reading.lastFrameTime = null;
-                reading.animFrameId   = requestAnimationFrame(animLoop);
-            }
+function toggleComplete(pid) { 
+  const done=isCompleted(pid); 
+  const now=new Date().toISOString(); 
+  setPartialProgress(pid,{completed:!done,completedAt:!done?now:undefined}); 
+  const card=document.getElementById('pc-'+pid),chk=document.getElementById('chk-'+pid),cbtn=document.getElementById('cbtn-'+pid); 
+  if(card) card.classList.toggle('completed',!done); 
+  if(chk){ 
+    chk.className='partial-check '+(!done?'done':''); 
+    chk.innerHTML=!done?'<i class="ri-check-line"></i>':''; 
+  } 
+  if(cbtn){ 
+    cbtn.className='complete-btn '+(!done?'done':'undone'); 
+    cbtn.innerHTML=!done?'<i class="ri-checkbox-circle-fill"></i> Annuler':'<i class="ri-checkbox-circle-line"></i> Marquer complété'; 
+  } 
+  showToast(!done?'Marqué complété':'Annulé'); 
+  const act=LS.get(KEY_ACTIVITY,{}); 
+  act[todayKey()]=(act[todayKey()]||0)+2; 
+  LS.set(KEY_ACTIVITY,act); 
+  updateGoalCardDisplay(); 
+}
 
-            function animLoop(ts) {
-                if(reading.stopped || reading.paused) { reading.animFrameId = null; return; }
+// ========== SCHEDULE ==========
+let selectedDay=todayKey();
+function renderSchedule() { 
+  const today=new Date(); 
+  const dn=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']; 
+  const schedule=LS.get(KEY_SCHEDULE,{}); 
+  const days=[]; 
+  for(let i=-3;i<=3;i++){ 
+    const d=new Date(today); 
+    d.setDate(today.getDate()+i); 
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; 
+    days.push({key,dayName:dn[d.getDay()],dayNum:d.getDate(),isToday:i===0,hasSessions:!!(schedule[key]&&schedule[key].length)}); 
+  } 
+  const allSubjects=getSubjects(); 
+  const sessions=schedule[selectedDay]||[]; 
+  return `<div class="page-inner"><div class="section-title">Semaine en cours</div><div class="week-grid">${days.map(d=>`<div class="day-cell ${d.isToday?'today':''} ${d.key===selectedDay?'active':''} ${d.hasSessions?'has-sessions':''}" onclick="selectDay('${d.key}')"><div class="day-name">${d.dayName}</div><div class="day-num">${d.dayNum}</div><div class="day-dot"></div></div>`).join('')}</div><div class="session-add-card"><div class="session-add-title"><i class="ri-add-circle-line"></i> Ajouter une session</div><div class="session-add-row"><select class="session-select" id="sess-subj" aria-label="Module">${allSubjects.map(s=>`<option value="${s.id}">${s.title}</option>`).join('')}</select><input type="time" class="session-time-input" id="sess-time" value="09:00" aria-label="Heure"><input type="number" class="session-duration-input" id="sess-duration" placeholder="Heure" min="0.5" max="12" step="0.5" value="1" style="width:80px;" aria-label="Durée"></div><div style="margin-top:8px"><input type="text" class="add-exercise-input" id="sess-note" placeholder="Note optionnelle..." style="width:100%" aria-label="Note"></div><div style="margin-top:8px"><button class="session-add-submit" onclick="addSession()"><i class="ri-add-line"></i> Ajouter</button></div></div><div class="section-title">Sessions du jour</div><div class="sessions-container">${renderSessionsList(sessions)}</div></div>`; 
+}
 
-                if(reading.lastFrameTime === null) {
-                    reading.lastFrameTime = ts;
-                    reading.animFrameId = requestAnimationFrame(animLoop);
-                    return;
-                }
+function renderSessionsList(sessions) { 
+  if(!sessions.length) return '<div class="empty-state"><i class="ri-calendar-check-line"></i><p>Aucune session</p></div>'; 
+  return sessions.map((s,i)=>{ 
+    const meta=subjMeta(s.subjectId); 
+    const subj=getSubjects().find(x=>x.id===s.subjectId); 
+    return `<div class="session-card ${s.completed?'completed':''}" id="session-${i}"><div class="session-time-badge">${s.time}</div><div class="session-info"><div class="session-subject" style="color:${meta.color};${s.completed?'text-decoration:line-through;opacity:0.7':''}">${subj?escHtml(subj.title):escHtml(s.subjectId)}</div>${s.duration?`<div class="session-detail"><i class="ri-time-line"></i> ${s.duration}h</div>`:''}${s.note?`<div class="session-detail">${escHtml(s.note)}</div>`:''}</div><button class="session-complete-btn ${s.completed?'done':''}" onclick="toggleSessionComplete(${i})" title="${s.completed?'Annuler':'Terminé'}" aria-label="${s.completed?'Annuler la session':'Marquer comme terminé'}"><i class="ri-lg ${s.completed?'ri-checkbox-circle-fill':'ri-checkbox-circle-line'}"></i></button><button class="session-del" onclick="deleteSession(${i})" aria-label="Supprimer la session"><i class="ri-delete-bin-line"></i></button></div>`; 
+  }).join(''); 
+}
 
-                const dt = Math.min((ts - reading.lastFrameTime) / 1000, 0.1);
-                reading.lastFrameTime = ts;
-                reading.totalElapsed += dt;
-                reading.currentOffset += dt * reading.speedPxPerSec;
-                reading.clampOffset();
+function selectDay(key) { selectedDay=key; document.getElementById('page-content').innerHTML=renderSchedule(); }
+function addSession() { 
+  const subjEl=document.getElementById('sess-subj'),timeEl=document.getElementById('sess-time'),durationEl=document.getElementById('sess-duration'),noteEl=document.getElementById('sess-note'); 
+  if(!subjEl||!timeEl) return; 
+  const duration=durationEl?parseFloat(durationEl.value)||0:0; 
+  const schedule=LS.get(KEY_SCHEDULE,{}); 
+  if(!schedule[selectedDay]) schedule[selectedDay]=[]; 
+  schedule[selectedDay].push({subjectId:subjEl.value,time:timeEl.value,duration,note:noteEl?noteEl.value:'',completed:false}); 
+  schedule[selectedDay].sort((a,b)=>a.time.localeCompare(b.time)); 
+  LS.set(KEY_SCHEDULE,schedule); 
+  document.getElementById('page-content').innerHTML=renderSchedule(); 
+  showToast('Session ajoutée'); 
+}
+function toggleSessionComplete(idx) { 
+  const schedule=LS.get(KEY_SCHEDULE,{}); 
+  if(!schedule[selectedDay]||!schedule[selectedDay][idx]) return; 
+  schedule[selectedDay][idx].completed=!schedule[selectedDay][idx].completed; 
+  LS.set(KEY_SCHEDULE,schedule); 
+  document.getElementById('page-content').innerHTML=renderSchedule(); 
+}
+function deleteSession(idx) { 
+  if(!confirm('Supprimer cette session ?')) return; 
+  const schedule=LS.get(KEY_SCHEDULE,{}); 
+  if(schedule[selectedDay]){ schedule[selectedDay].splice(idx,1); LS.set(KEY_SCHEDULE,schedule); } 
+  document.getElementById('page-content').innerHTML=renderSchedule(); 
+  showToast('Session supprimée'); 
+}
 
-                teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
-                updateReadingUI();
-                reading.saveProgressToDisk();
+// ========== STATS ==========
+function renderStats() { 
+  const overall=calcOverallProgress(); 
+  const allSubjects=getSubjects(); 
+  const today=new Date(); 
+  const activity=LS.get(KEY_ACTIVITY,{}); 
+  const heatCells=[]; 
+  for(let i=90;i>=0;i--){ 
+    const d=new Date(today); d.setDate(today.getDate()-i); 
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; 
+    const min=activity[key]||0; 
+    const lvl=min===0?0:min<30?1:min<60?2:min<120?3:4; 
+    heatCells.push(`<div class="heat-cell" data-lvl="${lvl}" title="${key}: ${Math.round(min)}min"></div>`); 
+  } 
+  return `<div class="page-inner"><div class="stats-hero-row"><div class="stats-mini"><div class="stats-mini-val text-accent">${overall.pct}%</div><div class="stats-mini-lbl">Progression</div></div><div class="stats-mini"><div class="stats-mini-val text-green">${overall.done}</div><div class="stats-mini-lbl">Complétés</div></div></div><div class="section-title">Progression par module</div><div class="subjects-progress">${allSubjects.map(s=>{ const pct=calcSubjectProgress(s.id); const meta=s; const subjectPartials=getAllPartials().filter(p=>p.subjectId===s.id); const doneP=subjectPartials.filter(p=>isCompleted(p.id)).length; const allP=subjectPartials.length; return `<div class="subj-progress-item"><div class="subj-progress-top"><span class="subj-progress-name"><i class="${meta.icon}" style="color:${meta.color};margin-right:6px"></i>${escHtml(s.title)}</span><span class="subj-progress-pct">${pct}%</span></div><div class="progress-bar-wrap" style="height:8px;border-radius:4px"><div class="progress-bar-fill" style="width:${pct}%;background:${meta.color};border-radius:4px"></div></div><div style="font-size:11px;color:var(--text3);margin-top:4px">${doneP}/${allP}</div></div>`; }).join('')}</div><div class="section-title">Activité (91 jours)</div><div class="heatmap-grid">${heatCells.join('')}</div><div class="heatmap-legend"><span>Moins</span><div class="heatmap-legend-cell" style="background:var(--bg3)"></div><div class="heatmap-legend-cell" data-lvl="1" style="background:rgba(108,99,255,0.25)"></div><div class="heatmap-legend-cell" data-lvl="2" style="background:rgba(108,99,255,0.5)"></div><div class="heatmap-legend-cell" data-lvl="3" style="background:rgba(108,99,255,0.75)"></div><div class="heatmap-legend-cell" data-lvl="4" style="background:var(--accent)"></div><span>Plus</span></div></div>`; 
+}
 
-                if(reading.maxOffset > 0.5 && reading.currentOffset >= reading.maxOffset) {
-                    finishReading();
-                    return;
-                }
+// ========== SUBJECT MODAL ==========
+function openSubjectModal(subjectId) {
+  document.getElementById('subject-modal').classList.add('open');
+  const titleEl = document.getElementById('subject-modal-title');
+  const nameInput = document.getElementById('subject-name-input');
+  const idInput = document.getElementById('subject-id-input');
+  const iconInput = document.getElementById('subject-icon-input');
+  const colorInput = document.getElementById('subject-color-input');
+  renderIconGrid();
+  renderColorGrid();
+  if (subjectId) {
+    const subjects = getSubjects(); const s = subjects.find(x => x.id === subjectId);
+    if (s) { titleEl.textContent = 'Modifier le Module'; nameInput.value = s.title; idInput.value = s.id; iconInput.value = s.icon; colorInput.value = s.color; selectIcon(s.icon); selectColor(s.color); }
+  } else {
+    titleEl.textContent = 'Nouveau Module'; nameInput.value = ''; idInput.value = ''; iconInput.value = 'ri-book-line'; colorInput.value = '#6c63ff'; selectIcon('ri-book-line'); selectColor('#6c63ff');
+  }
+}
+function closeSubjectModal() { document.getElementById('subject-modal').classList.remove('open'); }
+function renderIconGrid() { const grid = document.getElementById('icon-select-grid'); grid.innerHTML = ICON_OPTIONS.map(ic => `<div class="icon-option" data-icon="${ic}" onclick="selectIcon('${ic}')" role="button" tabindex="0" aria-label="Icône ${ic}"><i class="${ic}"></i></div>`).join(''); }
+function selectIcon(icon) { document.getElementById('subject-icon-input').value = icon; document.querySelectorAll('#icon-select-grid .icon-option').forEach(el => el.classList.toggle('selected', el.dataset.icon === icon)); }
+function renderColorGrid() { const grid = document.getElementById('color-select-grid'); grid.innerHTML = COLOR_OPTIONS.map(c => `<div class="color-option" style="background:${c}" data-color="${c}" onclick="selectColor('${c}')" role="button" tabindex="0" aria-label="Couleur ${c}"></div>`).join(''); }
+function selectColor(color) { document.getElementById('subject-color-input').value = color; document.querySelectorAll('#color-select-grid .color-option').forEach(el => el.classList.toggle('selected', el.dataset.color === color)); }
+function saveSubjectFromModal() {
+  const name = document.getElementById('subject-name-input').value.trim();
+  if (!name) { showToast('Le nom est requis'); return; }
+  const id = document.getElementById('subject-id-input').value;
+  const icon = document.getElementById('subject-icon-input').value;
+  const color = document.getElementById('subject-color-input').value;
+  let subjects = getSubjects();
+  if (id) { subjects = subjects.map(s => s.id === id ? { ...s, title: name, icon, color } : s); }
+  else { 
+    const newId = 'subj-' + Date.now(); 
+    subjects.push({ 
+      id: newId, 
+      title: name, 
+      icon, 
+      color, 
+      branches: [{ id: "main-" + newId, title: "Main", partials: [] }] 
+    }); 
+  }
+  saveSubjects(subjects); closeSubjectModal(); 
+  if (currentPage === 'subjects') { document.getElementById('page-content').innerHTML = renderSubjectsPage(); }
+  showToast(id ? 'Module modifié' : 'Module ajouté');
+}
 
-                reading.animFrameId = requestAnimationFrame(animLoop);
-            }
+// ========== GOAL MODAL ==========
+let goalModalSearchQuery = '';
+function openGoalModal() { 
+  document.getElementById('goal-modal').classList.add('open'); 
+  goalModalSearchQuery = '';
+  document.getElementById('goal-search-input').value = ''; 
+  document.getElementById('goal-modal-results').innerHTML = renderGoalResults(getWeeklyGoal()?.partials || []); 
+}
+function closeGoalModal() { document.getElementById('goal-modal').classList.remove('open'); }
+function onGoalModalSearch() { 
+  goalModalSearchQuery = document.getElementById('goal-search-input').value; 
+  document.getElementById('goal-modal-results').innerHTML = renderGoalResults(getWeeklyGoal()?.partials || []); 
+}
 
-            function pauseReading() {
-                if(reading.stopped || reading.paused) return;
-                reading.paused       = true;
-                reading.active       = false;
-                reading.lastFrameTime = null;
-                if(reading.animFrameId) { cancelAnimationFrame(reading.animFrameId); reading.animFrameId = null; }
-                if(reading.textId && reading.currentOffset > 0) {
-                    const p = appProgress[reading.textId] || {};
-                    p.offset  = reading.currentOffset;
-                    p.elapsed = reading.totalElapsed;
-                    appProgress[reading.textId] = p;
-                    saveProgress(appProgress);
-                }
-                updatePausePlayBtn();
-            }
+function renderGoalResults(selectedIds) { 
+  const q = goalModalSearchQuery.toLowerCase().trim(); 
+  const allPartials = getAllPartials();
+  
+  if (q) { 
+    const matching = allPartials.filter(p => 
+      p.title.toLowerCase().includes(q) || 
+      (p.subjectTitle && p.subjectTitle.toLowerCase().includes(q))
+    ); 
+    
+    if (!matching.length) {
+      return `<div class="empty-state"><i class="ri-search-line"></i><p>Aucun résultat pour "${escHtml(q)}"</p></div>`; 
+    }
+    
+    return '<div style="display:flex;flex-direction:column;gap:6px">' + matching.map(p => { 
+      const checked = selectedIds.includes(p.id); 
+      return `
+        <label class="modal-partial-label" style="cursor:pointer">
+          <div class="modal-partial-checkbox ${checked?'checked':''}">
+            ${checked?'<i class="ri-check-line"></i>':''}
+          </div>
+          <input type="checkbox" value="${p.id}" ${checked?'checked':''} style="display:none" onchange="toggleGoalCheckbox(this)">
+          <span class="modal-partial-title">${escHtml(p.title)}</span>
+          <span style="font-size:11px;color:var(--text3)">${escHtml(p.subjectTitle||'')}</span>
+        </label>
+      `; 
+    }).join('') + '</div>'; 
+  } 
+  
+  let html = '';
+  const subjects = getSubjects();
+  subjects.forEach(s => {
+    const meta = s;
+    const branches = s.branches || [];
+    const hasMatchingPartials = branches.some(b => {
+      const ps = getBranchPartials(b.id);
+      return ps.length > 0;
+    });
+    
+    if (!hasMatchingPartials) return;
+    
+    html += `
+      <div style="margin-bottom:8px">
+        <div class="modal-subject-header" onclick="toggleGoalSubject('${s.id}')">
+          <div class="modal-subject-icon" style="background:${meta.color}33; color:${meta.color}">
+            <i class="${meta.icon}"></i>
+          </div>
+          <div class="modal-subject-info">
+            <div class="modal-subject-name">${escHtml(s.title)}</div>
+            <div class="modal-subject-count">${branches.length} chapitre(s)</div>
+          </div>
+          <i class="ri-arrow-right-s-line modal-subject-chevron" id="goal-chevron-${s.id}"></i>
+        </div>
+        <div class="modal-subject-body" id="goal-subject-body-${s.id}">
+          ${branches.map(b => {
+            const ps = getBranchPartials(b.id);
+            if (!ps.length) return '';
+            return `
+              <div class="modal-branch-row" onclick="toggleGoalBranch('${b.id}')">
+                <span class="modal-branch-name">${escHtml(b.title)}</span>
+                <span class="modal-branch-stats">${ps.length} parties</span>
+                <i class="ri-arrow-down-s-line modal-branch-chevron" id="goal-branch-chevron-${b.id}"></i>
+              </div>
+              <div class="modal-partials-list" id="goal-branch-partials-${b.id}">
+                ${ps.map(p => { 
+                  const checked = selectedIds.includes(p.id); 
+                  return `
+                    <label class="modal-partial-label" style="cursor:pointer">
+                      <div class="modal-partial-checkbox ${checked?'checked':''}">
+                        ${checked?'<i class="ri-check-line"></i>':''}
+                      </div>
+                      <input type="checkbox" value="${p.id}" ${checked?'checked':''} style="display:none" onchange="toggleGoalCheckbox(this)">
+                      <span class="modal-partial-title">${escHtml(p.title)}</span>
+                    </label>
+                  `; 
+                }).join('')}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  });
+  
+  if (!html) {
+    html = '<div class="empty-state"><i class="ri-book-open-line"></i><p>Aucune partie disponible</p></div>';
+  }
+  
+  return html; 
+}
 
-            function resumeReading() {
-                if(reading.stopped || !reading.paused) return;
-                reading.paused       = false;
-                reading.active       = true;
-                reading.lastFrameTime = null;
-                reading.speedPxPerSec = reading.getSpeed();
-                reading.recalc();
-                reading.clampOffset();
-                teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
-                updateReadingUI();
-                updatePausePlayBtn();
-                reading.animFrameId = requestAnimationFrame(animLoop);
-            }
+function toggleGoalSubject(id) { 
+  const body = document.getElementById('goal-subject-body-'+id);
+  const chevron = document.getElementById('goal-chevron-'+id); 
+  if (body) { 
+    body.classList.toggle('open'); 
+    if (chevron) chevron.classList.toggle('open'); 
+  } 
+}
+function toggleGoalBranch(id) { 
+  const list = document.getElementById('goal-branch-partials-'+id);
+  const chevron = document.getElementById('goal-branch-chevron-'+id); 
+  if (list) { 
+    list.classList.toggle('open'); 
+    if (chevron) chevron.classList.toggle('open'); 
+  } 
+}
+function toggleGoalCheckbox(el) { 
+  const box = el.previousElementSibling; 
+  box.classList.toggle('checked', el.checked); 
+  box.innerHTML = el.checked ? '<i class="ri-check-line"></i>' : ''; 
+}
+function saveWeeklyGoalFromModal() { 
+  const ids = [...document.querySelectorAll('#goal-modal-results input[type="checkbox"]:checked')].map(cb => cb.value); 
+  if (!ids.length) { 
+    showToast('Sélectionnez au moins une partie'); 
+    return; 
+  } 
+  saveWeeklyGoal(ids); 
+  closeGoalModal(); 
+  document.getElementById('page-content').innerHTML = renderHome(); 
+  showToast('Objectif enregistré'); 
+}
 
-            function togglePausePlay() {
-                if(reading.stopped) return;
-                if(reading.paused) resumeReading(); else pauseReading();
-            }
+// ========== CHECKLIST ==========
+function openChecklistModal() { document.getElementById('checklist-modal').classList.add('open'); renderChecklist(); }
+function closeChecklistModal() { document.getElementById('checklist-modal').classList.remove('open'); updateGoalCardDisplay(); }
+function renderChecklist() { 
+  const goal=getWeeklyGoal(); 
+  const body=document.getElementById('checklist-body'); 
+  if(!goal||!goal.partials.length){ 
+    body.innerHTML='<p style="text-align:center;padding:20px">Aucune tâche</p>'; 
+    return; 
+  } 
+  const allP=getAllPartials(); 
+  body.innerHTML=goal.partials.map(pid=>{ 
+    const p=allP.find(pp=>pp.id===pid); 
+    if(!p) return ''; 
+    const done=isCompleted(pid); 
+    return `<div class="checklist-item"><div class="checklist-item-actions"><div class="checklist-checkbox ${done?'checked':''}" onclick="toggleChecklistItem('${pid}')">${done?'<i class="ri-check-line" style="font-size:14px"></i>':''}</div><button class="checklist-delete-btn" onclick="removeChecklistItem('${pid}')" aria-label="Retirer la tâche"><i class="ri-delete-bin-line"></i></button></div><div class="checklist-item-title">${escHtml(p.title)}</div><div class="checklist-item-sub">${escHtml(p.subjectTitle)}</div></div>`; 
+  }).join(''); 
+}
+function toggleChecklistItem(pid) { toggleComplete(pid); renderChecklist(); }
+function removeChecklistItem(pid) { 
+  const goal=getWeeklyGoal(); 
+  if(!goal) return; 
+  goal.partials=goal.partials.filter(id=>id!==pid); 
+  if(!goal.partials.length){ clearWeeklyGoal(); closeChecklistModal(); } 
+  else LS.set(KEY_WEEKLY_GOAL,goal); 
+  renderChecklist(); 
+  updateGoalCardDisplay(); 
+}
+function updateGoalCardDisplay() { 
+  const card=document.getElementById('goal-card'); 
+  if(!card) return; 
+  const goal=getWeeklyGoal(); 
+  if(!goal){ 
+    if(currentPage==='home') {
+      document.getElementById('page-content').innerHTML = renderHome();
+    }
+    return; 
+  } 
+  const gp=calcGoalProgress(goal); 
+  const gr=30,gc=2*Math.PI*gr,goffset=gc-(gp.pct/100)*gc; 
+  const allDone=gp.done===gp.total&&gp.total>0; 
+  const circleFill=document.getElementById('goal-circle-fill'); 
+  if(circleFill){ 
+    circleFill.setAttribute('stroke-dashoffset',goffset); 
+    circleFill.setAttribute('stroke',allDone?'var(--green)':'var(--accent)'); 
+  } 
+  const pctSpan=document.getElementById('goal-pct'); 
+  if(pctSpan) pctSpan.textContent=gp.pct+'%'; 
+}
+function clearWeeklyGoal() { LS.set(KEY_WEEKLY_GOAL, null); }
 
-            function restartReading() {
-                const id = reading.textId;
-                if(reading.animFrameId) { cancelAnimationFrame(reading.animFrameId); reading.animFrameId = null; }
-                if(id && appProgress[id]) { delete appProgress[id]; saveProgress(appProgress); }
-                reading.reset();
-                readingDoneOverlay.classList.remove('show');
-                teleprompterContent.style.transform = 'translateY(0)';
-                updateReadingUI();
-                if(id) startReading(id);
-            }
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-            function finishReading() {
-                const tot = reading.totalElapsed;
-                reading.stopped = true; reading.paused = false; reading.active = false;
-                if(reading.animFrameId) { cancelAnimationFrame(reading.animFrameId); reading.animFrameId = null; }
-                finishReadingSession(tot);
+// ========== INIT ==========
+(function initGoalClear() { 
+  const goal=LS.get(KEY_WEEKLY_GOAL,null); 
+  if(goal&&goal.weekMonday!==getWeekKey()) LS.set(KEY_WEEKLY_GOAL,null); 
+})();
+nav('home', false);
+</script>
 
-                const tx = getText(reading.textId);
-                readingDoneSub.textContent = tx ? `"${tx.title}" — ${fmtTime(Math.round(tot))} reading time` : '';
-                readingDoneOverlay.classList.add('show');
-                updatePausePlayBtn();
-
-                if(reading.textId && appProgress[reading.textId]) {
-                    delete appProgress[reading.textId]; saveProgress(appProgress);
-                }
-            }
-
-            function finishReadingSession(totalSec) {
-                if(!reading.textId || totalSec <= 0) return;
-                const tx = getText(reading.textId);
-                if(tx) {
-                    tx.totalReadTime = (tx.totalReadTime || 0) + Math.round(totalSec);
-                    tx.readCount     = (tx.readCount || 0) + 1;
-                    tx.lastRead      = new Date().toISOString();
-                    persistData(); refreshData();
-                }
-                renderHome();
-                if(currentPage === 'level' && currentLevel) renderLevelTexts();
-            }
-
-            function closeReading() {
-                const tot = reading.totalElapsed;
-                if(reading.animFrameId) { cancelAnimationFrame(reading.animFrameId); reading.animFrameId = null; }
-                if(!reading.stopped && tot > 1) finishReadingSession(tot);
-                if(!reading.stopped && reading.textId && reading.currentOffset > 0 && reading.currentOffset < reading.maxOffset) {
-                    const p = appProgress[reading.textId] || {};
-                    p.offset  = reading.currentOffset;
-                    p.elapsed = reading.totalElapsed;
-                    appProgress[reading.textId] = p;
-                    saveProgress(appProgress);
-                }
-                reading.reset();
-                readingDoneOverlay.classList.remove('show');
-                teleprompterContent.textContent = '';
-                readingOverlay.classList.remove('active');
-                renderHome();
-                if(currentPage === 'level' && currentLevel) renderLevelTexts();
-            }
-
-            function updateReadingUI() {
-                if(reading.maxOffset <= 0) {
-                    readingProgInner.style.width = '0%';
-                    readingTimeTag.textContent   = '--:--';
-                    return;
-                }
-                const pct    = Math.min(100, Math.round((reading.currentOffset / reading.maxOffset) * 100));
-                readingProgInner.style.width = pct + '%';
-                const remain = Math.max(0, (reading.maxOffset - reading.currentOffset) / Math.max(1, reading.speedPxPerSec));
-                readingTimeTag.textContent   = fmtTimeCompact(remain);
-            }
-
-            function applyReadingSettingsToDOM() {
-                const padPct = (100 - appSettings.textWidth) / 2;
-                teleprompterContent.style.fontSize   = appSettings.fontSize + 'px';
-                teleprompterContent.style.lineHeight = appSettings.lineSpacing;
-                teleprompterContent.style.color      = appSettings.textColor;
-                teleprompterContent.style.textAlign  = appSettings.textAlign;
-                teleprompterContent.style.paddingRight = padPct + '%';
-                teleprompterContent.style.paddingLeft  = padPct + '%';
-                teleprompterContent.style.paddingBottom = '60vh';
-                readingStage.style.background          = appSettings.bgColor;
-                readingOverlay.style.background        = appSettings.bgColor;
-            }
-
-            function onReadingSettingChange() {
-                appSettings.speed       = parseInt(speedSlider.value);
-                appSettings.fontSize    = parseInt(fontSizeSlider.value);
-                appSettings.lineSpacing = parseFloat(lineSpacingSlider.value);
-                appSettings.textWidth   = parseInt(textWidthSlider.value);
-                appSettings.textColor   = textColorPicker.value;
-                appSettings.bgColor     = bgColorPicker.value;
-                appSettings.textAlign   = textAlignSelect.value;
-                saveSettings(appSettings);
-                updateSettingsUIValues();
-                if(readingOverlay.classList.contains('active')) {
-                    applyReadingSettingsToDOM();
-                    reading.speedPxPerSec = reading.getSpeed();
-                    reading.recalc();
-                    reading.clampOffset();
-                    teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
-                    updateReadingUI();
-                }
-            }
-
-            function updateSettingsUIValues() {
-                speedSlider.value        = appSettings.speed;       speedVal.textContent       = appSettings.speed;
-                fontSizeSlider.value     = appSettings.fontSize;    fontSizeVal.textContent    = appSettings.fontSize + 'px';
-                lineSpacingSlider.value  = appSettings.lineSpacing; lineSpacingVal.textContent = appSettings.lineSpacing;
-                textWidthSlider.value    = appSettings.textWidth;   textWidthVal.textContent   = appSettings.textWidth + '%';
-                textColorPicker.value    = appSettings.textColor;
-                bgColorPicker.value      = appSettings.bgColor;
-                textAlignSelect.value    = appSettings.textAlign;
-            }
-
-            bottomNav.addEventListener('click', e => {
-                const nb = e.target.closest('.nav-btn'); if(!nb) return;
-                const pg = nb.dataset.page;
-                if(pg === 'home') {
-                    searchActive = false; searchBarHome.style.display = 'none';
-                    searchResults.style.display = 'none'; levelGrid.style.display = '';
-                    searchInput.value = ''; showPage('home');
-                } else if(pg === 'favorites') {
-                    showPage('favorites');
-                } else if(pg === 'settings') {
-                    showPage('settings');
-                }
-            });
-
-            $('#btnSearch').addEventListener('click', () => {
-                showPage('home');
-                searchActive = !searchActive;
-                if(searchActive) { searchBarHome.style.display = 'block'; searchInput.focus(); }
-                else { searchBarHome.style.display = 'none'; searchResults.style.display = 'none'; levelGrid.style.display = ''; searchInput.value = ''; }
-            });
-            $('#btnStats').addEventListener('click', () => { showPage('stats'); });
-            searchInput.addEventListener('input', () => doSearch(searchInput.value));
-            $('#btnBackLevel').addEventListener('click', () => showPage('home'));
-            $('#btnBackStats').addEventListener('click', () => showPage('home'));
-            $('#btnAddText').addEventListener('click', () => openAddModal(currentLevel || 'A1'));
-            $('#btnCancelModal').addEventListener('click', closeModal);
-            $('#btnSaveText').addEventListener('click', saveText);
-            modalOverlay.addEventListener('click', e => { if(e.target === modalOverlay) closeModal(); });
-
-            speedSlider.addEventListener('input',       onReadingSettingChange);
-            fontSizeSlider.addEventListener('input',    onReadingSettingChange);
-            lineSpacingSlider.addEventListener('input', onReadingSettingChange);
-            textWidthSlider.addEventListener('input',   onReadingSettingChange);
-            textColorPicker.addEventListener('input',   onReadingSettingChange);
-            bgColorPicker.addEventListener('input',     onReadingSettingChange);
-            textAlignSelect.addEventListener('change',  onReadingSettingChange);
-
-            $('#resetReadingSettings').addEventListener('click', () => {
-                appSettings = { speed:50, fontSize:20, lineSpacing:1.7, textWidth:88, textColor:'#f0f0f0', bgColor:'#000000', textAlign:'left' };
-                saveSettings(appSettings); updateSettingsUIValues();
-                if(readingOverlay.classList.contains('active')) {
-                    applyReadingSettingsToDOM();
-                    reading.speedPxPerSec = reading.getSpeed();
-                    reading.recalc(); reading.clampOffset();
-                    teleprompterContent.style.transform = `translateY(${-reading.currentOffset}px)`;
-                    updateReadingUI();
-                }
-                showToast('Settings reset.');
-            });
-
-            $('#btnCloseReading').addEventListener('click',   closeReading);
-            $('#btnPausePlay').addEventListener('click',      togglePausePlay);
-            $('#btnRestartReading').addEventListener('click', restartReading);
-            $('#btnDoneClose').addEventListener('click',      closeReading);
-
-            readingStage.addEventListener('click', e => {
-                if(e.target.closest('.reading-done-overlay')) return;
-                if(!reading.stopped) togglePausePlay();
-            });
-
-            readingStage.addEventListener('touchmove', e => {
-                if(readingOverlay.classList.contains('active') && reading.active && !reading.paused) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-
-            document.addEventListener('visibilitychange', () => {
-                if(document.hidden && readingOverlay.classList.contains('active') && !reading.paused && !reading.stopped) {
-                    pauseReading();
-                }
-            });
-
-            document.addEventListener('keydown', e => {
-                if(e.key === 'Escape') {
-                    if(readingOverlay.classList.contains('active')) closeReading();
-                    else if(modalOverlay.classList.contains('show'))   closeModal();
-                }
-                if(e.key === ' ' && readingOverlay.classList.contains('active')) {
-                    e.preventDefault();
-                    if(!reading.stopped) togglePausePlay();
-                }
-            });
-
-            updateSettingsUIValues();
-            renderHome();
-            updateNavHighlight();
-        })();
-    </script>
+<!-- ===== تم إزالة كل ما يتعلق بـ PWA والأيقونات ===== -->
 </body>
 </html>
